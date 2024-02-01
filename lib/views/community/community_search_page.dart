@@ -79,20 +79,18 @@ class _CommunitySearchPageBodyState extends State<CommunitySearchPageBody> {
     return ProviderWidget<ShortVideoSearchViewModel>(
         model: Provider.of<ShortVideoSearchViewModel>(context),
         onReady: (_) {},
-        builder: (_, model, __) => MultiStateWidget(
-              builder: (_) => PurlawWaterfallList(
-                useTopPadding: false,
-                  list: List.generate(model.videoList.result!.length, (index) {
-                    return GridVideoBlock(
-                      video: model.videoList.result![index],
-                      indexInList: index,
-                      videoList: model.videoList,
-                      loadMore: model.loadMoreVideo,
-                    );
-                  }),
-                  controller: controller),
-              state: model.state,
-          readyWaitingWidget: Container()
-            ));
+        builder: (_, model, __) => PurlawWaterfallList(
+          useTopPadding: false,
+            list: List.generate((model.videoList.result?.length) ?? 0, (index) {
+              return GridVideoBlock(
+                video: model.videoList.result![index],
+                indexInList: index,
+                videoList: model.videoList,
+                loadMore: model.loadMoreVideo,
+              );
+            }),
+            controller: controller, onPullRefresh: () async {
+            await model.searchVideo(getCookie(context, listen: false), model.text);
+        }, loadingState: model.state, readyWidget: Container(),));
   }
 }

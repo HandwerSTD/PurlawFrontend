@@ -47,6 +47,7 @@ class UserAvatarLoader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (avatar.isEmpty) return Icon(Icons.account_circle_rounded, size: size * 0.8, color: Colors.grey,);
     return ImageLoader(
       url: HttpGet.getApi(API.userAvatar.api) + avatar,
       width: size,
@@ -78,20 +79,19 @@ class _AccountPageVideoWaterfallState extends State<AccountPageVideoWaterfall> {
         model.load();
       },
       builder: (context, model, _) {
-        return MultiStateWidget(
-          state: model.state,
-          builder: (_) => PurlawWaterfallList(
-              useTopPadding: false,
-              list: List.generate(model.videoList.result!.length, (index) {
-                return GridVideoBlock(
-                  video: model.videoList.result![index],
-                  indexInList: index,
-                  videoList: model.videoList,
-                  loadMore: model.loadMoreVideo,
-                );
-              }),
-              controller: controller),
-        );
+        return PurlawWaterfallList(
+            useTopPadding: false,
+            list: List.generate(model.videoList.result!.length, (index) {
+              return GridVideoBlock(
+                video: model.videoList.result![index],
+                indexInList: index,
+                videoList: model.videoList,
+                loadMore: model.loadMoreVideo,
+              );
+            }),
+            controller: controller, onPullRefresh: ()async{
+              await model.load();
+        }, loadingState: model.state,);
       },
     );
   }

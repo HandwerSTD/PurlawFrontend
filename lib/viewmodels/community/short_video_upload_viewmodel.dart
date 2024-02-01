@@ -20,6 +20,7 @@ class ShortVideoUploadViewModel extends BaseViewModel {
   Uint8List coverData = Uint8List(0);
   bool loaded = false;
   bool isVideoUploading = false;
+  ValueNotifier<int> percentage = ValueNotifier(0);
 
   ShortVideoUploadViewModel({required this.selectedFile, required super.context});
 
@@ -79,14 +80,30 @@ class ShortVideoUploadViewModel extends BaseViewModel {
           videoData: videoData,
           coverData: coverData,
           cookie: cookie);
-      var resp = await response.stream.transform(utf8.decoder).join();
-      var result = jsonDecode(resp);
-      print("[ShortVideoUpload] res: $result");
-      if (result["status"] != "success") throw Exception(result["message"]);
-      makeToast("上传成功");
-      Future.delayed(Duration(seconds: 1)).then((value) {
-        eventBus.fire(ShortVideoUploadEventBus(needNavigate: true));
+      var total = response.contentLength!, uploaded = 0;
+      print("[DEBUG] total = $total");
+      response.stream.listen((value) {
+        uploaded += value.length;
+        percentage.value = ((uploaded / total) * 100).toInt();
+        print("[DEBUG] uploaded = $uploaded, percent = ${percentage.value}");
+      },
+      onDone: () {
+        // var result = jsonDecode(resp);
+        // print("[ShortVideoUpload] res: $result");
+        // if (result["status"] != "success") throw Exception(result["message"]);
+        makeToast("上传成功");
+        Future.delayed(Duration(seconds: 1)).then((value) {
+          eventBus.fire(ShortVideoUploadEventBus(needNavigate: true));
+        });
+      },
+      onError: (e) {
+        makeToast("上传失败");
+        print(e);
+        isVideoUploading = false;
+        notifyListeners();
       });
+      // var resp = await response.stream.transform(utf8.decoder).join();
+
     } on Exception catch (e) {
       print(e);
       makeToast("上传失败");

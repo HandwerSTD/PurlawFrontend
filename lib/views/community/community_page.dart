@@ -51,31 +51,31 @@ class _CommunityPageBodyState extends State<CommunityPageBody> {
       }
     }
     return LayoutBuilder(
-      builder: (_, constraints) => MultiStateWidget(
-        state: model.state,
-        builder: (_) => Container(
-            alignment: Alignment.center,
-            child: Stack(alignment: Alignment.topCenter, children: [
-              PurlawWaterfallList(
-                controller: controller,
-                list: List.generate(model.videoList.result!.length, (index) {
-                  return GridVideoBlock(video: model.videoList.result![index]);
-                }),
+      builder: (_, constraints) => Container(
+          alignment: Alignment.center,
+          child: Stack(alignment: Alignment.topCenter, children: [
+            PurlawWaterfallList(
+              refresherOffset: 40,
+              controller: controller,
+              list: List.generate((model.videoList.result?.length) ?? 0, (index) {
+                return GridVideoBlock(video: model.videoList.result![index]);
+              }), onPullRefresh: () async {
+                await model.fetchVideoList(getCookie(context, listen: false));
+            }, loadingState: model.state,
+            ),
+            Visibility(
+              visible: (Responsive.checkWidth(constraints.maxWidth) !=
+                  Responsive.lg),
+              child: SearchAppBar(
+                hintLabel: '搜索',
+                onSubmitted: (val) {},
+                readOnly: true,
+                onTap: () {
+                  JumpToSearchPage(context);
+                },
               ),
-              Visibility(
-                visible: (Responsive.checkWidth(constraints.maxWidth) !=
-                    Responsive.lg),
-                child: SearchAppBar(
-                  hintLabel: '搜索',
-                  onSubmitted: (val) {},
-                  readOnly: true,
-                  onTap: () {
-                    JumpToSearchPage(context);
-                  },
-                ),
-              ),
-            ])),
-      ),
+            ),
+          ])),
     );
   }
 }
@@ -123,21 +123,15 @@ class GridVideoBlock extends StatelessWidget {
                 Container(
                     alignment: Alignment.center,
                     margin: const EdgeInsets.only(top: 5, bottom: 12),
-                    child: ImageLoaderWithMemory(
+                    child: ImageLoader(
                       width: 180,
-                      height: (video.coverRatio == null
-                          ? null
-                          : video.coverRatio! * 180),
+                      height: (video.coverRatio! * 180),
                       url:
                           HttpGet.getApi(API.videoCover.api) + video.coverSha1!,
-                      saveRatio: (double height, double width) {
-                        video.coverRatio = height / width;
-                      },
                       loadingWidget: Container(
                         width: 180,
-                          height:180,
                         alignment: Alignment.center,
-                        color: Colors.grey,
+                        color: Colors.grey.withOpacity(0.3),
                         child: const TDLoading(
                           icon: TDLoadingIcon.circle,
                           size: TDLoadingSize.large,
@@ -218,16 +212,20 @@ class GridVideoBlock extends StatelessWidget {
                 Container(
                     alignment: Alignment.center,
                     margin: const EdgeInsets.only(top: 5, bottom: 12),
-                    child: ImageLoaderWithMemory(
+                    child: ImageLoader(
                       width: 180,
-                      height: (video.coverRatio == null
-                          ? null
-                          : video.coverRatio! * 180),
+                      height: (video.coverRatio! * 180),
                       url:
                           HttpGet.getApi(API.videoCover.api) + video.coverSha1!,
-                      saveRatio: (double height, double width) {
-                        video.coverRatio = height / width;
-                      },
+                        loadingWidget: Container(
+                          width: 180,
+                          alignment: Alignment.center,
+                          color: Colors.grey.withOpacity(0.5),
+                          child: const TDLoading(
+                            icon: TDLoadingIcon.circle,
+                            size: TDLoadingSize.large,
+                          ),
+                        )
                     )),
                 Padding(
                   padding:

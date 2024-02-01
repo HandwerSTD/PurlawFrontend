@@ -64,6 +64,7 @@ class VideoInfoModel {
     coverSha1 = json['cover_sha1'];
     timestamp = json['timestamp'];
     avatar = json['avatar'];
+    coverRatio = json['cover_height'] / json['cover_width'];
   }
 
   Map<String, dynamic> toJson() {

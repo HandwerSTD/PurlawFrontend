@@ -19,7 +19,7 @@ class MainViewModel extends BaseViewModel {
   void logout() {
     DatabaseUtil.storeUserNamePasswd('', '');
     DatabaseUtil.storeCookie('');
-    myUserInfoModel = MyUserInfoModel(avatar: '', uid: '', user: '加载失败', cookie: '');
+    myUserInfoModel = MyUserInfoModel(avatar: '', uid: '', user: ' ', cookie: '');
     cookies = '';
     SystemNavigator.pop();
   }

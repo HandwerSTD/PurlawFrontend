@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
@@ -108,17 +109,16 @@ class _ShortVideoUploadState extends State<ShortVideoUpload> {
                           children: [
                             (Image.memory(model.coverData)),
                             Container(
-                              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 8, vertical: 2),
                               margin: EdgeInsets.only(bottom: 2),
                               decoration: BoxDecoration(
-                                color: Colors.black54,
-                                borderRadius: BorderRadius.circular(14)
-                              ),
+                                  color: Colors.black54,
+                                  borderRadius: BorderRadius.circular(14)),
                               child: const Text(
                                 "点击更换封面",
                                 style: TextStyle(
-                                    fontSize: 18,
-                                    color: Colors.white),
+                                    fontSize: 18, color: Colors.white),
                               ),
                             ),
                           ],
@@ -126,7 +126,10 @@ class _ShortVideoUploadState extends State<ShortVideoUpload> {
                       : const SizedBox(
                           width: 48,
                           height: 48,
-                          child: TDLoading(size: TDLoadingSize.large, icon: TDLoadingIcon.circle,))),
+                          child: TDLoading(
+                            size: TDLoadingSize.large,
+                            icon: TDLoadingIcon.circle,
+                          ))),
                 ),
               )),
               IgnorePointer(
@@ -141,9 +144,12 @@ class _ShortVideoUploadState extends State<ShortVideoUpload> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Expanded(
-                            child: Text(
-                          (model.isVideoUploading ? "上传中" : "上传视频"),
-                          textAlign: TextAlign.center,
+                            child: ValueListenableBuilder<int>(
+                          valueListenable: model.percentage,
+                          builder: (context, value, child) => Text(
+                            (model.isVideoUploading ? "上传中 $value%" : "上传视频"),
+                            textAlign: TextAlign.center,
+                          ),
                         ))
                       ],
                     )),
