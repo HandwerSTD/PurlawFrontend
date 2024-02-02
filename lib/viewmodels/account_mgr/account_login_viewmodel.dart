@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
-import 'package:purlaw/common/constants.dart';
+import 'package:purlaw/common/constants/constants.dart';
 import 'package:purlaw/common/network/network_request.dart';
 import 'package:purlaw/common/utils/database/database_util.dart';
 import 'package:purlaw/main.dart';

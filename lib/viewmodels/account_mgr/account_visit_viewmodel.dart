@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:purlaw/common/constants.dart';
+import 'package:purlaw/common/constants/constants.dart';
 import 'package:purlaw/common/network/network_loading_state.dart';
 import 'package:purlaw/models/account_mgr/user_info_model.dart';
 import 'package:purlaw/viewmodels/base_viewmodel.dart';

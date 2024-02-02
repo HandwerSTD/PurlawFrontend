@@ -4,7 +4,7 @@ import 'package:purlaw/common/network/network_request.dart';
 import 'package:purlaw/models/community/short_video_info_model.dart';
 import 'package:purlaw/viewmodels/base_viewmodel.dart';
 
-import '../../common/constants.dart';
+import '../../common/constants/constants.dart';
 
 class ShortVideoSearchViewModel extends BaseViewModel {
   VideoList videoList = VideoList();

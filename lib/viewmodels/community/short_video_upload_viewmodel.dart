@@ -3,7 +3,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/cupertino.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:purlaw/common/constants.dart';
+import 'package:purlaw/common/constants/constants.dart';
 import 'package:purlaw/common/network/network_request.dart';
 import 'package:purlaw/main.dart';
 import 'package:purlaw/viewmodels/base_viewmodel.dart';

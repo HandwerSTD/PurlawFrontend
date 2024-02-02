@@ -5,7 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:purlaw/common/network/network_request.dart';
 import 'package:purlaw/viewmodels/base_viewmodel.dart';
 
-import '../../common/constants.dart';
+import '../../common/constants/constants.dart';
 
 class AccountRegisterViewModel extends BaseViewModel {
   TextEditingController nameCtrl = TextEditingController(), passwdCtrl = TextEditingController(), mailCtrl = TextEditingController();

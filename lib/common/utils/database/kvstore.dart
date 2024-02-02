@@ -7,7 +7,6 @@ class KVBox {
   static Future setupLocator() async {
     await Hive.initFlutter();
     await Hive.openBox(defaultBox);
-    await Hive.openLazyBox(historyChats);
   }
   static void insert(String key, String value, {String useBox = KVBox.defaultBox}) {
     var box = Hive.box(useBox);

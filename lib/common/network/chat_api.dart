@@ -3,9 +3,11 @@ import 'dart:isolate';
 
 import 'package:purlaw/common/network/network_request.dart';
 
-import '../constants.dart';
+import '../constants/constants.dart';
 
 class ChatNetworkRequest {
+
+
   static late Isolate isolate;
 
   static Future<void> submitNewMessage(
@@ -13,7 +15,7 @@ class ChatNetworkRequest {
     var response = jsonDecode(await HttpGet.post(
         API.chatCreateSession.api,
         HttpGet.jsonHeadersCookie(cookie),
-        ({"type": "chat", "data": text})).timeout(Duration(seconds: 10)));
+        ({"type": "ask", "data": text})).timeout(Duration(seconds: 10)));
     print(response);
     String session = response["session_id"];
     print(session);

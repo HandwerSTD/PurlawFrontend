@@ -9,11 +9,12 @@ import 'package:purlaw/viewmodels/main_viewmodel.dart';
 import 'package:purlaw/viewmodels/theme_viewmodel.dart';
 import 'package:purlaw/views/account_mgr/account_login.dart';
 import 'package:purlaw/views/account_mgr/components/account_page_components.dart';
+import 'package:purlaw/views/ai_chat_page/chat_history_page.dart';
 import 'package:purlaw/views/community/short_video/short_video_upload_page.dart';
 import 'package:purlaw/views/settings/SettingsPage.dart';
 import 'package:tdesign_flutter/tdesign_flutter.dart';
 
-import '../../common/constants.dart';
+import '../../common/constants/constants.dart';
 import '../../common/network/network_request.dart';
 import '../../common/provider/provider_widget.dart';
 import '../../common/utils/misc.dart';
@@ -57,6 +58,9 @@ class _MyAccountPageState extends State<MyAccountPage> {
     return Scaffold(
       appBar: AppBar(
         actions: [
+          IconButton(onPressed: (){
+            Provider.of<ThemeViewModel>(context, listen: false).switchDarkMode();
+          }, icon: Icon(Icons.sunny)),
           IconButton(onPressed: (){
             Provider.of<MainViewModel>(context, listen: false).refreshCookies();
           }, icon: Icon(Icons.refresh)),
@@ -113,8 +117,7 @@ class _MyAccountPageBodyState extends State<MyAccountPageBody>
                     child: PurlawPageTab(
                       controller: controller,
                       children: [
-                        Container(
-                        ),
+                        ChatHistoryPageBody(),
                         MyAccountVideoListBody(uid: widget.userInfo.uid),
                         Container()
                       ],

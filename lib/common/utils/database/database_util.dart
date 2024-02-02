@@ -1,3 +1,4 @@
+import 'package:hive/hive.dart';
 import 'package:purlaw/common/utils/database/kvstore.dart';
 
 class DatabaseUtil {
@@ -33,6 +34,25 @@ class DatabaseUtil {
   static String getServerAddress() => KVBox.query(DatabaseConst.serverAddress);
   static void storeServerAddress(String server) {
     KVBox.insert(DatabaseConst.serverAddress, server);
+  }
+}
+
+class HistoryDatabaseUtil {
+  static Future<void> clearHistory() async {
+    var box = await Hive.openLazyBox(KVBox.historyChats);
+    await box.clear();
+  }
+  static void storeHistory(String value) async {
+    var box = await Hive.openLazyBox(KVBox.historyChats);
+    box.put(DateTime.timestamp().millisecondsSinceEpoch ~/ 1000, value);
+  }
+  static Future<List<(int, String)>> listHistory() async {
+    var box = await Hive.openLazyBox(KVBox.historyChats);
+    var result = <(int, String)>[];
+    for (var key in box.keys) {
+      result.add((key, await box.get(key)));
+    }
+    return result;
   }
 }
 

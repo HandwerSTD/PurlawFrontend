@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:purlaw/common/constants.dart';
+import 'package:purlaw/common/constants/constants.dart';
 import 'package:purlaw/common/network/network_loading_state.dart';
 import 'package:purlaw/common/network/network_request.dart';
 import 'package:purlaw/common/utils/misc.dart';

@@ -1,10 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:http/http.dart' as http;
 import 'package:purlaw/models/account_mgr/user_info_model.dart';
 
-import '../constants.dart';
+import '../constants/constants.dart';
 import '../utils/database/database_util.dart';
 
 /// 对 HTTP 网络请求的二次封装
@@ -47,6 +48,15 @@ class HttpGet {
     if (response.statusCode != HTTP_OK)
       throw HttpException(response.statusCode.toString());
     return const Utf8Decoder().convert(response.bodyBytes);
+  }
+  static Future<Uint8List> postGetBodyBytes(String api, Map<String, String> headers,
+      Map<String, dynamic> body) async {
+    print("getting bytes");
+    var response = await http.post(Uri.parse(getApi(api)),
+        headers: headers, body: jsonEncode(body));
+    if (response.statusCode != HTTP_OK)
+      throw HttpException(response.statusCode.toString());
+    return (response.bodyBytes);
   }
 }
 

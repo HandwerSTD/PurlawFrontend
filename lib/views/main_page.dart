@@ -9,6 +9,7 @@ import 'package:purlaw/viewmodels/theme_viewmodel.dart';
 import 'package:purlaw/views/account_mgr/account_login.dart';
 import 'package:purlaw/views/account_mgr/my_account_page.dart';
 import 'package:purlaw/views/ai_chat_page/ai_chat_page.dart';
+import 'package:purlaw/views/ai_chat_page/chat_history_page.dart';
 import 'package:purlaw/views/community/community_page.dart';
 import 'package:purlaw/views/utilities/utilities_index_page.dart';
 
@@ -28,7 +29,8 @@ class MainPage extends StatelessWidget {
   static Widget leftButton(BuildContext context) => IconButton(
     onPressed: () {
       // Navigator.push(context, MaterialPageRoute(builder: (_) => MyAccountPage()));
-      Provider.of<ThemeViewModel>(context, listen: false).switchDarkMode();
+      // Provider.of<ThemeViewModel>(context, listen: false).switchDarkMode();
+      Navigator.push(context, MaterialPageRoute(builder: (_) => ChatHistoryPage()));
     },
     icon: Icon(Icons.mark_chat_read_outlined),
   );

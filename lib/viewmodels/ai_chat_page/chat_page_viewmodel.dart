@@ -5,10 +5,11 @@ import 'dart:isolate';
 
 import 'package:flutter/material.dart';
 import 'package:purlaw/common/network/chat_api.dart';
+import 'package:purlaw/common/utils/database/database_util.dart';
 import 'package:purlaw/viewmodels/base_viewmodel.dart';
 import 'package:purlaw/views/account_mgr/my_account_page.dart';
 
-import '../../common/constants.dart';
+import '../../common/constants/constants.dart';
 import '../../models/ai_chat/chat_message_model.dart';
 
 /// 对话消息列表的 ViewModel
@@ -20,6 +21,13 @@ class AIChatMsgListViewModel extends BaseViewModel {
   bool replying = false;
 
   AIChatMsgListViewModel({required super.context});
+
+  void saveMessage() {
+    HistoryDatabaseUtil.storeHistory(jsonEncode(messageModels.toJson()));
+    messageModels = ListAIChatMessageModels(messages: [AIChatMessageModel(message: Constants.firstOutput, isMine: false, isFirst: true)]);
+    notifyListeners();
+    makeToast("保存成功");
+  }
 
   void scrollToBottom() {
     scrollController.animateTo(scrollController.position.maxScrollExtent,
@@ -33,6 +41,7 @@ class AIChatMsgListViewModel extends BaseViewModel {
     notifyListeners();
   }
   void reEnableAfterReceive() {
+    messageModels.messages!.last.generateCompleted.value = true;
     replying = false;
     notifyListeners();
   }
@@ -64,9 +73,9 @@ class AIChatMsgListViewModel extends BaseViewModel {
     notifyListeners();
 
     messageModels.messages?.add(AIChatMessageModel(message: "", isMine: false));
-    // await appendMessage("response for $text");
+    await appendMessage("response for $text");
     try {
-      await ChatNetworkRequest.submitNewMessage(text, cookie, appendMessage);
+      // await ChatNetworkRequest.submitNewMessage(text, cookie, appendMessage);
       reEnableAfterReceive();
       notifyListeners();
     } on Exception catch (e) {

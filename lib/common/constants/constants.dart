@@ -22,7 +22,8 @@ enum API {
   userListVideo("/api/video/list_video"),
 
   chatCreateSession("/api/chat/create_session"),
-  chatFlushSession("/api/chat/flush_session");
+  chatFlushSession("/api/chat/flush_session"),
+  chatRequestVoice("/api/voice/request_voice");
 
   const API(this.api);
   final String api;

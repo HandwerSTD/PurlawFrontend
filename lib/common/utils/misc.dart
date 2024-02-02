@@ -49,5 +49,25 @@ class TimeUtils {
     var date = DateTime.fromMillisecondsSinceEpoch(timestamp * 1000);
     return formatDate(date, [yyyy,'年',mm,'月',dd,'日 ',HH,':',nn,':', ss]);
   }
+
+  static String getDurationTimeString(Duration now, Duration total) {
+    if (total.inSeconds >= 60 * 60) {
+      var nowTime = [now.inHours, now.inMinutes, now.inSeconds]
+          .map((seg) => seg.remainder(60).toString().padLeft(2, '0'))
+          .join(':');
+      var totalTime = [total.inHours, total.inMinutes, total.inSeconds]
+          .map((seg) => seg.remainder(60).toString().padLeft(2, '0'))
+          .join(':');
+      return "${nowTime} / ${totalTime}";
+    }
+    var nowTime = [now.inMinutes, now.inSeconds]
+        .map((seg) => seg.remainder(60).toString().padLeft(2, '0'))
+        .join(':');
+    var totalTime = [total.inMinutes, total.inSeconds]
+        .map((seg) => seg.remainder(60).toString().padLeft(2, '0'))
+        .join(':');
+    return "${nowTime} / ${totalTime}";
+  }
+
 }
 

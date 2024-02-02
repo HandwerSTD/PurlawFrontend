@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:purlaw/common/constants.dart';
+import 'package:purlaw/common/constants/constants.dart';
 import 'package:purlaw/common/network/network_loading_state.dart';
 import 'package:purlaw/common/network/network_request.dart';
 import 'package:purlaw/common/utils/database/database_util.dart';
@@ -14,13 +14,14 @@ import 'package:purlaw/viewmodels/base_viewmodel.dart';
 /// 程序运行的全局配置存储区
 class MainViewModel extends BaseViewModel {
   /// 登录者的用户信息模型，应当在重新刷新 Cookies 后再使用
-  MyUserInfoModel myUserInfoModel = MyUserInfoModel(avatar: '', uid: '', user: '加载失败', cookie: '');
+  MyUserInfoModel myUserInfoModel = MyUserInfoModel(avatar: '', uid: '', user: ' ', cookie: '');
 
-  void logout() {
+  void logout() async {
     DatabaseUtil.storeUserNamePasswd('', '');
     DatabaseUtil.storeCookie('');
     myUserInfoModel = MyUserInfoModel(avatar: '', uid: '', user: ' ', cookie: '');
     cookies = '';
+    await HistoryDatabaseUtil.clearHistory();
     SystemNavigator.pop();
   }
 

@@ -395,7 +395,7 @@ class _VideoPlayBlockState extends State<VideoPlayBlock> {
                       valueListenable: model.videoPlayerController,
                       builder: (context, value, child) {
                         return Text(
-                          "  ${getDurationTimeString(value.position, value.duration)}",
+                          "  ${TimeUtils.getDurationTimeString(value.position, value.duration)}",
                           style: TextStyle(color: Colors.white),
                         );
                       })
@@ -406,25 +406,6 @@ class _VideoPlayBlockState extends State<VideoPlayBlock> {
         ))
       ],
     );
-  }
-
-  String getDurationTimeString(Duration now, Duration total) {
-    if (total.inSeconds >= 60 * 60) {
-      var nowTime = [now.inHours, now.inMinutes, now.inSeconds]
-          .map((seg) => seg.remainder(60).toString().padLeft(2, '0'))
-          .join(':');
-      var totalTime = [total.inHours, total.inMinutes, total.inSeconds]
-          .map((seg) => seg.remainder(60).toString().padLeft(2, '0'))
-          .join(':');
-      return "${nowTime} / ${totalTime}";
-    }
-    var nowTime = [now.inMinutes, now.inSeconds]
-        .map((seg) => seg.remainder(60).toString().padLeft(2, '0'))
-        .join(':');
-    var totalTime = [total.inMinutes, total.inSeconds]
-        .map((seg) => seg.remainder(60).toString().padLeft(2, '0'))
-        .join(':');
-    return "${nowTime} / ${totalTime}";
   }
 
   Widget authorInfo(BuildContext context, VideoInfoModel video) {

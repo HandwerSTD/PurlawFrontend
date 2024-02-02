@@ -10,6 +10,7 @@ class PurlawRRectButton extends StatelessWidget {
   final Widget child;
   final EdgeInsetsGeometry? padding, margin;
   final Function onClick;
+  final List<BoxShadow>? shadow;
   const PurlawRRectButton({
     this.height = 36,
     this.width = 36,
@@ -20,6 +21,7 @@ class PurlawRRectButton extends StatelessWidget {
     this.disabledColor,
     this.padding, this.margin,
     required this.onClick,
+    this.shadow,
     super.key});
 
   @override
@@ -29,7 +31,8 @@ class PurlawRRectButton extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(radius),
-          color: (disabled ? disabledColor : backgroundColor)
+          color: (disabled ? disabledColor : backgroundColor),
+          boxShadow: shadow
         ),
         alignment: Alignment.center,
         width: width,

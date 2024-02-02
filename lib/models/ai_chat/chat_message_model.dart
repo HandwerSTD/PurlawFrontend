@@ -1,3 +1,7 @@
+import 'dart:typed_data';
+
+import 'package:flutter/material.dart';
+
 /// 单条对话的信息，适用于 AI 对话
 class ListAIChatMessageModels {
   List<AIChatMessageModel>? messages;
@@ -25,8 +29,11 @@ class ListAIChatMessageModels {
 
 class AIChatMessageModel {
   String message = "";
+  Uint8List? audio;
   bool isMine = false;
   bool isFirst = false;
+  ValueNotifier<bool> generateCompleted = ValueNotifier(false);
+  ValueNotifier<int> audioIsPlaying = ValueNotifier(-1);
 
   AIChatMessageModel({this.message = "", this.isMine = false, this.isFirst = false});
 

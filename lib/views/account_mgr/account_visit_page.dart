@@ -13,7 +13,7 @@ import 'package:purlaw/views/account_mgr/components/account_page_components.dart
 import 'package:purlaw/views/settings/SettingsPage.dart';
 import 'package:tdesign_flutter/tdesign_flutter.dart';
 
-import '../../common/constants.dart';
+import '../../common/constants/constants.dart';
 import '../../common/network/network_request.dart';
 import '../../common/provider/provider_widget.dart';
 

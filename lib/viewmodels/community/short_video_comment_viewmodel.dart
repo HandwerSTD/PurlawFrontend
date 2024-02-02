@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:purlaw/viewmodels/base_viewmodel.dart';
 
-import '../../common/constants.dart';
+import '../../common/constants/constants.dart';
 import '../../common/network/network_loading_state.dart';
 import '../../common/network/network_request.dart';
 import '../../models/community/short_video_comment_model.dart';

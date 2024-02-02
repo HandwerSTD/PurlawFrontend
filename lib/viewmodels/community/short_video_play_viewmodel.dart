@@ -7,7 +7,7 @@ import 'package:purlaw/viewmodels/base_viewmodel.dart';
 import 'package:purlaw/views/community/short_video/short_video_play_page.dart';
 import 'package:video_player/video_player.dart';
 
-import '../../common/constants.dart';
+import '../../common/constants/constants.dart';
 import '../../common/network/network_request.dart';
 import 'package:flutter/material.dart';
 

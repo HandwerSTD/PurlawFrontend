@@ -65,14 +65,6 @@ class AIChatPageFooter extends StatefulWidget {
 }
 
 class _AIChatPageFooterState extends State<AIChatPageFooter> {
-  // bool replying = false;
-  //
-  // void setReply(bool val) {
-  //   print("setReply: $val");
-  //   setState(() {
-  //     replying = val;
-  //   });
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -92,7 +84,9 @@ class _AIChatPageFooterState extends State<AIChatPageFooter> {
                 RecommendedActionButton(title: '停止对话', onClick: (){
                   model.manuallyBreak();
                 }, show: model.replying, isHeadOrTail: -1,),
-                RecommendedActionButton(title: '保存对话', onClick: (){}, show: (!model.replying && model.messageModels.messages!.length > 1), isHeadOrTail: 1,)
+                RecommendedActionButton(title: '保存并清除对话', onClick: (){
+                  model.saveMessage();
+                }, show: (!model.replying && model.messageModels.messages!.length > 1), isHeadOrTail: 1,)
               ],),
               Container(
                 alignment: Alignment.center,
