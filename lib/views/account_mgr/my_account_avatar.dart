@@ -11,13 +11,13 @@ import 'package:purlaw/viewmodels/main_viewmodel.dart';
 import 'package:purlaw/views/account_mgr/components/account_page_components.dart';
 import 'package:tdesign_flutter/tdesign_flutter.dart';
 import 'package:http/http.dart' as http;
-
+import 'package:purlaw/common/utils/log_utils.dart';
 class MyAccountAvatar extends StatelessWidget {
   const MyAccountAvatar({super.key});
 
   Future uploadNewAvatar(
       {required List<int> avatar, required String cookie}) async {
-    print("[AccountAPI] Uploading new avatar");
+    Log.i("[AccountAPI] Uploading new avatar");
     var req = http.MultipartRequest(
         'post', Uri.parse(HttpGet.getApi(API.userUploadAvatar.api)));
     req.headers
@@ -64,7 +64,7 @@ class MyAccountAvatar extends StatelessWidget {
                         var resp = await response.stream
                             .transform(utf8.decoder)
                             .join();
-                        print("[UploadNewAvatar] res: $resp");
+                        Log.i("[UploadNewAvatar] res: $resp");
                         if (context.mounted) {
                           TDToast.showText(
                               context: context, "${jsonDecode(

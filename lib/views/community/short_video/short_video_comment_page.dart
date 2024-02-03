@@ -7,7 +7,7 @@ import 'package:purlaw/viewmodels/community/short_video_comment_viewmodel.dart';
 import 'package:purlaw/viewmodels/main_viewmodel.dart';
 import 'package:purlaw/viewmodels/theme_viewmodel.dart';
 import 'package:purlaw/views/account_mgr/components/account_page_components.dart';
-
+import 'package:purlaw/common/utils/log_utils.dart';
 import '../../../common/provider/provider_widget.dart';
 import '../../../common/utils/misc.dart';
 import '../../../components/purlaw/button.dart';
@@ -49,7 +49,7 @@ class _ShortVideoCommentListState extends State<ShortVideoCommentList> {
 
     controller.addListener(() {
       if (controller.position.pixels == controller.position.maxScrollExtent) {
-        print("[ShortVideoCommentList] Scrolled to end, loading data");
+        Log.i("[ShortVideoCommentList] Scrolled to end, loading data");
         // loadMoreComment(commentId: widget.video.commentId, add: (elem) {
         //   setState(() {
         //     commentList.add(elem);
@@ -71,28 +71,33 @@ class _ShortVideoCommentListState extends State<ShortVideoCommentList> {
         model.load();
         loadMore = model.loadMoreComments;
       },
-      builder: (context, model, _) => Column(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Expanded(
-                child: MultiStateWidget(
-                  state: model.state,
-                  builder: (context) => ListView(
-                                controller: controller,
-                                children: List.generate(
-                    model.videoCommentList.result!.length,
-                    (index) => Container(
-                          padding: const EdgeInsets.only(left: 24, right: 24, top: 12),
-                          child: CommentBlock(
-                              comment: model.videoCommentList.result![index]),
-                        )),
-                  ),
-                  emptyWidget: const Center(child: Text("空空如也")),
-                )),
-            bottomSendMsgButton(context)
-          ],
-        ),
+      builder: (context, model, _) => RefreshIndicator(
+        onRefresh: () async {
+          await model.load();
+        },
+        child: Column(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                  child: MultiStateWidget(
+                    state: model.state,
+                    builder: (context) => ListView(
+                                  controller: controller,
+                                  children: List.generate(
+                      model.videoCommentList.result!.length,
+                      (index) => Container(
+                            // padding: const EdgeInsets.only(left: 24, right: 24, top: 0),
+                            child: CommentBlock(
+                                comment: model.videoCommentList.result![index]),
+                          )),
+                    ),
+                    emptyWidget: const Center(child: Text("空空如也")),
+                  )),
+              bottomSendMsgButton(context)
+            ],
+          ),
+      ),
     );
   }
 
@@ -145,49 +150,58 @@ class CommentBlock extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Row(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(right: 18, top: 12, bottom: 24),
-              child: UserAvatarLoader(
-                avatar: comment.avatar!,
-                size: 48,
-                radius: 24,
+    return Container(
+      decoration: BoxDecoration(
+        border: Border(bottom: BorderSide(color: Colors.grey[400]!, width: 0.5))
+      ),
+      padding: EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+      child: Column(
+        children: [
+          Row(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(right: 18, top: 12, bottom: 24),
+                child: UserAvatarLoader(
+                  avatar: comment.avatar!,
+                  size: 36,
+                  radius: 18,
+                ),
               ),
-            ),
-            Expanded(
-                child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  comment.author!,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(fontSize: 16),
-                ),
-                ExpandableText(
-                  text: comment.content!,
-                  style: const TextStyle(fontSize: 16),
-                  maxLines: 3,
-                  expand: false,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 4, bottom: 4),
-                  child: Text(
-                    TimeUtils.formatDateTime(comment.timestamp!.toInt()),
-                    style: const TextStyle(fontSize: 14),
+              Expanded(
+                  child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 4.0),
+                    child: Text(
+                      comment.author!,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(fontSize: 13),
+                    ),
                   ),
-                )
-              ],
-            ))
-          ],
-        )
-      ],
+                  ExpandableText(
+                    text: comment.content!,
+                    style: const TextStyle(fontSize: 14),
+                    maxLines: 3,
+                    expand: false,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 4),
+                    child: Text(
+                      TimeUtils.formatDateTime(comment.timestamp!.toInt()),
+                      style: const TextStyle(fontSize: 12, color: Colors.grey),
+                    ),
+                  )
+                ],
+              ))
+            ],
+          )
+        ],
+      ),
     );
   }
 }

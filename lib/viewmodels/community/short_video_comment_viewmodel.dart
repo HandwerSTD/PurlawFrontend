@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:purlaw/viewmodels/base_viewmodel.dart';
-
+import 'package:purlaw/common/utils/log_utils.dart';
 import '../../common/constants/constants.dart';
 import '../../common/network/network_loading_state.dart';
 import '../../common/network/network_request.dart';
@@ -43,7 +43,7 @@ class ShortVideoCommentViewModel extends BaseViewModel {
         changeState(NetworkLoadingState.CONTENT);
       }
     } catch(e) {
-      print(e);
+      Log.e(e);
       makeToast("网络错误");
       changeState(NetworkLoadingState.ERROR);
     }
@@ -64,7 +64,7 @@ class ShortVideoCommentViewModel extends BaseViewModel {
       }
       ++pageNum;
     } catch(e) {
-      print(e);
+      Log.e(e);
       makeToast("网络错误");
     }
   }
@@ -83,7 +83,7 @@ class ShortVideoCommentViewModel extends BaseViewModel {
       makeToast("评论成功");
       reload();
     } catch (e) {
-      print(e);
+      Log.e(e);
       makeToast("评论失败");
     }
   }

@@ -3,7 +3,7 @@ import 'package:purlaw/common/network/network_loading_state.dart';
 import 'package:purlaw/common/network/network_request.dart';
 import 'package:purlaw/models/community/short_video_info_model.dart';
 import 'package:purlaw/viewmodels/base_viewmodel.dart';
-
+import 'package:purlaw/common/utils/log_utils.dart';
 import '../../common/constants/constants.dart';
 
 class ShortVideoSearchViewModel extends BaseViewModel {
@@ -31,10 +31,10 @@ class ShortVideoSearchViewModel extends BaseViewModel {
       if (response["status"] != "success") throw Exception(response["message"]??"未知错误");
       videoList = VideoList.fromJson(response);
       totalCount = response["count_items"];
-      print("[DEBUG] totalCount = $totalCount");
+      Log.i("[DEBUG] totalCount = $totalCount");
       changeState(NetworkLoadingState.CONTENT);
     } catch(e) {
-      print(e);
+      Log.e(e);
       makeToast("网络错误");
       changeState(NetworkLoadingState.ERROR);
     }
@@ -55,7 +55,7 @@ class ShortVideoSearchViewModel extends BaseViewModel {
       }
       ++pageNum;
     } catch(e) {
-      print(e);
+      Log.e(e);
       makeToast("网络错误");
     }
   }

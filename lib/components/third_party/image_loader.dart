@@ -73,7 +73,7 @@ class ImageLoaderWithMemory extends StatelessWidget {
           imageBuilder: (context, image) {
             image.resolve(const ImageConfiguration())
                 .addListener(ImageStreamListener((image, _) {
-                  // print("${image.image.height}x${image.image.width}");
+                  // Log.i("${image.image.height}x${image.image.width}");
               saveRatio(image.image.height.toDouble(), image.image.width.toDouble());
             }));
             return Image(image: image);

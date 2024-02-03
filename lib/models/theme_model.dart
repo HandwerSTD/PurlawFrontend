@@ -4,13 +4,16 @@ import 'package:flutter/material.dart';
 class ThemeModel {
   static const defaultThemeColor = Color.fromARGB(255, 176, 156, 241);
 
+  static const List<Color> presetThemes = [defaultThemeColor, Colors.blueAccent];
+  static const List<String> presetNames = ["法藤紫", "远峰蓝"];
+
   late Color themeColor;
   late ThemeData themeData ;
   bool dark;
   late ColorModel colorModel;
 
-  ThemeModel({required this.dark}) {
-    themeColor = defaultThemeColor;
+  ThemeModel({required this.dark, Color? setColor}) {
+    themeColor = setColor ?? defaultThemeColor;
     themeData = ThemeData(
         fontFamily: 'HarmonyOS Sans SC',
         colorScheme: ColorScheme.fromSeed(
@@ -60,6 +63,7 @@ class ColorModel {
   Color loginTextIndicatorColor;
   Color generalFillColor;
   Color generalFillColorLight;
+  Color generalFillColorBright;
   Color chatInputDividerColor;
   Color secondarySurfaceColor;
 
@@ -69,12 +73,14 @@ class ColorModel {
     required this.chatInputDividerColor,
     required this.loginTextIndicatorColor,
     required this.generalFillColorLight,
-    required this.secondarySurfaceColor
+    required this.secondarySurfaceColor,
+    required this.generalFillColorBright
   });
 
   static ColorModel light() {
     return ColorModel(
       loginTextFieldColor: const Color(0xfff2f2f2),
+        generalFillColorBright: const Color(0xffe4ddfc),
       generalFillColorLight: const Color(0xffb09cf1),
       generalFillColor: const Color(0xFF8465EC),
         chatInputDividerColor: const Color(0xffcbbcfa),
@@ -85,6 +91,7 @@ class ColorModel {
   static ColorModel dark() {
     return ColorModel(
         loginTextFieldColor: Colors.black,
+        generalFillColorBright: const Color(0xffe4ddfc),
         generalFillColorLight: const Color(0xffb09cf1),
         generalFillColor: const Color(0xFF8465EC),
         chatInputDividerColor: const Color(0xffcbbcfa),

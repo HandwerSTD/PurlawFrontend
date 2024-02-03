@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:purlaw/common/utils/database/database_util.dart';
 import 'package:purlaw/models/theme_model.dart';
 
@@ -31,4 +32,9 @@ class ColorsUtil {
 
   static String colorTo6Str(Color color) =>
       ("#${color.red.toRadixString(16)}${color.green.toRadixString(16)}${color.blue.toRadixString(16)}");
+}
+
+
+ThemeModel getThemeModel(context, {bool listen = true}) {
+  return Provider.of<ThemeViewModel>(context, listen: listen).themeModel;
 }

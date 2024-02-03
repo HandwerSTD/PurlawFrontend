@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tdesign_flutter/tdesign_flutter.dart';
-
+import 'package:purlaw/common/utils/log_utils.dart';
 import '../common/network/network_loading_state.dart';
 
 /// 状态管理层级的基础封装
@@ -16,7 +16,7 @@ class BaseViewModel extends ChangeNotifier {
       throw Exception("[BaseViewModel] context not implemented while showing toast");
     }
     if (!context!.mounted) {
-      print("[BaseViewModel] context is not mounted while showing toast");
+      Log.i("[BaseViewModel] context is not mounted while showing toast");
       return;
     }
     TDToast.showText(text, context: context!);

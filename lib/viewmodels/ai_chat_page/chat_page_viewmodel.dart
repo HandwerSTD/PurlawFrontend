@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:purlaw/common/network/chat_api.dart';
 import 'package:purlaw/common/utils/database/database_util.dart';
 import 'package:purlaw/viewmodels/base_viewmodel.dart';
-
+import 'package:purlaw/common/utils/log_utils.dart';
 import '../../common/constants/constants.dart';
 import '../../models/ai_chat/chat_message_model.dart';
 
@@ -45,11 +45,11 @@ class AIChatMsgListViewModel extends BaseViewModel {
     notifyListeners();
   }
   void manuallyBreak() {
-    print("[DEBUG] Manually Break");
+    Log.i("[DEBUG] Manually Break");
     try {
       ChatNetworkRequest.isolate.kill(priority: Isolate.immediate);
     } on Exception catch (e) {
-      print(e);
+      Log.e(e);
     } finally {
       reEnableAfterReceive();
     }
@@ -78,7 +78,7 @@ class AIChatMsgListViewModel extends BaseViewModel {
       reEnableAfterReceive();
       notifyListeners();
     } on Exception catch (e) {
-      print(e);
+      Log.e(e);
       makeToast("生成失败");
       manuallyBreak();
     }

@@ -9,7 +9,7 @@ import 'package:purlaw/viewmodels/community/short_video_upload_viewmodel.dart';
 import 'package:purlaw/viewmodels/main_viewmodel.dart';
 import 'package:purlaw/viewmodels/theme_viewmodel.dart';
 import 'package:tdesign_flutter/tdesign_flutter.dart';
-
+import 'package:purlaw/common/utils/log_utils.dart';
 class ShortVideoUpload extends StatefulWidget {
   final XFile selectedFile;
   const ShortVideoUpload({super.key, required this.selectedFile});
@@ -88,7 +88,7 @@ class _ShortVideoUploadState extends State<ShortVideoUpload> {
               Expanded(
                   child: GestureDetector(
                 onTap: () async {
-                  print("[ShortVideoUpload] selecting another cover");
+                  Log.i("[ShortVideoUpload] selecting another cover");
                   ImagePicker()
                       .pickImage(
                           source: ImageSource.gallery,

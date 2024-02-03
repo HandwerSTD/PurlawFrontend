@@ -9,9 +9,10 @@ import 'package:purlaw/common/utils/database/database_util.dart';
 import 'package:purlaw/main.dart';
 import 'package:purlaw/viewmodels/base_viewmodel.dart';
 import 'package:purlaw/viewmodels/main_viewmodel.dart';
-
+import 'package:purlaw/common/utils/log_utils.dart';
 class AccountLoginViewModel extends BaseViewModel {
   TextEditingController nameCtrl = TextEditingController(), passwdCtrl = TextEditingController();
+  FocusNode nameFocus = FocusNode(), passwdFocus = FocusNode();
   bool loggingIn = false;
 
   AccountLoginViewModel({required super.context});
@@ -20,10 +21,11 @@ class AccountLoginViewModel extends BaseViewModel {
     return nameCtrl.text.isNotEmpty && passwdCtrl.text.isNotEmpty;
   }
   void login() async {
+    nameFocus.unfocus(); passwdFocus.unfocus();
     loggingIn = true;
     notifyListeners();
     var result = await loginUser();
-    print(result);
+    Log.i(result);
     if (result != "success") {
       makeToast(result);
     } else {
@@ -44,10 +46,10 @@ class AccountLoginViewModel extends BaseViewModel {
       });
       var response =
           jsonDecode(httpResult.$1);
-      print(response);
+      Log.i(response);
 
       if (!response["status"].startsWith("success")) {
-        print("login failed");
+        Log.i("login failed");
         return response["message"];
       }
 
@@ -65,7 +67,7 @@ class AccountLoginViewModel extends BaseViewModel {
         ..notifyListeners(); // 应该不会出事吧。。。
 
     } catch(e) {
-      print(e);
+      Log.e(e);
       return "登录失败，请检查网络";
     }
     eventBus.fire(AccountLoginEventBus(needNavigate: true));

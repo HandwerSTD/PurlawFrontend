@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:isolate';
 
 import 'package:purlaw/common/network/network_request.dart';
+import 'package:purlaw/common/utils/log_utils.dart';
 
 import '../constants/constants.dart';
 
@@ -16,9 +17,9 @@ class ChatNetworkRequest {
         API.chatCreateSession.api,
         HttpGet.jsonHeadersCookie(cookie),
         ({"type": "ask", "data": text})).timeout(const Duration(seconds: 10)));
-    print(response);
+    Log.i(response);
     String session = response["session_id"];
-    print(session);
+    Log.i(session);
     await isolateFlushSession(append,
         session: session, cookie: cookie, callback: () {});
   }
@@ -36,12 +37,12 @@ class ChatNetworkRequest {
           // 到达结尾
           message = message.replaceAll("<EOF>", "");
           await append(message);
-          print("[ChatAPI] Isolate killed");
+          Log.i("[ChatAPI] Isolate killed");
           isolate.kill(priority: Isolate.immediate);
           callback();
         } else if (message.startsWith("<H_ERR>")) {
           // 出现错误
-          print("[ChatAPI] Isolate killed due to error");
+          Log.i("[ChatAPI] Isolate killed due to error");
           isolate.kill(priority: Isolate.immediate);
           throw Exception(message.replaceAll("<H_ERR>", ""));
         } else {
@@ -53,7 +54,7 @@ class ChatNetworkRequest {
         }
       }
       if (message is SendPort) {
-        print("[ChatAPI] sendPort got");
+        Log.i("[ChatAPI] sendPort got");
         message.send({"cookie": cookie, "session": session});
       }
     });
@@ -75,7 +76,7 @@ class ChatNetworkRequest {
           // var chatRes = jsonDecode(Utf8Decoder().convert(value.bodyBytes));
           var chatRes = jsonDecode(await HttpGet.post(API.chatFlushSession.api,
               HttpGet.jsonHeadersCookie(cookie), {"session_id": session}));
-          print(chatRes);
+          Log.i(chatRes);
           if (chatRes["status"] != "success") {
             throw Exception(chatRes["message"]);
           }
@@ -87,7 +88,7 @@ class ChatNetworkRequest {
           sp.send((chatRes["data"].toString()));
         }
       } catch (err) {
-        print(err);
+        Log.e(err);
         sp.send("<H_ERR>$err");
       } finally {
         sp.send("<H_EOF>");

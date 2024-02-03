@@ -43,7 +43,7 @@ class _PurlawAppMainPageTabBarState extends State<PurlawAppMainPageTabBar> {
     return LayoutBuilder(
       builder: (_, constraints) {
         String screenType = Responsive.checkWidth(constraints.maxWidth);
-        // print("[DEBUG] screenType = $screenType");
+        // Log.i("[DEBUG] screenType = $screenType");
         bool rBreak = screenType == Responsive.lg;
         Color bg = (rBreak
             ? themeModel.colorModel.secondarySurfaceColor

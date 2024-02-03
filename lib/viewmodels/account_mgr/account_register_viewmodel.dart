@@ -4,7 +4,7 @@ import 'package:crypto/crypto.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:purlaw/common/network/network_request.dart';
 import 'package:purlaw/viewmodels/base_viewmodel.dart';
-
+import 'package:purlaw/common/utils/log_utils.dart';
 import '../../common/constants/constants.dart';
 
 class AccountRegisterViewModel extends BaseViewModel {
@@ -31,20 +31,19 @@ class AccountRegisterViewModel extends BaseViewModel {
     (bool, String) verify = verifyRegister();
     if (!verify.$1) return verify.$2;
     try {
-      print("[Register] registering ${nameCtrl.text} ${passwdCtrl.text} ${sha1.convert(utf8.encode(passwdCtrl.text)).toString()}");
       var response = jsonDecode(await HttpGet.post(API.userRegister.api, HttpGet.jsonHeaders, {
         "user": nameCtrl.text,
         "password": sha1.convert(utf8.encode(passwdCtrl.text)).toString()
       }));
-      print(response);
+      Log.i(response);
 
       if (!response["status"].startsWith("success")) {
-        print("login failed");
+        Log.i("login failed");
         return response["message"];
       }
 
     } catch(e) {
-      print(e);
+      Log.e(e);
       return "注册失败";
     }
     return "注册成功";
@@ -54,7 +53,7 @@ class AccountRegisterViewModel extends BaseViewModel {
     registering = true; notifyListeners();
     var result = await registerNewAccount();
     registering = false; notifyListeners();
-    print(result);
+    Log.i(result);
     makeToast(result);
   }
 }

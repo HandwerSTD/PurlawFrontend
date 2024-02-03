@@ -6,7 +6,7 @@ import 'package:purlaw/models/community/short_video_info_model.dart';
 import 'package:purlaw/viewmodels/base_viewmodel.dart';
 import 'package:purlaw/views/community/short_video/short_video_play_page.dart';
 import 'package:video_player/video_player.dart';
-
+import 'package:purlaw/common/utils/log_utils.dart';
 import '../../common/constants/constants.dart';
 import '../../common/network/network_request.dart';
 import 'package:flutter/material.dart';
@@ -35,9 +35,9 @@ class ShortVideoPlayViewModel extends BaseViewModel {
       videoList.result?.addAll(list.result!.map((e) => e));
       // pageList.addAll(list.result!.map((e) => VideoPlayBlock(nowPlaying: e)));
       notifyListeners();
-      print("[DEBUG] New Page Load completed");
+      Log.i("[DEBUG] New Page Load completed");
     } catch(e) {
-      print(e);
+      Log.e(e);
       makeToast("网络错误");
     }
   }
@@ -68,9 +68,9 @@ class ShortVideoPlayByListViewModel extends BaseViewModel {
   //     videoList.result?.addAll(list.result!.map((e) => e));
   //     pageList.addAll(list.result!.map((e) => VideoPlayBlock(nowPlaying: e)));
   //     notifyListeners();
-  //     print("[DEBUG] New Page Load completed");
+  //     Log.i("[DEBUG] New Page Load completed");
   //   } catch(e) {
-  //     print(e);
+  //     Log.e(e);
   //     makeToast("网络错误");
   //   }
   // }
@@ -95,7 +95,7 @@ class ShortVideoPlayBlockViewModel extends BaseViewModel {
       assert(response["message"] == 0 || response["message"] == 1);
       nowPlaying.meLiked = response["message"];
     } on Exception catch (e) {
-      print(e);
+      Log.e(e);
       makeToast("网络错误");
     }
   }
@@ -105,7 +105,7 @@ class ShortVideoPlayBlockViewModel extends BaseViewModel {
     if (cookie != "") {
       getVideoIsLiked();
     }
-    // print(HttpGet.getApi(API.videoFile.api) + nowPlaying.sha1!);
+    // Log.i(HttpGet.getApi(API.videoFile.api) + nowPlaying.sha1!);
     videoPlayerController = VideoPlayerController.networkUrl(Uri.parse(HttpGet.getApi(API.videoFile.api) + nowPlaying.sha1!));
     videoPlayerController.initialize().then((_) {
         videoController = ChewieController(
@@ -149,7 +149,7 @@ class ShortVideoPlayBlockViewModel extends BaseViewModel {
       }));
       if (response["status"] != "success") throw Exception(response["message"]);
     } catch(e) {
-      print(e);
+      Log.e(e);
       makeToast("${(origin == 0 ? "" : "取消")}点赞失败");
       nowPlaying.meLiked = origin;
       notifyListeners();

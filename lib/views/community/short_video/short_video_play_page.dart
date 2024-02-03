@@ -17,7 +17,7 @@ import 'package:purlaw/views/community/short_video/short_video_comment_page.dart
 import 'package:tdesign_flutter/tdesign_flutter.dart';
 import 'package:video_player/video_player.dart';
 import '../../../common/utils/misc.dart';
-
+import 'package:purlaw/common/utils/log_utils.dart';
 class ShortVideoPlayPage extends StatefulWidget {
   final VideoInfoModel paramVideo;
   const ShortVideoPlayPage({required this.paramVideo, super.key});
@@ -68,7 +68,7 @@ class _ShortVideoPlayPageState extends State<ShortVideoPlayPage> {
             scrollDirection: Axis.vertical,
             onPageChanged: (index) {
               if (index == model.videoList.result!.length - 1) {
-                print("[ShortVideoPlay] Scrolled to end");
+                Log.i("[ShortVideoPlay] Scrolled to end");
                 model.loadMoreVideo(cookie);
               }
             },
@@ -144,7 +144,7 @@ class _ShortVideoPlayByListState extends State<ShortVideoPlayByList> {
             scrollDirection: Axis.vertical,
             onPageChanged: (index) async {
               if (index == model.videoList.result!.length - 1) {
-                print("[ShortVideoPlay] Scrolled to end");
+                Log.i("[ShortVideoPlay] Scrolled to end");
                 model.loadMoreVideo(cookie);
               }
             },
@@ -311,11 +311,11 @@ class _VideoPlayBlockState extends State<VideoPlayBlock> {
                               left: 18, right: 8, top: 0, bottom: 12),
                           child: GestureDetector(
                             onDoubleTap: () {
-                              print("[ShortVideoPlay] test for double tap");
+                              Log.i("[ShortVideoPlay] test for double tap");
                             },
                             onTap: () {
                               // if (!model.loaded) return;
-                              print("[ShortVideoPlay] open desc");
+                              Log.i("[ShortVideoPlay] open desc");
                               showModalBottomSheet(
                                   context: context,
                                   builder: (context) {
@@ -422,7 +422,6 @@ class _VideoPlayBlockState extends State<VideoPlayBlock> {
         Navigator.push(context, MaterialPageRoute(builder: (_) => AccountVisitPage(userId: video.authorId!))).then((value) {
           model.autoPlay = true;
         });
-        // todo: pause & jump
       },
       child: Container(
         margin: const EdgeInsets.only(left: 0, top: 4, bottom: 12),
@@ -460,7 +459,7 @@ class _VideoPlayBlockState extends State<VideoPlayBlock> {
             icon:
                 (video.meLiked == 1 ? Icons.thumb_up_rounded : Icons.thumb_up_outlined),
             onPressed: () {
-              print("switchVideoLike");
+              Log.i("switchVideoLike");
               if (getCookie(context, listen: false).isEmpty) {
                 TDToast.showText('请先登录', context: context);
                 Future.delayed(const Duration(seconds: 1)).then((value) {

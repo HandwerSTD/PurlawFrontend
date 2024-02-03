@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:purlaw/common/constants/constants.dart';
 import 'package:purlaw/common/network/network_request.dart';
+import 'package:purlaw/common/utils/database/database_util.dart';
 import 'package:purlaw/common/utils/misc.dart';
 import 'package:purlaw/components/purlaw/purlaw_components.dart';
 import 'package:purlaw/models/theme_model.dart';
@@ -14,6 +15,7 @@ import 'package:purlaw/viewmodels/theme_viewmodel.dart';
 import 'package:tdesign_flutter/tdesign_flutter.dart';
 import 'package:async/async.dart';
 
+import '../../common/utils/log_utils.dart';
 import '../../models/ai_chat/chat_message_model.dart';
 
 class PurlawChatMessageBlock extends StatefulWidget {
@@ -279,15 +281,15 @@ class _PurlawChatMessageBlockState extends State<PurlawChatMessageBlock> {
                     HttpGet.jsonHeadersCookie(
                         getCookie(context, listen: false)),
                     {"voice_text": widget.msg.message}), onCancel: () {
-              print("[Network] canceled");
+              Log.i("[Network] canceled");
             });
             var response = await audioFuture?.valueOrCancellation(null);
             if (response == null) return;
-            print("[DEBUG] voice got");
+            Log.i("[DEBUG] voice got");
             try {
               var failedBody = const Utf8Decoder().convert(response);
               // failed
-              print(failedBody);
+              Log.i(failedBody);
             } catch (e) {
               // success
               widget.msg.audio = response;
@@ -305,7 +307,7 @@ class _PurlawChatMessageBlockState extends State<PurlawChatMessageBlock> {
           }
           return;
         } catch (e) {
-          print(e);
+          Log.e(e);
           widget.msg.audioIsPlaying.value = -2;
         }
       }
@@ -327,7 +329,7 @@ class _PurlawChatMessageBlockState extends State<PurlawChatMessageBlock> {
         audioPlayer.play(BytesSource(widget.msg.audio!));
       }
     } on Exception catch (e) {
-      print(e);
+      Log.e(e);
       if (context.mounted) {
         TDToast.showText("播放失败", context: context);
       }

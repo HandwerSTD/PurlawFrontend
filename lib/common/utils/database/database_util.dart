@@ -12,6 +12,7 @@ class DatabaseUtil {
   static void setFirstOpen() {
     KVBox.insert(DatabaseConst.firstOpen, DatabaseConst.dbTrue);
     KVBox.insert(DatabaseConst.themeColor, "#ca80ba");
+    KVBox.insert(DatabaseConst.autoAudioPlay, DatabaseConst.dbFalse);
     storeServerAddress("http://100.86.9.47:5000");
   }
 
@@ -39,6 +40,7 @@ class DatabaseUtil {
   static void storeServerAddress(String server) {
     KVBox.insert(DatabaseConst.serverAddress, server);
   }
+  static bool get getAutoAudioPlay => KVBox.query(DatabaseConst.autoAudioPlay) == DatabaseConst.dbTrue;
 }
 
 class HistoryDatabaseUtil {
@@ -58,6 +60,10 @@ class HistoryDatabaseUtil {
       result.add((key, await box.get(key)));
     }
     return result;
+  }
+  static Future<void> deleteHistory(int value) async {
+    var box = await Hive.openLazyBox(KVBox.historyChats);
+    await box.delete(value);
   }
 }
 
@@ -97,6 +103,7 @@ class DatabaseConst {
   // Preferences
   static const String firstOpen = "IS_FIRST_OPEN";
   static const String themeColor = "THEME_COLOR";
+  static const String autoAudioPlay = "AUTO_AUDIO_PLAY";
 
   // User login info
   static const String userCookie = "USER_COOKIE";

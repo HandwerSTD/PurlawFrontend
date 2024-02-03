@@ -4,7 +4,7 @@ import 'dart:typed_data';
 
 import 'package:http/http.dart' as http;
 import 'package:purlaw/models/account_mgr/user_info_model.dart';
-
+import 'package:purlaw/common/utils/log_utils.dart';
 import '../constants/constants.dart';
 import '../utils/database/database_util.dart';
 
@@ -54,7 +54,7 @@ class HttpGet {
   }
   static Future<Uint8List> postGetBodyBytes(String api, Map<String, String> headers,
       Map<String, dynamic> body) async {
-    print("getting bytes");
+    Log.i("getting bytes");
     var response = await http.post(Uri.parse(getApi(api)),
         headers: headers, body: jsonEncode(body));
     if (response.statusCode != HTTP_OK) {
@@ -70,7 +70,7 @@ class NetworkRequest {
       String user, String cookie) async {
     var response = jsonDecode(await HttpGet.post(
         API.userInfo.api, HttpGet.jsonHeaders, {'user': user}));
-    // print(response);
+    // Log.i(response);
     if (!(response["status"] as String).startsWith("success")) {
       throw Exception(response["message"]);
     }
@@ -83,10 +83,10 @@ class NetworkRequest {
         HttpGet.jsonHeaders,
         {"user": username, "password": passwd});
     var response = jsonDecode(httpResult.$1);
-    print(response);
+    Log.i(response);
 
     if (!response["status"].startsWith("success")) {
-      print("login failed");
+      Log.i("login failed");
       throw Exception(response["message"]);
     }
 

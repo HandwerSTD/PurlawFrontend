@@ -14,7 +14,7 @@ import 'package:purlaw/viewmodels/theme_viewmodel.dart';
 import 'package:purlaw/views/main_page.dart';
 import 'package:purlaw/views/oobe/oobe.dart';
 import 'package:tdesign_flutter/tdesign_flutter.dart';
-
+import 'package:purlaw/common/utils/log_utils.dart';
 void main() {
   runApp(const MyApp());
 }
@@ -79,7 +79,7 @@ class _ProgramEntryState extends State<ProgramEntry> {
 
       // 获取主题色
       final String themeColor = DatabaseUtil.getThemeColor();
-      print("[DEBUG] read theme color = $themeColor");
+      Log.i("[DEBUG] read theme color = $themeColor");
       Provider.of<ThemeViewModel>(context, listen: false)
           .setThemeColor(ColorsUtil.hexToColor(themeColor), update: false);
       if ((MediaQuery.of(context).platformBrightness == Brightness.dark) != Provider.of<ThemeViewModel>(context, listen: false).themeModel.dark) {
@@ -96,14 +96,15 @@ class _ProgramEntryState extends State<ProgramEntry> {
       final String cookie = DatabaseUtil.getCookie();
       Provider.of<MainViewModel>(context, listen: false).cookies = cookie;
       if (cookie.isNotEmpty) {
-        print("[DEBUG] cookie detected, refreshing");
+        ("[DEBUG] cookie detected, refreshing");
         Provider.of<MainViewModel>(context, listen: false).refreshCookies();
       }
+      getMainViewModel(context, listen: false).autoAudioPlay = DatabaseUtil.getAutoAudioPlay;
 
       Provider.of<MainViewModel>(context, listen: false)
           .changeState(NetworkLoadingState.CONTENT);
     });
-    print("main inited");
+    Log.i("main inited");
   }
 
   @override

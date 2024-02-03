@@ -9,7 +9,7 @@ import 'package:purlaw/views/account_mgr/account_login.dart';
 import 'package:purlaw/views/account_mgr/components/account_page_components.dart';
 import 'package:purlaw/views/ai_chat_page/chat_history_page.dart';
 import 'package:purlaw/views/community/short_video/short_video_upload_page.dart';
-import 'package:purlaw/views/settings/SettingsPage.dart';
+import 'package:purlaw/views/settings/settings_page.dart';
 import 'package:tdesign_flutter/tdesign_flutter.dart';
 
 import '../../common/utils/misc.dart';

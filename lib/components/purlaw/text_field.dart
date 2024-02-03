@@ -12,18 +12,22 @@ class PurlawLoginTextField extends StatelessWidget {
   final EdgeInsetsGeometry? margin;
   final String hint;
   final TextEditingController controller;
+  final FocusNode? focusNode;
   final bool? secureText;
+  final Function(String)? onSubmitted;
   const PurlawLoginTextField(
       {required this.hint,
       required this.controller,
       this.secureText,
       this.margin,
+        this.focusNode,
+        this.onSubmitted,
       super.key});
 
   @override
   Widget build(BuildContext context) {
     ThemeModel themeModel = Provider.of<ThemeViewModel>(context).themeModel;
-    // print("width: ${MediaQuery.of(context).size.width}");
+    // Log.i("width: ${MediaQuery.of(context).size.width}");
     return LayoutBuilder(builder: (context, constraints) {
       return Container(
         decoration: BoxDecoration(
@@ -35,11 +39,15 @@ class PurlawLoginTextField extends StatelessWidget {
         margin: margin,
         width: Responsive.assignWidthSmall(constraints.maxWidth),
         child: TextField(
+          focusNode: focusNode,
           autocorrect: false,
           controller: controller,
           decoration: loginInputDeco(hint),
           obscureText: secureText ?? false,
           style: const TextStyle(fontSize: 14),
+          onSubmitted: onSubmitted,
+          enableIMEPersonalizedLearning: false,
+          enableSuggestions: false,
         ),
       );
     });

@@ -11,9 +11,9 @@ import 'package:purlaw/viewmodels/account_mgr/account_login_viewmodel.dart';
 import 'package:purlaw/viewmodels/theme_viewmodel.dart';
 import 'package:purlaw/views/account_mgr/account_register.dart';
 import 'package:tdesign_flutter/tdesign_flutter.dart';
-
+import 'package:purlaw/common/utils/log_utils.dart';
 import '../../models/theme_model.dart';
-import '../settings/SettingsPage.dart';
+import '../settings/settings_page.dart';
 
 class AccountLoginPage extends StatelessWidget {
   final bool showBack;
@@ -50,7 +50,7 @@ class _AccountLoginPageBodyState extends State<AccountLoginPageBody> {
       _  = eventBus.on<AccountLoginEventBus>().listen((event) {
       if (event.needNavigate) {
         TDToast.showText("登陆成功", context: context);
-        print("[EventBus] received, navigating");
+        Log.i("[EventBus] received, navigating");
         Navigator.pop(context);
       }
     });
@@ -101,17 +101,27 @@ class _AccountLoginPageBodyState extends State<AccountLoginPageBody> {
                   Column(
                     children: [
                       PurlawLoginTextField(
+                        focusNode: model.nameFocus,
                         hint: '用户名',
                         controller: model.nameCtrl,
                         margin:
                             const EdgeInsets.only(left: 32, right: 32, top: 24, bottom: 6),
+                        onSubmitted: (val){
+                          model.nameFocus.unfocus();
+                          model.passwdFocus.requestFocus();
+                        },
                       ),
                       PurlawLoginTextField(
+                        focusNode: model.passwdFocus,
                         hint: '密码',
                         controller: model.passwdCtrl,
                         margin:
                             const EdgeInsets.only(left: 32, right: 32, top: 6, bottom: 32),
                         secureText: true,
+                        onSubmitted: (val) {
+                          if (model.loggingIn) return;
+                          model.login();
+                        },
                       ),
                       PurlawRRectButton(
                         onClick: () async {
