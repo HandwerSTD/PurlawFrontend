@@ -40,6 +40,7 @@ class ShortVideoCommentList extends StatefulWidget {
 }
 
 class _ShortVideoCommentListState extends State<ShortVideoCommentList> {
+  static const tag = "ShortVideo Comment";
   ScrollController controller = ScrollController();
   Function()? loadMore;
 
@@ -49,14 +50,8 @@ class _ShortVideoCommentListState extends State<ShortVideoCommentList> {
 
     controller.addListener(() {
       if (controller.position.pixels == controller.position.maxScrollExtent) {
-        Log.i("[ShortVideoCommentList] Scrolled to end, loading data");
-        // loadMoreComment(commentId: widget.video.commentId, add: (elem) {
-        //   setState(() {
-        //     commentList.add(elem);
-        //   });
-        // }, pageNum: pageIndex + 1).then((value) {
-        //   if (value > 0) ++pageIndex;
-        // });// 到底部加载新内容
+        Log.d(tag: tag, "Scrolled to end, loading data");
+        // 到底部加载新内容
         if (loadMore != null) loadMore!();
       }
     });

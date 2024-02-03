@@ -18,6 +18,8 @@ import 'package:async/async.dart';
 import '../../common/utils/log_utils.dart';
 import '../../models/ai_chat/chat_message_model.dart';
 
+const tag = "Chat MessageBlock";
+
 class PurlawChatMessageBlock extends StatefulWidget {
   final AIChatMessageModel msg;
   const PurlawChatMessageBlock({required this.msg, super.key});
@@ -281,15 +283,15 @@ class _PurlawChatMessageBlockState extends State<PurlawChatMessageBlock> {
                     HttpGet.jsonHeadersCookie(
                         getCookie(context, listen: false)),
                     {"voice_text": widget.msg.message}), onCancel: () {
-              Log.i("[Network] canceled");
+              Log.i(tag: tag,"[Network] canceled");
             });
             var response = await audioFuture?.valueOrCancellation(null);
             if (response == null) return;
-            Log.i("[DEBUG] voice got");
+            Log.i(tag: tag,"voice got", );
             try {
               var failedBody = const Utf8Decoder().convert(response);
               // failed
-              Log.i(failedBody);
+              Log.i(tag: tag,failedBody);
             } catch (e) {
               // success
               widget.msg.audio = response;
@@ -307,7 +309,7 @@ class _PurlawChatMessageBlockState extends State<PurlawChatMessageBlock> {
           }
           return;
         } catch (e) {
-          Log.e(e);
+          Log.e(e, tag: "Chat MessageBlock");
           widget.msg.audioIsPlaying.value = -2;
         }
       }
@@ -329,7 +331,7 @@ class _PurlawChatMessageBlockState extends State<PurlawChatMessageBlock> {
         audioPlayer.play(BytesSource(widget.msg.audio!));
       }
     } on Exception catch (e) {
-      Log.e(e);
+      Log.e(e, tag: "Chat MessageBlock");
       if (context.mounted) {
         TDToast.showText("播放失败", context: context);
       }

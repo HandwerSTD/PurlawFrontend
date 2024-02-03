@@ -10,6 +10,7 @@ import 'package:purlaw/components/third_party/image_loader.dart';
 import 'package:purlaw/models/community/short_video_info_model.dart';
 import 'package:purlaw/viewmodels/community/short_video_list_viewmodel.dart';
 import 'package:purlaw/viewmodels/main_viewmodel.dart';
+import 'package:purlaw/viewmodels/theme_viewmodel.dart';
 import 'package:purlaw/views/account_mgr/components/account_page_components.dart';
 import 'package:purlaw/views/community/community_search_page.dart';
 import 'package:purlaw/views/community/short_video/short_video_play_page.dart';
@@ -114,77 +115,90 @@ class GridVideoBlock extends StatelessWidget {
                           loadMoreVideo: loadMore!)));
             }
           },
-          child: Padding(
-            padding: const EdgeInsets.only(top: 4, bottom: 12, left: 4, right: 4),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                    alignment: Alignment.center,
-                    margin: const EdgeInsets.only(top: 5, bottom: 12),
-                    child: ImageLoader(
-                      width: 180,
-                      height: (video.coverRatio! * 180),
-                      url:
-                          HttpGet.getApi(API.videoCover.api) + video.coverSha1!,
-                      loadingWidget: Container(
-                        width: 180,
-                        alignment: Alignment.center,
-                        color: Colors.grey.withOpacity(0.3),
-                        child: const TDLoading(
-                          icon: TDLoadingIcon.circle,
-                          size: TDLoadingSize.large,
-                        ),
-                      ),
-                    )),
-                Padding(
-                  padding:
-                      const EdgeInsets.only(left: 10, right: 10, bottom: 6),
-                  child: Text(
-                    video.title!,
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 2,
-                    style: const TextStyle(fontSize: 13, letterSpacing: 0.1),
-                  ),
+          child: Container(
+            margin: const EdgeInsets.only(top: 2, bottom: 4, left: 4, right: 4),
+          decoration: BoxDecoration(
+            border: Border.all(width: 0.1, color: Colors.grey[400]!),
+            borderRadius: BorderRadius.circular(4)
+          ),
+          child: ClipRRect(
+              borderRadius: BorderRadius.circular(4),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: getThemeModel(context).dark ? Colors.black : Colors.white,
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 10, right: 10),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          UserAvatarLoader(
-                              avatar: video.avatar!, size: 18, radius: 9),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 6, right: 1),
-                            child: Text(
-                              video.author!,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(fontSize: 12),
+                padding: const EdgeInsets.only(top: 0, bottom: 8, left: 0, right: 0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                        alignment: Alignment.center,
+                        margin: const EdgeInsets.only(top: 0, bottom: 12),
+                        child: ImageLoader(
+                          width: 180,
+                          height: (video.coverRatio! * 180),
+                          url:
+                              HttpGet.getApi(API.videoCover.api) + video.coverSha1!,
+                          loadingWidget: Container(
+                            width: 180,
+                            alignment: Alignment.center,
+                            color: Colors.grey.withOpacity(0.3),
+                            child: const TDLoading(
+                              icon: TDLoadingIcon.circle,
+                              size: TDLoadingSize.large,
                             ),
+                          ),
+                        )),
+                    Padding(
+                      padding:
+                          const EdgeInsets.only(left: 10, right: 10, bottom: 6),
+                      child: Text(
+                        video.title!,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 2,
+                        style: const TextStyle(fontSize: 13, letterSpacing: 0.1),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 10, right: 10),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              UserAvatarLoader(
+                                  avatar: video.avatar!, size: 18, radius: 9),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 6, right: 1),
+                                child: Text(
+                                  video.author!,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(fontSize: 12),
+                                ),
+                              )
+                            ],
+                          ),
+                          Row(
+                            // crossAxisAlignment: en,
+                            children: [
+                              const Icon(
+                                size: 16,
+                                TypIconData(0xE087),
+                                // color: Color(0xbb000000),
+                              ),
+                              Text(" ${video.like!}")
+                            ],
                           )
                         ],
                       ),
-                      Row(
-                        // crossAxisAlignment: en,
-                        children: [
-                          const Icon(
-                            size: 16,
-                            TypIconData(0xE087),
-                            // color: Color(0xbb000000),
-                          ),
-                          Text(" ${video.like!}")
-                        ],
-                      )
-                    ],
-                  ),
+                    ),
+                    // Divider()
+                  ],
                 ),
-                // Divider()
-              ],
+              ),
             ),
           ),
         )

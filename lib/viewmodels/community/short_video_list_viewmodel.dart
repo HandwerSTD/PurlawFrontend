@@ -6,6 +6,8 @@ import 'package:purlaw/viewmodels/base_viewmodel.dart';
 import 'package:purlaw/common/utils/log_utils.dart';
 import '../../common/constants/constants.dart';
 
+const tag = "ShortVideo List ViewModel";
+
 class ShortVideoListViewModel extends BaseViewModel {
   VideoList videoList = VideoList();
 
@@ -21,7 +23,7 @@ class ShortVideoListViewModel extends BaseViewModel {
       notifyListeners();
       changeState(NetworkLoadingState.CONTENT);
     } catch(e) {
-      Log.e(e);
+      Log.e(tag: tag, e);
       makeToast("网络错误");
       changeState(NetworkLoadingState.ERROR);
     }
@@ -36,7 +38,7 @@ class ShortVideoListViewModel extends BaseViewModel {
       videoList.result?.addAll(list.result!.map((e) => e));
       notifyListeners();
     } catch(e) {
-      Log.e(e);
+      Log.e(tag: tag, e);
       makeToast("网络错误");
     }
   }

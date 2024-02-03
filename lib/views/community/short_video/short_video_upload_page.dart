@@ -88,7 +88,7 @@ class _ShortVideoUploadState extends State<ShortVideoUpload> {
               Expanded(
                   child: GestureDetector(
                 onTap: () async {
-                  Log.i("[ShortVideoUpload] selecting another cover");
+                  Log.i(tag: "ShortVideo Upload", "selecting another cover");
                   ImagePicker()
                       .pickImage(
                           source: ImageSource.gallery,

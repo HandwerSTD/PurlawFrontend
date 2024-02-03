@@ -7,6 +7,8 @@ import 'package:purlaw/viewmodels/base_viewmodel.dart';
 import 'package:purlaw/common/utils/log_utils.dart';
 import '../../common/network/network_request.dart';
 
+const tag = "Account Visit ViewModel";
+
 class AccountVisitViewModel extends BaseViewModel {
   late UserInfoModel userInfoModel;
   String userId;
@@ -21,7 +23,7 @@ class AccountVisitViewModel extends BaseViewModel {
       userInfoModel = UserInfoModel.fromJson(response["result"]);
       changeState(NetworkLoadingState.CONTENT);
     } catch(e) {
-      Log.e(e);
+      Log.e(tag: tag, e);
       makeToast("加载失败");
       changeState(NetworkLoadingState.ERROR);
     }

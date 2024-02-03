@@ -10,6 +10,9 @@ import 'package:purlaw/main.dart';
 import 'package:purlaw/viewmodels/base_viewmodel.dart';
 import 'package:purlaw/viewmodels/main_viewmodel.dart';
 import 'package:purlaw/common/utils/log_utils.dart';
+
+const tag = "Account Login ViewModel";
+
 class AccountLoginViewModel extends BaseViewModel {
   TextEditingController nameCtrl = TextEditingController(), passwdCtrl = TextEditingController();
   FocusNode nameFocus = FocusNode(), passwdFocus = FocusNode();
@@ -25,7 +28,7 @@ class AccountLoginViewModel extends BaseViewModel {
     loggingIn = true;
     notifyListeners();
     var result = await loginUser();
-    Log.i(result);
+    Log.i(tag: tag,result);
     if (result != "success") {
       makeToast(result);
     } else {
@@ -46,10 +49,10 @@ class AccountLoginViewModel extends BaseViewModel {
       });
       var response =
           jsonDecode(httpResult.$1);
-      Log.i(response);
+      Log.i(tag: tag,response);
 
       if (!response["status"].startsWith("success")) {
-        Log.i("login failed");
+        Log.i(tag: tag,"login failed");
         return response["message"];
       }
 
@@ -67,7 +70,7 @@ class AccountLoginViewModel extends BaseViewModel {
         ..notifyListeners(); // 应该不会出事吧。。。
 
     } catch(e) {
-      Log.e(e);
+      Log.e(tag: tag, e);
       return "登录失败，请检查网络";
     }
     eventBus.fire(AccountLoginEventBus(needNavigate: true));

@@ -88,7 +88,7 @@ class ChatNetworkRequest {
           sp.send((chatRes["data"].toString()));
         }
       } catch (err) {
-        Log.e(err);
+        Log.e(tag:"ChatAPI", err);
         sp.send("<H_ERR>$err");
       } finally {
         sp.send("<H_EOF>");

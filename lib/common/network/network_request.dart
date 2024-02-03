@@ -54,7 +54,7 @@ class HttpGet {
   }
   static Future<Uint8List> postGetBodyBytes(String api, Map<String, String> headers,
       Map<String, dynamic> body) async {
-    Log.i("getting bytes");
+    Log.i("getting bytes", tag: "HTTP PostGetBodyBytes");
     var response = await http.post(Uri.parse(getApi(api)),
         headers: headers, body: jsonEncode(body));
     if (response.statusCode != HTTP_OK) {
@@ -83,10 +83,10 @@ class NetworkRequest {
         HttpGet.jsonHeaders,
         {"user": username, "password": passwd});
     var response = jsonDecode(httpResult.$1);
-    Log.i(response);
+    Log.i(response, tag: "RefreshCookies");
 
     if (!response["status"].startsWith("success")) {
-      Log.i("login failed");
+      Log.i("login failed", tag: "RefreshCookies");
       throw Exception(response["message"]);
     }
 

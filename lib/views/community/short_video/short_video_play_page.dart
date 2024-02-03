@@ -18,6 +18,8 @@ import 'package:tdesign_flutter/tdesign_flutter.dart';
 import 'package:video_player/video_player.dart';
 import '../../../common/utils/misc.dart';
 import 'package:purlaw/common/utils/log_utils.dart';
+
+const tag = "ShortVideo PlayPage";
 class ShortVideoPlayPage extends StatefulWidget {
   final VideoInfoModel paramVideo;
   const ShortVideoPlayPage({required this.paramVideo, super.key});
@@ -68,7 +70,7 @@ class _ShortVideoPlayPageState extends State<ShortVideoPlayPage> {
             scrollDirection: Axis.vertical,
             onPageChanged: (index) {
               if (index == model.videoList.result!.length - 1) {
-                Log.i("[ShortVideoPlay] Scrolled to end");
+                Log.d(tag: tag, "[ShortVideoPlay] Scrolled to end");
                 model.loadMoreVideo(cookie);
               }
             },
@@ -144,7 +146,7 @@ class _ShortVideoPlayByListState extends State<ShortVideoPlayByList> {
             scrollDirection: Axis.vertical,
             onPageChanged: (index) async {
               if (index == model.videoList.result!.length - 1) {
-                Log.i("[ShortVideoPlay] Scrolled to end");
+                Log.i(tag: tag, "[ShortVideoPlay] Scrolled to end");
                 model.loadMoreVideo(cookie);
               }
             },
@@ -311,11 +313,11 @@ class _VideoPlayBlockState extends State<VideoPlayBlock> {
                               left: 18, right: 8, top: 0, bottom: 12),
                           child: GestureDetector(
                             onDoubleTap: () {
-                              Log.i("[ShortVideoPlay] test for double tap");
+                              Log.d(tag: tag, "test for double tap");
                             },
                             onTap: () {
                               // if (!model.loaded) return;
-                              Log.i("[ShortVideoPlay] open desc");
+                              Log.d(tag: tag, "open desc");
                               showModalBottomSheet(
                                   context: context,
                                   builder: (context) {
@@ -459,7 +461,7 @@ class _VideoPlayBlockState extends State<VideoPlayBlock> {
             icon:
                 (video.meLiked == 1 ? Icons.thumb_up_rounded : Icons.thumb_up_outlined),
             onPressed: () {
-              Log.i("switchVideoLike");
+              Log.i(tag: tag, "switchVideoLike");
               if (getCookie(context, listen: false).isEmpty) {
                 TDToast.showText('请先登录', context: context);
                 Future.delayed(const Duration(seconds: 1)).then((value) {

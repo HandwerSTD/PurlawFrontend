@@ -8,6 +8,8 @@ import '../../common/network/network_loading_state.dart';
 import '../../common/network/network_request.dart';
 import '../../models/community/short_video_comment_model.dart';
 
+const tag = "ShortVideo Comment ViewModel";
+
 class ShortVideoCommentViewModel extends BaseViewModel {
   final String cid;
   int pageNum = 1;
@@ -43,7 +45,7 @@ class ShortVideoCommentViewModel extends BaseViewModel {
         changeState(NetworkLoadingState.CONTENT);
       }
     } catch(e) {
-      Log.e(e);
+      Log.e(tag: tag, e);
       makeToast("网络错误");
       changeState(NetworkLoadingState.ERROR);
     }
@@ -64,7 +66,7 @@ class ShortVideoCommentViewModel extends BaseViewModel {
       }
       ++pageNum;
     } catch(e) {
-      Log.e(e);
+      Log.e(tag: tag, e);
       makeToast("网络错误");
     }
   }
@@ -83,7 +85,7 @@ class ShortVideoCommentViewModel extends BaseViewModel {
       makeToast("评论成功");
       reload();
     } catch (e) {
-      Log.e(e);
+      Log.e(tag: tag, e);
       makeToast("评论失败");
     }
   }

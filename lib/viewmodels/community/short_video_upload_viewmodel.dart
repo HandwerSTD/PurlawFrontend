@@ -11,6 +11,8 @@ import 'package:http/http.dart' as http;
 import 'package:purlaw/common/utils/log_utils.dart';
 import '../../common/utils/cache_utils.dart';
 
+const tag = "ShortVideo Upload ViewModel";
+
 class ShortVideoUploadViewModel extends BaseViewModel {
   final XFile selectedFile;
   TextEditingController titleController = TextEditingController();
@@ -47,7 +49,7 @@ class ShortVideoUploadViewModel extends BaseViewModel {
         required List<int> videoData,
         required List<int> coverData,
         required String cookie}) async {
-    Log.i("[ShortVideo] Uploading Video");
+    Log.i(tag: tag,"[ShortVideo] Uploading Video");
     var req = http.MultipartRequest(
         'post', Uri.parse(HttpGet.getApi(API.videoUpload.api)));
     req.headers.addAll({"content-type": "multipart/form-data", "cookie": cookie});
@@ -80,15 +82,15 @@ class ShortVideoUploadViewModel extends BaseViewModel {
           coverData: coverData,
           cookie: cookie);
       var total = response.contentLength!, uploaded = 0;
-      Log.i("[DEBUG] total = $total");
+      Log.i(tag: tag,"[DEBUG] total = $total");
       response.stream.listen((value) {
         uploaded += value.length;
         percentage.value = ((uploaded / total) * 100).toInt();
-        Log.i("[DEBUG] uploaded = $uploaded, percent = ${percentage.value}");
+        Log.i(tag: tag,"[DEBUG] uploaded = $uploaded, percent = ${percentage.value}");
       },
       onDone: () {
         // var result = jsonDecode(resp);
-        // Log.i("[ShortVideoUpload] res: $result");
+        // Log.i(tag: tag,"[ShortVideoUpload] res: $result");
         // if (result["status"] != "success") throw Exception(result["message"]);
         makeToast("上传成功");
         Future.delayed(const Duration(seconds: 1)).then((value) {
@@ -97,14 +99,14 @@ class ShortVideoUploadViewModel extends BaseViewModel {
       },
       onError: (e) {
         makeToast("上传失败");
-        Log.e(e);
+        Log.e(tag: tag, e);
         isVideoUploading = false;
         notifyListeners();
       });
       // var resp = await response.stream.transform(utf8.decoder).join();
 
     } on Exception catch (e) {
-      Log.e(e);
+      Log.e(tag: tag, e);
       makeToast("上传失败");
     } finally {
       await CacheUtil.clear(); // 清除缓存 不知道有没有用

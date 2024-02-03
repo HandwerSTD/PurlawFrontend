@@ -79,7 +79,7 @@ class _ProgramEntryState extends State<ProgramEntry> {
 
       // 获取主题色
       final String themeColor = DatabaseUtil.getThemeColor();
-      Log.i("[DEBUG] read theme color = $themeColor");
+      Log.i(tag: "Main", "read theme color = $themeColor");
       Provider.of<ThemeViewModel>(context, listen: false)
           .setThemeColor(ColorsUtil.hexToColor(themeColor), update: false);
       if ((MediaQuery.of(context).platformBrightness == Brightness.dark) != Provider.of<ThemeViewModel>(context, listen: false).themeModel.dark) {
@@ -104,7 +104,7 @@ class _ProgramEntryState extends State<ProgramEntry> {
       Provider.of<MainViewModel>(context, listen: false)
           .changeState(NetworkLoadingState.CONTENT);
     });
-    Log.i("main inited");
+    Log.i(tag: "Main", "main inited");
   }
 
   @override

@@ -7,6 +7,8 @@ import '../../common/constants/constants.dart';
 import '../../common/network/network_loading_state.dart';
 import '../../common/network/network_request.dart';
 
+const tag = "Account VideoList ViewModel";
+
 class AccountVideoListViewModel extends BaseViewModel {
   final String userId;
   VideoList videoList = VideoList(result: []);
@@ -27,11 +29,11 @@ class AccountVideoListViewModel extends BaseViewModel {
       }));
       if (response["status"] != "success") throw Exception(response["message"]??"未知错误");
       totalCount = response["count_items"];
-      Log.i("totalCount = $totalCount");
+      Log.i(tag: tag,"totalCount = $totalCount");
       videoList = VideoList.fromJson(response);
       changeState(NetworkLoadingState.CONTENT);
     } catch(e) {
-      Log.e(e);
+      Log.e(tag: tag, e);
       makeToast("网络错误");
       changeState(NetworkLoadingState.ERROR);
     }
@@ -52,7 +54,7 @@ class AccountVideoListViewModel extends BaseViewModel {
       }
       ++pageNum;
     } catch(e) {
-      Log.e(e);
+      Log.e(tag: tag, e);
       makeToast("网络错误");
     }
   }

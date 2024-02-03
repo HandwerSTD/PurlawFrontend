@@ -7,6 +7,8 @@ import 'package:purlaw/viewmodels/base_viewmodel.dart';
 import 'package:purlaw/common/utils/log_utils.dart';
 import '../../common/constants/constants.dart';
 
+const tag = "Account Register ViewModel";
+
 class AccountRegisterViewModel extends BaseViewModel {
   TextEditingController nameCtrl = TextEditingController(), passwdCtrl = TextEditingController(), mailCtrl = TextEditingController();
   bool agreeStatement = false;
@@ -35,15 +37,15 @@ class AccountRegisterViewModel extends BaseViewModel {
         "user": nameCtrl.text,
         "password": sha1.convert(utf8.encode(passwdCtrl.text)).toString()
       }));
-      Log.i(response);
+      Log.i(tag: tag,response);
 
       if (!response["status"].startsWith("success")) {
-        Log.i("login failed");
+        Log.i(tag: tag,"login failed");
         return response["message"];
       }
 
     } catch(e) {
-      Log.e(e);
+      Log.e(tag: tag, e);
       return "注册失败";
     }
     return "注册成功";
@@ -53,7 +55,7 @@ class AccountRegisterViewModel extends BaseViewModel {
     registering = true; notifyListeners();
     var result = await registerNewAccount();
     registering = false; notifyListeners();
-    Log.i(result);
+    Log.i(tag: tag,result);
     makeToast(result);
   }
 }

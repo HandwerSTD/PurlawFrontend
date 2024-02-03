@@ -6,6 +6,8 @@ import 'package:purlaw/viewmodels/base_viewmodel.dart';
 import 'package:purlaw/common/utils/log_utils.dart';
 import '../../common/constants/constants.dart';
 
+const tag = "ShortVideo Search ViewModel";
+
 class ShortVideoSearchViewModel extends BaseViewModel {
   VideoList videoList = VideoList();
   String text = "";
@@ -31,10 +33,10 @@ class ShortVideoSearchViewModel extends BaseViewModel {
       if (response["status"] != "success") throw Exception(response["message"]??"未知错误");
       videoList = VideoList.fromJson(response);
       totalCount = response["count_items"];
-      Log.i("[DEBUG] totalCount = $totalCount");
+      Log.i(tag: tag,"[DEBUG] totalCount = $totalCount");
       changeState(NetworkLoadingState.CONTENT);
     } catch(e) {
-      Log.e(e);
+      Log.e(tag: tag, e);
       makeToast("网络错误");
       changeState(NetworkLoadingState.ERROR);
     }
@@ -55,7 +57,7 @@ class ShortVideoSearchViewModel extends BaseViewModel {
       }
       ++pageNum;
     } catch(e) {
-      Log.e(e);
+      Log.e(tag: tag, e);
       makeToast("网络错误");
     }
   }

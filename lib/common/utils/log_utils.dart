@@ -1,9 +1,10 @@
 import 'package:logger/logger.dart';
 import 'package:flutter/material.dart';
+import 'package:purlaw/common/utils/misc.dart';
 
 class Log {
+  static bool saveLog = true;
   static bool printLog = true;
-  static bool showLog = true;
   static String logs = "";
   static Logger logger = Logger(
     printer: PrettyPrinter(
@@ -13,46 +14,78 @@ class Log {
   );
 
   static void switchLogger() {
-    showLog = !showLog;
+    printLog = !printLog;
+    logs += ("\n-----------Logger turned to ${printLog} at ${TimeUtils.formatDateTime(TimeUtils.timestamp)}------------\n");
+  }
+  static void switchSaver() {
+    saveLog = !saveLog;
+    logs += ("\n-----------Switched to ${saveLog} at ${TimeUtils.formatDateTime(TimeUtils.timestamp)}------------\n");
   }
   static void append(message) {
-    if (!showLog) return;
+    if (!saveLog) return;
     logs += '$message\n';
   }
   static void i(message, {String? tag}) {
-    message = "${tag??""}$message";
+    message = "[${tag??""}] $message";
     if (!printLog) return;
     logger.i(message);
     append(message);
   }
   static void d(message, {String? tag}) {
-    message = "${tag??""}$message";
+    message = "[${tag??""}] $message";
     if (!printLog) return;
     logger.d(message);
     append(message);
   }
   static void e(message, {Object? error, String? tag}) {
-    message = "[${tag??""}]$message";
+    message = "[${tag??""}] $message";
     if (!printLog) return;
     logger.e(message, error: error);
     append(message); append(error);
   }
 }
 
-class LoggerPage extends StatelessWidget {
+
+class LoggerPage extends StatefulWidget {
   const LoggerPage({super.key});
 
   @override
+  State<LoggerPage> createState() => _LoggerPageState();
+}
+
+class _LoggerPageState extends State<LoggerPage> {
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ListView(
-        children: [
-          Row(
-            children: [
-              Expanded(child: Text(Log.logs))
-            ],
-          )
+      appBar: AppBar(
+        centerTitle: true,
+        title: Text("日志"),
+        actions: [
+          IconButton(onPressed: (){
+            setState(() {
+              Log.switchSaver();
+            });
+          }, icon: Icon(Icons.switch_camera_outlined)),
+          IconButton(onPressed: (){
+            setState(() {
+              Log.switchLogger();
+            });
+          }, icon: Icon(Icons.closed_caption_disabled_outlined))
         ],
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: ListView(
+          children: [
+            Row(
+              children: [
+                Expanded(child: SelectableText(Log.logs, style: TextStyle(
+                  fontFamily: 'Monospace'
+                ),))
+              ],
+            )
+          ],
+        ),
       ),
     );
   }

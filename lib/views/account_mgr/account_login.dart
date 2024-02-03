@@ -50,7 +50,6 @@ class _AccountLoginPageBodyState extends State<AccountLoginPageBody> {
       _  = eventBus.on<AccountLoginEventBus>().listen((event) {
       if (event.needNavigate) {
         TDToast.showText("登陆成功", context: context);
-        Log.i("[EventBus] received, navigating");
         Navigator.pop(context);
       }
     });

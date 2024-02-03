@@ -11,6 +11,8 @@ import 'package:purlaw/common/utils/log_utils.dart';
 import '../../common/constants/constants.dart';
 import '../../models/ai_chat/chat_message_model.dart';
 
+const tag = "Chat ViewModel";
+
 /// 对话消息列表的 ViewModel
 class AIChatMsgListViewModel extends BaseViewModel {
   ScrollController scrollController = ScrollController();
@@ -45,11 +47,11 @@ class AIChatMsgListViewModel extends BaseViewModel {
     notifyListeners();
   }
   void manuallyBreak() {
-    Log.i("[DEBUG] Manually Break");
+    Log.i(tag: tag,"[DEBUG] Manually Break");
     try {
       ChatNetworkRequest.isolate.kill(priority: Isolate.immediate);
     } on Exception catch (e) {
-      Log.e(e);
+      Log.e(tag: tag, e);
     } finally {
       reEnableAfterReceive();
     }
@@ -78,7 +80,7 @@ class AIChatMsgListViewModel extends BaseViewModel {
       reEnableAfterReceive();
       notifyListeners();
     } on Exception catch (e) {
-      Log.e(e);
+      Log.e(tag: tag, e);
       makeToast("生成失败");
       manuallyBreak();
     }
