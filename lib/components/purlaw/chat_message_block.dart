@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
 import 'package:audioplayers/audioplayers.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:purlaw/common/constants/constants.dart';
@@ -102,7 +101,7 @@ class _PurlawChatMessageBlockState extends State<PurlawChatMessageBlock> {
                           width: 1),
                       color: background,
                       boxShadow: [
-                        BoxShadow(color: Colors.black12, blurRadius: 5),
+                        const BoxShadow(color: Colors.black12, blurRadius: 5),
                         BoxShadow(
                             color: (themeModel.dark
                                 ? Colors.grey[800]!.withOpacity(0.2)
@@ -132,7 +131,7 @@ class _PurlawChatMessageBlockState extends State<PurlawChatMessageBlock> {
                       if (!msgData.isMine)
                         {
                           Padding(
-                            padding: EdgeInsets.only(top: 4),
+                            padding: const EdgeInsets.only(top: 4),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisSize: MainAxisSize.min,
@@ -166,7 +165,7 @@ class _PurlawChatMessageBlockState extends State<PurlawChatMessageBlock> {
               builder: (context, value, child) {
                 if (value) {
                   return PurlawRRectButton(
-                    margin: EdgeInsets.only(right: 16, bottom: 8),
+                    margin: const EdgeInsets.only(right: 16, bottom: 8),
                     height: 24,
                     width: 24,
                     radius: 12,
@@ -219,12 +218,12 @@ class _PurlawChatMessageBlockState extends State<PurlawChatMessageBlock> {
                 ValueListenableBuilder(
                     valueListenable: widget.msg.audioIsPlaying,
                     builder: (context, value, child) {
-                      if (value == 0) return Text("加载中");
-                      if (value == 1) return Text("播放中");
-                      if (value == 2) return Text("已暂停");
-                      if (value == 3) return Text("播放完毕");
-                      if (value == -2) return Text("加载失败");
-                      return Text("");
+                      if (value == 0) return const Text("加载中");
+                      if (value == 1) return const Text("播放中");
+                      if (value == 2) return const Text("已暂停");
+                      if (value == 3) return const Text("播放完毕");
+                      if (value == -2) return const Text("加载失败");
+                      return const Text("");
                     }),
               ],
             ),
@@ -286,7 +285,7 @@ class _PurlawChatMessageBlockState extends State<PurlawChatMessageBlock> {
             if (response == null) return;
             print("[DEBUG] voice got");
             try {
-              var failedBody = Utf8Decoder().convert(response);
+              var failedBody = const Utf8Decoder().convert(response);
               // failed
               print(failedBody);
             } catch (e) {

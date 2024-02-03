@@ -4,7 +4,6 @@ import 'package:purlaw/common/constants/constants.dart';
 import 'package:purlaw/common/network/network_loading_state.dart';
 import 'package:purlaw/common/network/network_request.dart';
 import 'package:purlaw/common/utils/misc.dart';
-import 'package:purlaw/components/multi_state_widget.dart';
 import 'package:purlaw/components/purlaw/purlaw_components.dart';
 import 'package:purlaw/components/purlaw/search_bar.dart';
 import 'package:purlaw/components/third_party/image_loader.dart';
@@ -116,7 +115,7 @@ class GridVideoBlock extends StatelessWidget {
             }
           },
           child: Padding(
-            padding: EdgeInsets.only(top: 4, bottom: 12, left: 4, right: 4),
+            padding: const EdgeInsets.only(top: 4, bottom: 12, left: 4, right: 4),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -149,7 +148,7 @@ class GridVideoBlock extends StatelessWidget {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(left: 10, right: 10),
+                  padding: const EdgeInsets.only(left: 10, right: 10),
                   child: Row(
                     mainAxisSize: MainAxisSize.max,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -160,12 +159,12 @@ class GridVideoBlock extends StatelessWidget {
                           UserAvatarLoader(
                               avatar: video.avatar!, size: 18, radius: 9),
                           Padding(
-                            padding: EdgeInsets.only(left: 6, right: 1),
+                            padding: const EdgeInsets.only(left: 6, right: 1),
                             child: Text(
                               video.author!,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                              style: TextStyle(fontSize: 12),
+                              style: const TextStyle(fontSize: 12),
                             ),
                           )
                         ],
@@ -205,7 +204,7 @@ class GridVideoBlock extends StatelessWidget {
                     builder: (_) => ShortVideoPlayPage(paramVideo: video)));
           },
           child: Padding(
-            padding: EdgeInsets.only(top: 4, bottom: 12),
+            padding: const EdgeInsets.only(top: 4, bottom: 12),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -238,7 +237,7 @@ class GridVideoBlock extends StatelessWidget {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(left: 10, right: 10),
+                  padding: const EdgeInsets.only(left: 10, right: 10),
                   child: Row(
                     mainAxisSize: MainAxisSize.max,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -249,12 +248,12 @@ class GridVideoBlock extends StatelessWidget {
                           UserAvatarLoader(
                               avatar: video.avatar!, size: 18, radius: 9),
                           Padding(
-                            padding: EdgeInsets.only(left: 6, right: 1),
+                            padding: const EdgeInsets.only(left: 6, right: 1),
                             child: Text(
                               video.author!,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                              style: TextStyle(fontSize: 12),
+                              style: const TextStyle(fontSize: 12),
                             ),
                           )
                         ],

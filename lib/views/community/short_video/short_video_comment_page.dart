@@ -22,7 +22,7 @@ class ShortVideoCommentPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("评论"),
+        title: const Text("评论"),
       ),
       body: ShortVideoCommentList(
         video: video,
@@ -83,7 +83,7 @@ class _ShortVideoCommentListState extends State<ShortVideoCommentList> {
                                 children: List.generate(
                     model.videoCommentList.result!.length,
                     (index) => Container(
-                          padding: EdgeInsets.only(left: 24, right: 24, top: 12),
+                          padding: const EdgeInsets.only(left: 24, right: 24, top: 12),
                           child: CommentBlock(
                               comment: model.videoCommentList.result![index]),
                         )),
@@ -101,7 +101,7 @@ class _ShortVideoCommentListState extends State<ShortVideoCommentList> {
     return Container(
       padding: const EdgeInsets.only(left: 13, right: 12, bottom: 12, top: 8),
       decoration:
-          BoxDecoration(border: Border(top: BorderSide(color: Colors.grey))),
+          const BoxDecoration(border: Border(top: BorderSide(color: Colors.grey))),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         mainAxisSize: MainAxisSize.max,
@@ -153,7 +153,7 @@ class CommentBlock extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: EdgeInsets.only(right: 18, top: 12, bottom: 24),
+              padding: const EdgeInsets.only(right: 18, top: 12, bottom: 24),
               child: UserAvatarLoader(
                 avatar: comment.avatar!,
                 size: 48,
@@ -168,19 +168,19 @@ class CommentBlock extends StatelessWidget {
                   comment.author!,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: TextStyle(fontSize: 16),
+                  style: const TextStyle(fontSize: 16),
                 ),
                 ExpandableText(
                   text: comment.content!,
-                  style: TextStyle(fontSize: 16),
+                  style: const TextStyle(fontSize: 16),
                   maxLines: 3,
                   expand: false,
                 ),
                 Padding(
-                  padding: EdgeInsets.only(top: 4, bottom: 4),
+                  padding: const EdgeInsets.only(top: 4, bottom: 4),
                   child: Text(
                     TimeUtils.formatDateTime(comment.timestamp!.toInt()),
-                    style: TextStyle(fontSize: 14),
+                    style: const TextStyle(fontSize: 14),
                   ),
                 )
               ],

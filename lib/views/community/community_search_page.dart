@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:purlaw/common/network/network_loading_state.dart';
 import 'package:purlaw/common/provider/provider_widget.dart';
-import 'package:purlaw/components/multi_state_widget.dart';
 import 'package:purlaw/components/purlaw/purlaw_components.dart';
-import 'package:purlaw/models/community/short_video_info_model.dart';
-import 'package:purlaw/viewmodels/community/short_video_list_viewmodel.dart';
 import 'package:purlaw/viewmodels/community/short_video_search_viewmodel.dart';
 import 'package:purlaw/viewmodels/main_viewmodel.dart';
 import 'package:purlaw/views/community/community_page.dart';
@@ -36,7 +32,7 @@ class CommunitySearchPage extends StatelessWidget {
             appBar: AppBar(
               automaticallyImplyLeading: false,
               leading: IconButton(
-                icon: Icon(Icons.arrow_back),
+                icon: const Icon(Icons.arrow_back),
                 onPressed: (){ Navigator.pop(context); },
               ),
               title: SearchAppBar(
@@ -48,10 +44,10 @@ class CommunitySearchPage extends StatelessWidget {
                 readOnly: false,
                 onTap: () {},
               ),
-              bottom: PreferredSize(preferredSize: Size.fromHeight(1), child: Divider(),),
+              bottom: const PreferredSize(preferredSize: Size.fromHeight(1), child: Divider(),),
               toolbarHeight: 72,
             ),
-            body: CommunitySearchPageBody(),
+            body: const CommunitySearchPageBody(),
           );
         });
   }

@@ -17,6 +17,7 @@ class BaseViewModel extends ChangeNotifier {
     }
     if (!context!.mounted) {
       print("[BaseViewModel] context is not mounted while showing toast");
+      return;
     }
     TDToast.showText(text, context: context!);
   }

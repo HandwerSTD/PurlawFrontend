@@ -4,19 +4,15 @@ import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:purlaw/common/provider/provider_widget.dart';
-import 'package:purlaw/components/purlaw/button.dart';
-import 'package:purlaw/components/purlaw/search_bar.dart';
+import 'package:purlaw/common/utils/database/database_util.dart';
 import 'package:purlaw/main.dart';
 import 'package:purlaw/models/community/short_video_info_model.dart';
 import 'package:purlaw/viewmodels/community/short_video_play_viewmodel.dart';
 import 'package:purlaw/viewmodels/main_viewmodel.dart';
-import 'package:purlaw/viewmodels/theme_viewmodel.dart';
 import 'package:purlaw/views/account_mgr/account_login.dart';
 import 'package:purlaw/views/account_mgr/account_visit_page.dart';
 import 'package:purlaw/views/account_mgr/components/account_page_components.dart';
 import 'package:purlaw/views/account_mgr/my_account_page.dart';
-import 'package:purlaw/views/community/community_page.dart';
-import 'package:purlaw/views/community/community_search_page.dart';
 import 'package:purlaw/views/community/short_video/short_video_comment_page.dart';
 import 'package:tdesign_flutter/tdesign_flutter.dart';
 import 'package:video_player/video_player.dart';
@@ -52,7 +48,7 @@ class _ShortVideoPlayPageState extends State<ShortVideoPlayPage> {
     String cookie = Provider.of<MainViewModel>(context).cookies;
     // 这里应该会重新加载吧。。都监听了
     return ProviderWidget<ShortVideoPlayViewModel>(
-      model: ShortVideoPlayViewModel.fromSingleVideo(widget.paramVideo),
+      model: ShortVideoPlayViewModel.fromSingleVideo(widget.paramVideo, context),
       onReady: (model) {
         // load 10
         model.loadMoreVideo(cookie);
@@ -169,12 +165,15 @@ class VideoPlayBlock extends StatefulWidget {
 }
 
 class _VideoPlayBlockState extends State<VideoPlayBlock> {
+  bool favorite = false;
+
   @override
   Widget build(BuildContext context) {
     return ProviderWidget<ShortVideoPlayBlockViewModel>(
       model: ShortVideoPlayBlockViewModel(
           nowPlaying: widget.nowPlaying, context: context),
       onReady: (model) {
+        favorite = FavoriteDatabaseUtil.getIsFavorite(model.nowPlaying.uid!);
         model.cookie =
             Provider.of<MainViewModel>(context, listen: false).cookies;
         model.load();
@@ -209,7 +208,7 @@ class _VideoPlayBlockState extends State<VideoPlayBlock> {
                           alignment: Alignment.center,
                           children: [
                             Container(
-                              padding: EdgeInsets.all(2),
+                              padding: const EdgeInsets.all(2),
                               child: model.loaded
                                   ? Chewie(
                                       controller: model.videoController,
@@ -239,8 +238,9 @@ class _VideoPlayBlockState extends State<VideoPlayBlock> {
     return ValueListenableBuilder(
         valueListenable: model.videoPlayerController,
         builder: (context, value, child) {
-          if (model.loaded && value.isBuffering)
-            return CircularProgressIndicator();
+          if (model.loaded && value.isBuffering) {
+            return const CircularProgressIndicator();
+          }
           return Icon(
             Icons.play_arrow,
             color: ((!model.loaded || (model.loaded && value.isPlaying))
@@ -259,7 +259,7 @@ class _VideoPlayBlockState extends State<VideoPlayBlock> {
     return Container(
       height: appBarHeight,
       alignment: Alignment.topLeft,
-      padding: EdgeInsets.only(left: 6),
+      padding: const EdgeInsets.only(left: 6),
       decoration: const BoxDecoration(
           // color: Colors.black12
           gradient: LinearGradient(
@@ -290,7 +290,7 @@ class _VideoPlayBlockState extends State<VideoPlayBlock> {
       children: [
         Flexible(
             child: Container(
-          padding: EdgeInsets.only(bottom: 36, left: 4, right: 4),
+          padding: const EdgeInsets.only(bottom: 36, left: 4, right: 4),
           decoration: const BoxDecoration(
               gradient: LinearGradient(
                   begin: Alignment.bottomCenter,
@@ -314,7 +314,7 @@ class _VideoPlayBlockState extends State<VideoPlayBlock> {
                               print("[ShortVideoPlay] test for double tap");
                             },
                             onTap: () {
-                              if (!model.loaded) return;
+                              // if (!model.loaded) return;
                               print("[ShortVideoPlay] open desc");
                               showModalBottomSheet(
                                   context: context,
@@ -337,12 +337,12 @@ class _VideoPlayBlockState extends State<VideoPlayBlock> {
                                           ),
                                         ),
                                         Padding(
-                                          padding: EdgeInsets.symmetric(
+                                          padding: const EdgeInsets.symmetric(
                                               horizontal: 24, vertical: 4),
                                           child: Text(
                                             TimeUtils.formatDateTime(
                                                 video.timestamp!.toInt()),
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                                 color: Colors.black54),
                                           ),
                                         ),
@@ -396,7 +396,7 @@ class _VideoPlayBlockState extends State<VideoPlayBlock> {
                       builder: (context, value, child) {
                         return Text(
                           "  ${TimeUtils.getDurationTimeString(value.position, value.duration)}",
-                          style: TextStyle(color: Colors.white),
+                          style: const TextStyle(color: Colors.white),
                         );
                       })
                 ],
@@ -412,13 +412,20 @@ class _VideoPlayBlockState extends State<VideoPlayBlock> {
     var model = Provider.of<ShortVideoPlayBlockViewModel>(context);
     return GestureDetector(
       onTap: () {
-        if (!model.loaded) return;
-        model.pauseVideo();
-        Navigator.push(context, MaterialPageRoute(builder: (_) => AccountVisitPage(userId: video.authorId!)));
+        // if (!model.loaded) return;
+        // model.pauseVideo();
+        if (model.loaded) {
+          model.pauseVideo();
+        } else {
+          model.autoPlay = false;
+        }
+        Navigator.push(context, MaterialPageRoute(builder: (_) => AccountVisitPage(userId: video.authorId!))).then((value) {
+          model.autoPlay = true;
+        });
         // todo: pause & jump
       },
       child: Container(
-        margin: EdgeInsets.only(left: 0, top: 4, bottom: 12),
+        margin: const EdgeInsets.only(left: 0, top: 4, bottom: 12),
         child: Row(
           children: [
             UserAvatarLoader(
@@ -427,7 +434,7 @@ class _VideoPlayBlockState extends State<VideoPlayBlock> {
               radius: 24,
             ),
             Padding(
-              padding: EdgeInsets.only(left: 12, top: 2),
+              padding: const EdgeInsets.only(left: 12, top: 2),
               child: Text(
                 video.author!,
                 maxLines: 1,
@@ -451,12 +458,12 @@ class _VideoPlayBlockState extends State<VideoPlayBlock> {
       children: [
         bottomFABSingle(
             icon:
-                (video.meLiked == 1 ? Icons.thumb_up : Icons.thumb_up_outlined),
+                (video.meLiked == 1 ? Icons.thumb_up_rounded : Icons.thumb_up_outlined),
             onPressed: () {
               print("switchVideoLike");
               if (getCookie(context, listen: false).isEmpty) {
                 TDToast.showText('请先登录', context: context);
-                Future.delayed(Duration(seconds: 1)).then((value) {
+                Future.delayed(const Duration(seconds: 1)).then((value) {
                   checkAndLoginIfNot(context);
                 });
                 return;
@@ -464,16 +471,35 @@ class _VideoPlayBlockState extends State<VideoPlayBlock> {
               model.switchVideoLike();
             }),
         bottomFABSingle(
-            icon: Icons.comment,
+            icon: Icons.comment_rounded,
             onPressed: () {
-              if (!model.loaded) return;
-              model.pauseVideo();
-              Navigator.push(context, MaterialPageRoute(builder: (_) => ShortVideoCommentPage(video: video)));
+              // if (!model.loaded) return;
+              // model.pauseVideo();
+              if (model.loaded) {
+                model.pauseVideo();
+              } else {
+                model.autoPlay = false;
+              }
+              Navigator.push(context, MaterialPageRoute(builder: (_) => ShortVideoCommentPage(video: video))).then((value) {
+                model.autoPlay = true;
+              });
             }),
         bottomFABSingle(
-            icon: Icons.share,
+          iconSize: 48,
+            margin: const EdgeInsets.only(top: 6, bottom: 12, right: 12),
+            icon: (favorite ? Icons.star_rounded : Icons.star_border_rounded),
             onPressed: () {
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              // if (!model.loaded) return;
+              FavoriteDatabaseUtil.storeFavorite(model.nowPlaying, !favorite);
+              setState(() {
+                favorite = !favorite;
+              });
+            }),
+        bottomFABSingle(
+            icon: Icons.share_rounded,
+            margin: const EdgeInsets.only(top: 12, bottom: 36, right: 12, left: 12),
+            onPressed: () {
+              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                 content: Text("暂未开放"),
                 duration: Duration(milliseconds: 1000),
               ));
@@ -483,18 +509,18 @@ class _VideoPlayBlockState extends State<VideoPlayBlock> {
   }
 
   Widget bottomFABSingle(
-      {required IconData icon, required Function onPressed}) {
+      {required IconData icon, required Function onPressed, double iconSize = 36, EdgeInsetsGeometry? margin}) {
     return Container(
       height: 52,
       width: 52,
-      margin: const EdgeInsets.all(12),
+      margin: (margin?? const EdgeInsets.all(12)),
       child: IconButton(
         onPressed: () {
           onPressed();
         },
         icon: Icon(
           icon,
-          size: 36,
+          size: iconSize,
           shadows: [fabBoxShadow],
           color: Colors.white,
         ),

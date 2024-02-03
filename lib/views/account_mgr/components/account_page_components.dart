@@ -1,13 +1,15 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:purlaw/common/network/network_loading_state.dart';
 import 'package:purlaw/common/network/network_request.dart';
 import 'package:purlaw/common/provider/provider_widget.dart';
-import 'package:purlaw/components/multi_state_widget.dart';
+import 'package:purlaw/common/utils/database/database_util.dart';
 import 'package:purlaw/components/purlaw/purlaw_components.dart';
 import 'package:purlaw/components/third_party/image_loader.dart';
 import 'package:purlaw/models/account_mgr/user_info_model.dart';
+import 'package:purlaw/models/community/short_video_info_model.dart';
 import 'package:purlaw/viewmodels/account_mgr/account_video_list_viewmodel.dart';
-import 'package:purlaw/viewmodels/theme_viewmodel.dart';
 
 import '../../../common/constants/constants.dart';
 import '../../community/community_page.dart';
@@ -30,7 +32,7 @@ class AccountPageUserInfoBoard extends StatelessWidget {
             padding: const EdgeInsets.only(top: 18, bottom: 18),
             child: Text(
               userInfoModel.user,
-              style: TextStyle(fontSize: 20),
+              style: const TextStyle(fontSize: 20),
             ),
           )
         ],
@@ -121,3 +123,43 @@ class _AccountPageVideoWaterfallState extends State<AccountPageVideoWaterfall> {
     );
   }
 }
+
+class AccountPageFavoriteVideoWaterfall extends StatefulWidget {
+  const AccountPageFavoriteVideoWaterfall({super.key});
+
+  @override
+  State<AccountPageFavoriteVideoWaterfall> createState() => _AccountPageFavoriteVideoWaterfallState();
+}
+
+class _AccountPageFavoriteVideoWaterfallState extends State<AccountPageFavoriteVideoWaterfall> {
+  ScrollController controller = ScrollController();
+  NetworkLoadingState state = NetworkLoadingState.LOADING;
+  VideoList videoList = VideoList(result: []);
+
+  @override
+  void initState() {
+    super.initState();
+    FavoriteDatabaseUtil.listFavorite().then((list) {
+      for (var val in list) {
+        videoList.result!.add(VideoInfoModel.fromJson(jsonDecode(val)));
+      }
+      setState(() {
+        state = (list.isEmpty ? NetworkLoadingState.EMPTY : NetworkLoadingState.CONTENT);
+      });
+    });
+
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return PurlawWaterfallList(list: List.generate(videoList.result!.length, (index) {
+      return GridVideoBlock(
+        video: videoList.result![index],
+        indexInList: index,
+        videoList: videoList,
+        loadMore: (){},
+      );
+    }), controller: controller, onPullRefresh: ()async{}, loadingState: state, useTopPadding: false,);
+  }
+}
+

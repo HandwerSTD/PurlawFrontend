@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:flutter/cupertino.dart';
@@ -92,7 +91,7 @@ class ShortVideoUploadViewModel extends BaseViewModel {
         // print("[ShortVideoUpload] res: $result");
         // if (result["status"] != "success") throw Exception(result["message"]);
         makeToast("上传成功");
-        Future.delayed(Duration(seconds: 1)).then((value) {
+        Future.delayed(const Duration(seconds: 1)).then((value) {
           eventBus.fire(ShortVideoUploadEventBus(needNavigate: true));
         });
       },

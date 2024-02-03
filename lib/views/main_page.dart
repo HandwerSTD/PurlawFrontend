@@ -5,8 +5,6 @@ import 'package:purlaw/components/purlaw/tabbar.dart';
 import 'package:purlaw/viewmodels/ai_chat_page/chat_page_viewmodel.dart';
 import 'package:purlaw/viewmodels/community/short_video_list_viewmodel.dart';
 import 'package:purlaw/viewmodels/main_page_viewmodel.dart';
-import 'package:purlaw/viewmodels/theme_viewmodel.dart';
-import 'package:purlaw/views/account_mgr/account_login.dart';
 import 'package:purlaw/views/account_mgr/my_account_page.dart';
 import 'package:purlaw/views/ai_chat_page/ai_chat_page.dart';
 import 'package:purlaw/views/ai_chat_page/chat_history_page.dart';
@@ -20,9 +18,9 @@ import 'community/community_search_page.dart';
 class MainPage extends StatelessWidget {
   static int tabIndex = 1;
   static Widget getTab(BuildContext context, int index) {
-    if (index == 0) return UtilitiesIndexPage().build(context);
-    if (index == 1) return AIChatPageBody().build(context);
-    if (index == 2) return CommunityPageBody();
+    if (index == 0) return const UtilitiesIndexPage().build(context);
+    if (index == 1) return const AIChatPageBody().build(context);
+    if (index == 2) return const CommunityPageBody();
     return Container();
   }
 
@@ -30,9 +28,9 @@ class MainPage extends StatelessWidget {
     onPressed: () {
       // Navigator.push(context, MaterialPageRoute(builder: (_) => MyAccountPage()));
       // Provider.of<ThemeViewModel>(context, listen: false).switchDarkMode();
-      Navigator.push(context, MaterialPageRoute(builder: (_) => ChatHistoryPage()));
+      Navigator.push(context, MaterialPageRoute(builder: (_) => const ChatHistoryPage()));
     },
-    icon: Icon(Icons.mark_chat_read_outlined),
+    icon: const Icon(Icons.mark_chat_read_outlined),
   );
   static Widget rightButton(BuildContext context, {bool rBreak = false}) =>
       Padding(
@@ -44,13 +42,13 @@ class MainPage extends StatelessWidget {
               onPressed: () {
                 JumpToSearchPage(context);
               },
-              icon: Icon(Icons.search),
+              icon: const Icon(Icons.search),
             ),),
             IconButton(
                 onPressed: () {
             openMyAccountPage(context);
                 },
-                icon: Icon(Icons.person_outline),
+                icon: const Icon(Icons.person_outline),
               ),
           ],
         ),
@@ -75,7 +73,7 @@ class MainPage extends StatelessWidget {
               final width = MediaQuery.of(context).size.width;
               final String screenType = Responsive.checkWidth(width);
               bool rBreak = (screenType == Responsive.lg);
-              return (rBreak ? LargeMainPageBody() : NormalMainPageBody());
+              return (rBreak ? const LargeMainPageBody() : const NormalMainPageBody());
             },
           )),
     );

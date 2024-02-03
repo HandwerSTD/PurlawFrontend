@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:purlaw/common/provider/provider_widget.dart';
 import 'package:purlaw/components/purlaw/purlaw_components.dart';
 import 'package:purlaw/components/third_party/image_loader.dart';
-import 'package:purlaw/viewmodels/account_mgr/account_login_viewmodel.dart';
 import 'package:purlaw/viewmodels/account_mgr/account_register_viewmodel.dart';
 import 'package:purlaw/viewmodels/theme_viewmodel.dart';
 
@@ -64,19 +63,19 @@ class AccountRegisterPageBody extends StatelessWidget {
                             hint: '邮箱',
                             controller: model.mailCtrl,
                             margin:
-                            EdgeInsets.only(left: 32, right: 32, top: 24, bottom: 6),
+                            const EdgeInsets.only(left: 32, right: 32, top: 24, bottom: 6),
                           ),
                           PurlawLoginTextField(
                             hint: '用户名',
                             controller: model.nameCtrl,
                             margin:
-                            EdgeInsets.only(left: 32, right: 32, top: 6, bottom: 6),
+                            const EdgeInsets.only(left: 32, right: 32, top: 6, bottom: 6),
                           ),
                           PurlawLoginTextField(
                             hint: '密码',
                             controller: model.passwdCtrl,
                             margin:
-                            EdgeInsets.only(left: 32, right: 32, top: 6, bottom: 12),
+                            const EdgeInsets.only(left: 32, right: 32, top: 6, bottom: 12),
                             secureText: true,
                           ),
                           Row(
@@ -101,7 +100,7 @@ class AccountRegisterPageBody extends StatelessWidget {
                               ),
                             ],
                           ),
-                          SizedBox(width: 0, height: 16,),
+                          const SizedBox(width: 0, height: 16,),
                           PurlawRRectButton(
                             onClick: () {
                               model.register();
@@ -112,7 +111,7 @@ class AccountRegisterPageBody extends StatelessWidget {
                             radius: 12,
                             child: Text(
                               (model.registering ? "注册中" :'一键注册'),
-                              style: TextStyle(
+                              style: const TextStyle(
                                   color: Colors.white,
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold),
@@ -127,7 +126,7 @@ class AccountRegisterPageBody extends StatelessWidget {
                     ],
                   ),
                   (rBreak ? Container() : const Padding(
-                    padding: const EdgeInsets.all(24.0),
+                    padding: EdgeInsets.all(24.0),
                     child: Text('—— 请登录以获得紫藤法道个性化服务。——', style: TextStyle(color: Colors.grey, fontSize: 12),),
                   )),
                 ],

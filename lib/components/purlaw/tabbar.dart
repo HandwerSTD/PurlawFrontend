@@ -51,7 +51,7 @@ class _PurlawAppMainPageTabBarState extends State<PurlawAppMainPageTabBar> {
         return Container(
           height: 64,
           width: constraints.maxWidth,
-          padding: EdgeInsets.symmetric(horizontal: 16),
+          padding: const EdgeInsets.symmetric(horizontal: 16),
           margin: EdgeInsets.only(top: (rBreak ? 16 : 0), left: (rBreak ? 16 : 0), right: (rBreak ? 16 : 0)),
           child: Row(
             mainAxisSize: MainAxisSize.max,
@@ -86,7 +86,7 @@ class _PurlawAppMainPageTabBarState extends State<PurlawAppMainPageTabBar> {
   }
 
   Widget _capsuleTabBar(BuildContext context, Color bg) {
-    return Container(
+    return SizedBox(
       width: Responsive.smallDp,
       child: ModifiedTDBottomTabBar(TDBottomTabBarBasicType.text,
           componentType: TDBottomTabBarComponentType.label,

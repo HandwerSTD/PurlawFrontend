@@ -2,7 +2,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:purlaw/common/constants/constants.dart';
 import 'package:purlaw/viewmodels/theme_viewmodel.dart';
 
 import '../../common/utils/misc.dart';
@@ -95,7 +94,7 @@ class PurlawChatTextField extends StatelessWidget {
           maxLines: null,
           keyboardType: TextInputType.multiline,
           decoration: chatInputDeco(hint, Colors.transparent, borderRadius),
-          style: TextStyle(fontSize: 16),
+          style: const TextStyle(fontSize: 16),
           ),
     );
   }
@@ -113,6 +112,6 @@ class PurlawChatTextField extends StatelessWidget {
         filled: true,
         fillColor: fillColor,
         hintText: hint,
-        hintStyle: TextStyle(color: Colors.grey));
+        hintStyle: const TextStyle(color: Colors.grey));
   }
 }

@@ -1,20 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:purlaw/common/utils/misc.dart';
 import 'package:purlaw/components/multi_state_widget.dart';
 import 'package:purlaw/components/purlaw/purlaw_components.dart';
-import 'package:purlaw/components/third_party/image_loader.dart';
 import 'package:purlaw/models/account_mgr/user_info_model.dart';
-import 'package:purlaw/viewmodels/account_mgr/account_page_viewmodel.dart';
 import 'package:purlaw/viewmodels/account_mgr/account_visit_viewmodel.dart';
-import 'package:purlaw/viewmodels/main_viewmodel.dart';
-import 'package:purlaw/views/account_mgr/account_login.dart';
 import 'package:purlaw/views/account_mgr/components/account_page_components.dart';
-import 'package:purlaw/views/settings/SettingsPage.dart';
 import 'package:tdesign_flutter/tdesign_flutter.dart';
 
-import '../../common/constants/constants.dart';
-import '../../common/network/network_request.dart';
 import '../../common/provider/provider_widget.dart';
 
 // Future openMyAccountPage(BuildContext context) {
@@ -43,7 +35,7 @@ class AccountVisitPage extends StatelessWidget {
           actions: [
             IconButton(onPressed: (){
               // Navigator.push(context, MaterialPageRoute(builder: (_) => SettingsPage()));
-            }, icon: Icon(Icons.settings))
+            }, icon: const Icon(Icons.settings))
           ],
         ),
         body: MultiStateWidget(
@@ -68,7 +60,7 @@ class AccountVisitPageBody extends StatefulWidget {
 class _AccountVisitPageBodyState extends State<AccountVisitPageBody>
     with SingleTickerProviderStateMixin {
   late TabController controller;
-  final List<TDTab> tabs = [TDTab(text: 'Ta的视频',)];
+  final List<TDTab> tabs = [const TDTab(text: 'Ta的视频',)];
 
 
   @override
@@ -86,8 +78,8 @@ class _AccountVisitPageBodyState extends State<AccountVisitPageBody>
       children: [
         AccountPageUserInfoBoard(
             userInfoModel: widget.userInfo),
-        Container(
-          width: rBreak ? 700 : null,
+        Expanded(
+          // width: rBreak ? 700 : null,
           child: Column(
             children: [
               PurlawPageTab(

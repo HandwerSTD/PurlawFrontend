@@ -45,6 +45,8 @@ class Responsive {
 
 /// 时间格式化
 class TimeUtils {
+  static int get timestamp => DateTime.timestamp().millisecondsSinceEpoch ~/ 1000;
+  
   static String formatDateTime(int timestamp) {
     var date = DateTime.fromMillisecondsSinceEpoch(timestamp * 1000);
     return formatDate(date, [yyyy,'年',mm,'月',dd,'日 ',HH,':',nn,':', ss]);
@@ -58,7 +60,7 @@ class TimeUtils {
       var totalTime = [total.inHours, total.inMinutes, total.inSeconds]
           .map((seg) => seg.remainder(60).toString().padLeft(2, '0'))
           .join(':');
-      return "${nowTime} / ${totalTime}";
+      return "$nowTime / $totalTime";
     }
     var nowTime = [now.inMinutes, now.inSeconds]
         .map((seg) => seg.remainder(60).toString().padLeft(2, '0'))
@@ -66,7 +68,7 @@ class TimeUtils {
     var totalTime = [total.inMinutes, total.inSeconds]
         .map((seg) => seg.remainder(60).toString().padLeft(2, '0'))
         .join(':');
-    return "${nowTime} / ${totalTime}";
+    return "$nowTime / $totalTime";
   }
 
 }

@@ -15,8 +15,10 @@ class ShortVideoPlayViewModel extends BaseViewModel {
   late VideoList videoList;
   PageController controller = PageController(initialPage: 1);
 
-  static ShortVideoPlayViewModel fromSingleVideo(VideoInfoModel paramVideo) {
-    ShortVideoPlayViewModel viewModel = ShortVideoPlayViewModel();
+  ShortVideoPlayViewModel({required super.context});
+
+  static ShortVideoPlayViewModel fromSingleVideo(VideoInfoModel paramVideo, BuildContext context) {
+    ShortVideoPlayViewModel viewModel = ShortVideoPlayViewModel(context: context);
     viewModel.videoList = VideoList(result: [paramVideo]);
     // viewModel.pageList = [ShortVideoRefreshPage(), VideoPlayBlock(nowPlaying: paramVideo)];
 
@@ -80,6 +82,7 @@ class ShortVideoPlayBlockViewModel extends BaseViewModel {
   final VideoInfoModel nowPlaying;
   String cookie = "";
   bool loaded = false;
+  bool autoPlay = true;
 
   ShortVideoPlayBlockViewModel({required this.nowPlaying, required super.context});
 
@@ -102,19 +105,19 @@ class ShortVideoPlayBlockViewModel extends BaseViewModel {
     if (cookie != "") {
       getVideoIsLiked();
     }
-    print(HttpGet.getApi(API.videoFile.api) + nowPlaying.sha1!);
+    // print(HttpGet.getApi(API.videoFile.api) + nowPlaying.sha1!);
     videoPlayerController = VideoPlayerController.networkUrl(Uri.parse(HttpGet.getApi(API.videoFile.api) + nowPlaying.sha1!));
     videoPlayerController.initialize().then((_) {
         videoController = ChewieController(
             videoPlayerController: videoPlayerController,
             showControls: false,
             showOptions: false,
-            autoPlay: true,
+            autoPlay: autoPlay,
             looping: true,
             aspectRatio: videoPlayerController.value.aspectRatio);
         loaded = true;
         notifyListeners();
-        resumeVideo();
+        if (autoPlay) resumeVideo();
       });
   }
 
@@ -129,7 +132,9 @@ class ShortVideoPlayBlockViewModel extends BaseViewModel {
   }
 
   Future<void> switchVideoLike() async {
-    if (!loaded) return;
+    if (!loaded) {
+      return;
+    }
     if (nowPlaying.meLiked == -1) {
       pauseVideo();
       eventBus.fire(ShortVideoPlayBlockEventBus(needNavigate: true));

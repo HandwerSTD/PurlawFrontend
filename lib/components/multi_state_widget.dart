@@ -48,7 +48,7 @@ class GeneralErrorWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(child: Text("加载错误"));
+    return const Center(child: Text("加载错误"));
   }
 }
 
@@ -57,7 +57,7 @@ class GeneralEmptyWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(child: Text("列表空"));
+    return const Center(child: Text("列表空"));
   }
 }
 
@@ -66,6 +66,6 @@ class GeneralLoadingWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(child: Text("加载中"));
+    return const Center(child: Text("加载中"));
   }
 }

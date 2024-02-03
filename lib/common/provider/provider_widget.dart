@@ -7,7 +7,7 @@ class ProviderWidget<T extends ChangeNotifier> extends StatefulWidget {
   final Widget? child;
   final Function(T) onReady;
 
-  ProviderWidget({
+  const ProviderWidget({super.key, 
     required this.model,
     this.child,
     required this.onReady,

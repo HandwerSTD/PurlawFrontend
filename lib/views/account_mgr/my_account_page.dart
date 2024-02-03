@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:purlaw/components/purlaw/purlaw_components.dart';
-import 'package:purlaw/components/third_party/image_loader.dart';
 import 'package:purlaw/models/account_mgr/user_info_model.dart';
-import 'package:purlaw/viewmodels/account_mgr/account_page_viewmodel.dart';
 import 'package:purlaw/viewmodels/main_viewmodel.dart';
 import 'package:purlaw/viewmodels/theme_viewmodel.dart';
 import 'package:purlaw/views/account_mgr/account_login.dart';
@@ -14,9 +12,6 @@ import 'package:purlaw/views/community/short_video/short_video_upload_page.dart'
 import 'package:purlaw/views/settings/SettingsPage.dart';
 import 'package:tdesign_flutter/tdesign_flutter.dart';
 
-import '../../common/constants/constants.dart';
-import '../../common/network/network_request.dart';
-import '../../common/provider/provider_widget.dart';
 import '../../common/utils/misc.dart';
 
 Future openMyAccountPage(BuildContext context) {
@@ -24,17 +19,17 @@ Future openMyAccountPage(BuildContext context) {
       Provider.of<MainViewModel>(context, listen: false).cookies.isNotEmpty;
   if (logged) {
     return Navigator.push(
-        context, MaterialPageRoute(builder: (_) => MyAccountPage()));
+        context, MaterialPageRoute(builder: (_) => const MyAccountPage()));
   }
   return Navigator.push(context,
-      MaterialPageRoute(builder: (_) => AccountLoginPage(showBack: true)));
+      MaterialPageRoute(builder: (_) => const AccountLoginPage(showBack: true)));
 }
 void checkAndLoginIfNot(BuildContext context) {
   bool logged =
       Provider.of<MainViewModel>(context, listen: false).cookies.isNotEmpty;
   if (!logged) {
     Navigator.push(context,
-        MaterialPageRoute(builder: (_) => AccountLoginPage(showBack: true)));
+        MaterialPageRoute(builder: (_) => const AccountLoginPage(showBack: true)));
   }
 }
 
@@ -60,13 +55,14 @@ class _MyAccountPageState extends State<MyAccountPage> {
         actions: [
           IconButton(onPressed: (){
             Provider.of<ThemeViewModel>(context, listen: false).switchDarkMode();
-          }, icon: Icon(Icons.sunny)),
+          }, icon: const Icon(Icons.sunny)),
           IconButton(onPressed: (){
-            Provider.of<MainViewModel>(context, listen: false).refreshCookies();
-          }, icon: Icon(Icons.refresh)),
+            TDToast.showText("刷新中", context: context);
+            Provider.of<MainViewModel>(context, listen: false).refreshCookies(toast: true);
+          }, icon: const Icon(Icons.refresh)),
           IconButton(onPressed: (){
-            Navigator.push(context, MaterialPageRoute(builder: (_) => SettingsPage()));
-          }, icon: Icon(Icons.settings))
+            Navigator.push(context, MaterialPageRoute(builder: (_) => const SettingsPage()));
+          }, icon: const Icon(Icons.settings))
         ],
       ),
       body: MyAccountPageBody(
@@ -87,7 +83,7 @@ class MyAccountPageBody extends StatefulWidget {
 class _MyAccountPageBodyState extends State<MyAccountPageBody>
     with SingleTickerProviderStateMixin {
   late TabController controller;
-  final List<TDTab> tabs = [TDTab(text: '我的历史',), TDTab(text: '我的视频',), TDTab(text: '社区收藏',)];
+  final List<TDTab> tabs = [const TDTab(text: '我的历史',), const TDTab(text: '我的视频',), const TDTab(text: '社区收藏',)];
 
 
   @override
@@ -117,9 +113,9 @@ class _MyAccountPageBodyState extends State<MyAccountPageBody>
                     child: PurlawPageTab(
                       controller: controller,
                       children: [
-                        ChatHistoryPageBody(),
+                        const ChatHistoryPageBody(),
                         MyAccountVideoListBody(uid: widget.userInfo.uid),
-                        Container()
+                        const AccountPageFavoriteVideoWaterfall()
                       ],
                     ).buildView(context),
                   ),
@@ -144,7 +140,7 @@ class MyAccountVideoListBody extends StatelessWidget {
       children: [
         AccountPageVideoWaterfall(userId: uid),
         Container(
-          margin: EdgeInsets.only(bottom: 48, right: 36),
+          margin: const EdgeInsets.only(bottom: 48, right: 36),
           child: FloatingActionButton.extended(
               label: const Text("上传视频"),
               icon: const Icon(Icons.add),

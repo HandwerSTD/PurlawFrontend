@@ -9,16 +9,16 @@ class VideoCommentList {
     if (json['result'] != null) {
       result = <VideoCommentInfoModel>[];
       json['result'].forEach((v) {
-        result!.add(new VideoCommentInfoModel.fromJson(v));
+        result!.add(VideoCommentInfoModel.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['total'] = this.total;
-    if (this.result != null) {
-      data['result'] = this.result!.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['total'] = total;
+    if (result != null) {
+      data['result'] = result!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -43,12 +43,12 @@ class VideoCommentInfoModel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['content'] = this.content;
-    data['author'] = this.author;
-    data['author_id'] = this.authorId;
-    data['timestamp'] = this.timestamp;
-    data['avatar'] = this.avatar;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['content'] = content;
+    data['author'] = author;
+    data['author_id'] = authorId;
+    data['timestamp'] = timestamp;
+    data['avatar'] = avatar;
     return data;
   }
 }

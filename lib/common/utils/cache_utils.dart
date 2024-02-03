@@ -4,14 +4,12 @@ import 'package:path_provider/path_provider.dart';
 class CacheUtil {
   static Future<int> total() async {
     Directory tempDir = await getTemporaryDirectory();
-    if (tempDir == null) return 0;
     int total = await _reduce(tempDir);
     return total;
   }
 
   static Future<void> clear() async {
     Directory tempDir = await getTemporaryDirectory();
-    if (tempDir == null) return;
     await _delete(tempDir);
   }
 
@@ -26,9 +24,10 @@ class CacheUtil {
 
       int total = 0;
 
-      if (children != null && children.isNotEmpty)
-        for (final FileSystemEntity child in children)
+      if (children.isNotEmpty)
+        for (final FileSystemEntity child in children) {
           total += await _reduce(child);
+        }
 
       return total;
     }

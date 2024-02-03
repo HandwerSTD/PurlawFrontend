@@ -1,5 +1,9 @@
+import 'dart:convert';
+
 import 'package:hive/hive.dart';
 import 'package:purlaw/common/utils/database/kvstore.dart';
+import 'package:purlaw/common/utils/misc.dart';
+import 'package:purlaw/models/community/short_video_info_model.dart';
 
 class DatabaseUtil {
   static bool isFirstOpen() {
@@ -44,7 +48,8 @@ class HistoryDatabaseUtil {
   }
   static void storeHistory(String value) async {
     var box = await Hive.openLazyBox(KVBox.historyChats);
-    box.put(DateTime.timestamp().millisecondsSinceEpoch ~/ 1000, value);
+    box.put(TimeUtils.timestamp, value);
+    box.flush();
   }
   static Future<List<(int, String)>> listHistory() async {
     var box = await Hive.openLazyBox(KVBox.historyChats);
@@ -53,6 +58,34 @@ class HistoryDatabaseUtil {
       result.add((key, await box.get(key)));
     }
     return result;
+  }
+}
+
+class FavoriteDatabaseUtil {
+  static Future<LazyBox> getBox() {
+    return Hive.openLazyBox(KVBox.favoriteVideos);
+  }
+  static void storeFavorite(VideoInfoModel video, bool toState) async {
+    var box = await getBox();
+    KVBox.insert(video.uid!, (toState ? DatabaseConst.dbTrue : ""), useBox: KVBox.favoriteVideosIndex);
+    if (!toState) {
+      // delete
+      box.delete(video.uid!);
+    } else {
+      // add
+      box.put(video.uid!, jsonEncode(video.toJson()));
+    }
+  }
+  static Future<List<String>> listFavorite() async {
+    var box = await getBox();
+    var result = <String>[];
+    for (var key in box.keys) {
+      result.add((await box.get(key)));
+    }
+    return result;
+  }
+  static bool getIsFavorite(String uid) {
+    return KVBox.query(uid, useBox: KVBox.favoriteVideosIndex).isNotEmpty;
   }
 }
 

@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:purlaw/common/utils/misc.dart';
-import 'package:tdesign_flutter/tdesign_flutter.dart';
 
 class PurlawAppTitleBar {
   final String title;

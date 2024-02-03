@@ -16,7 +16,7 @@ class SettingsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PurlawAppTitleBar(title: '设置', showBack: true).build(context),
-      body: SettingsPageBody(),
+      body: const SettingsPageBody(),
     );
   }
 }
@@ -43,7 +43,7 @@ class _SettingsPageBodyState extends State<SettingsPageBody> {
               settingsGroupTitle: '  帐户设置',
               items: [
                 SettingsItem(icons: Icons.account_circle, title: '头像', onTap: (){
-                  Navigator.push(context, MaterialPageRoute(builder: (_) => MyAccountAvatar()));
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => const MyAccountAvatar()));
                 },),
                 SettingsItem(icons: const TypIconData(0xE036), title: '昵称'),
                 SettingsItem(icons: Icons.manage_accounts, title: '账户管理'),
@@ -71,7 +71,7 @@ class _SettingsPageBodyState extends State<SettingsPageBody> {
             items: [
               SettingsItem(icons: Icons.contact_support_rounded, title: '联系我们'),
               SettingsItem(icons: Icons.grid_view_rounded, title: '关于紫藤法道', onTap: (){
-                Navigator.push(context, MaterialPageRoute(builder: (_) => AboutPage()));
+                Navigator.push(context, MaterialPageRoute(builder: (_) => const AboutPage()));
               },)
             ],
           )
@@ -83,13 +83,13 @@ class _SettingsPageBodyState extends State<SettingsPageBody> {
   setServerAddress() {
     return Dialog(
       child: Container(
-        padding: EdgeInsets.all(12),
+        padding: const EdgeInsets.all(12),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             TextField(
               controller: serverAddressController,
-              decoration: InputDecoration(hintText: "服务器地址"),
+              decoration: const InputDecoration(hintText: "服务器地址"),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -98,14 +98,14 @@ class _SettingsPageBodyState extends State<SettingsPageBody> {
                     onPressed: () {
                       Navigator.pop(context);
                     },
-                    child: Text("取消")),
+                    child: const Text("取消")),
                 TextButton(
                     onPressed: () {
                       DatabaseUtil.storeServerAddress(serverAddressController.text);
                       HttpGet.switchBaseUrl(serverAddressController.text);
                       Navigator.pop(context);
                     },
-                    child: Text("确定"))
+                    child: const Text("确定"))
               ],
             )
           ],
@@ -116,11 +116,11 @@ class _SettingsPageBodyState extends State<SettingsPageBody> {
   setLogoutConfirm() {
     return Dialog(
       child: Container(
-        padding: EdgeInsets.all(12),
+        padding: const EdgeInsets.all(12),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text("注销账户会清空本地对话历史记录，是否继续？"),
+            const Text("注销账户会清空本地对话历史记录，是否继续？"),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -128,12 +128,12 @@ class _SettingsPageBodyState extends State<SettingsPageBody> {
                     onPressed: () {
                       Navigator.pop(context);
                     },
-                    child: Text("取消")),
+                    child: const Text("取消")),
                 TextButton(
                     onPressed: () {
                       Provider.of<MainViewModel>(context, listen: false).logout();
                     },
-                    child: Text("确定"))
+                    child: const Text("确定"))
               ],
             )
           ],

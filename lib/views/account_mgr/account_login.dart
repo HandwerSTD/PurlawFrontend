@@ -25,8 +25,8 @@ class AccountLoginPage extends StatelessWidget {
         appBar: AppBar(
           actions: [
             IconButton(onPressed: (){
-              Navigator.push(context, MaterialPageRoute(builder: (_) => SettingsPage()));
-            }, icon: Icon(Icons.settings))
+              Navigator.push(context, MaterialPageRoute(builder: (_) => const SettingsPage()));
+            }, icon: const Icon(Icons.settings))
           ],
         ),
         body: const AccountLoginPageBody(),
@@ -104,13 +104,13 @@ class _AccountLoginPageBodyState extends State<AccountLoginPageBody> {
                         hint: '用户名',
                         controller: model.nameCtrl,
                         margin:
-                            EdgeInsets.only(left: 32, right: 32, top: 24, bottom: 6),
+                            const EdgeInsets.only(left: 32, right: 32, top: 24, bottom: 6),
                       ),
                       PurlawLoginTextField(
                         hint: '密码',
                         controller: model.passwdCtrl,
                         margin:
-                            EdgeInsets.only(left: 32, right: 32, top: 6, bottom: 32),
+                            const EdgeInsets.only(left: 32, right: 32, top: 6, bottom: 32),
                         secureText: true,
                       ),
                       PurlawRRectButton(
@@ -144,7 +144,7 @@ class _AccountLoginPageBodyState extends State<AccountLoginPageBody> {
                               style: TextStyle(color: Colors.blue),
                             ),
                             onTap: () {
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => AccountRegisterPage()));
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => const AccountRegisterPage()));
                             },
                           )
                         ],
@@ -154,7 +154,7 @@ class _AccountLoginPageBodyState extends State<AccountLoginPageBody> {
                 ],
               ),
               (rBreak ? Container() : const Padding(
-                padding: const EdgeInsets.all(24.0),
+                padding: EdgeInsets.all(24.0),
                 child: Text('—— 请登录以获得紫藤法道个性化服务。——', style: TextStyle(color: Colors.grey, fontSize: 12),),
               )),
             ],

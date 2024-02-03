@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
@@ -42,7 +41,7 @@ class _ShortVideoUploadState extends State<ShortVideoUpload> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("上传视频"),
+        title: const Text("上传视频"),
       ),
       body: ProviderWidget<ShortVideoUploadViewModel>(
         model: ShortVideoUploadViewModel(
@@ -51,7 +50,7 @@ class _ShortVideoUploadState extends State<ShortVideoUpload> {
           model.load();
         },
         builder: (context, model, _) => Padding(
-          padding: EdgeInsets.all(18),
+          padding: const EdgeInsets.all(18),
           child: Column(
             children: [
               Column(
@@ -60,28 +59,28 @@ class _ShortVideoUploadState extends State<ShortVideoUpload> {
                     children: [
                       Expanded(
                           child: Padding(
-                        padding: EdgeInsets.only(bottom: 12),
+                        padding: const EdgeInsets.only(bottom: 12),
                         child: TextField(
                           decoration: outlineBorderedInputDecoration("视频标题", 36,
                               filled: true),
                           controller: model.titleController,
-                          style: TextStyle(fontSize: 15),
+                          style: const TextStyle(fontSize: 15),
                         ),
                       ))
                     ],
                   ),
                   Padding(
-                    padding: EdgeInsets.only(bottom: 12),
+                    padding: const EdgeInsets.only(bottom: 12),
                     child: TextField(
                       decoration: outlineBorderedInputDecoration(
                           "视频标签，用英文逗号分隔", 36,
                           filled: true),
                       controller: model.tagsController,
-                      style: TextStyle(fontSize: 15),
+                      style: const TextStyle(fontSize: 15),
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(bottom: 12),
+                    padding: const EdgeInsets.only(bottom: 12),
                     child: multilineTextField(model.descController),
                   ),
                 ],
@@ -102,16 +101,16 @@ class _ShortVideoUploadState extends State<ShortVideoUpload> {
                   });
                 },
                 child: Padding(
-                  padding: EdgeInsets.all(12),
+                  padding: const EdgeInsets.all(12),
                   child: (model.loaded
                       ? Stack(
                           alignment: Alignment.bottomCenter,
                           children: [
                             (Image.memory(model.coverData)),
                             Container(
-                              padding: EdgeInsets.symmetric(
+                              padding: const EdgeInsets.symmetric(
                                   horizontal: 8, vertical: 2),
-                              margin: EdgeInsets.only(bottom: 2),
+                              margin: const EdgeInsets.only(bottom: 2),
                               decoration: BoxDecoration(
                                   color: Colors.black54,
                                   borderRadius: BorderRadius.circular(14)),
@@ -164,7 +163,7 @@ class _ShortVideoUploadState extends State<ShortVideoUpload> {
   Widget multilineTextField(TextEditingController cont) {
     return Container(
       // color: Colors.red,
-      constraints: BoxConstraints(
+      constraints: const BoxConstraints(
         maxHeight: 144.0,
         minHeight: 96.0,
       ),
@@ -187,7 +186,7 @@ class _ShortVideoUploadState extends State<ShortVideoUpload> {
           {bool dense = false, bool filled = false, fillColor}) =>
       InputDecoration(
         isDense: dense,
-        contentPadding: EdgeInsets.symmetric(vertical: 8.5, horizontal: 12),
+        contentPadding: const EdgeInsets.symmetric(vertical: 8.5, horizontal: 12),
         border: OutlineInputBorder(
             borderSide: BorderSide.none,
             borderRadius: BorderRadius.all(Radius.circular(rad))),
@@ -198,6 +197,6 @@ class _ShortVideoUploadState extends State<ShortVideoUpload> {
                 .colorModel
                 .loginTextFieldColor,
         hintText: hint,
-        hintStyle: TextStyle(color: Colors.grey),
+        hintStyle: const TextStyle(color: Colors.grey),
       );
 }

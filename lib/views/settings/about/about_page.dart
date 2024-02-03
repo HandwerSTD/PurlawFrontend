@@ -10,7 +10,7 @@ class AboutPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("关于应用"),
+        title: const Text("关于应用"),
       ),
       body: Center(
         child: Column(
@@ -23,21 +23,21 @@ class AboutPage extends StatelessWidget {
                 Text("版本 Beta v1.0"),
               ],
             ),
-            Padding(padding: EdgeInsets.all(24), child: Column(
+            Padding(padding: const EdgeInsets.all(24), child: Column(
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text("我们的"),
+                    const Text("我们的"),
                     InkWell(
-                      child: Text("用户协议", style: TextStyle(color: Colors.blueAccent),),
+                      child: const Text("用户协议", style: TextStyle(color: Colors.blueAccent),),
                       onTap: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => EULAPage()));
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => const EULAPage()));
                       },
                     ),
-                    Text("与"),
+                    const Text("与"),
                     InkWell(
-                      child: Text("开放源代码许可", style: TextStyle(color: Colors.blueAccent),),
+                      child: const Text("开放源代码许可", style: TextStyle(color: Colors.blueAccent),),
                       onTap: () {
                         // launchUrl(Uri.parse(privacyStatementAddress), mode: LaunchMode.externalApplication);
                       },
@@ -59,10 +59,10 @@ class EULAPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("用户协议"),),
+      appBar: AppBar(title: const Text("用户协议"),),
       body: Container(
         alignment: Alignment.topLeft,
-        padding: EdgeInsets.symmetric(horizontal: 24),
+        padding: const EdgeInsets.symmetric(horizontal: 24),
         child: ListView(
           children: const [
             Row(

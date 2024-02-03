@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:babstrap_settings_screen/babstrap_settings_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
@@ -14,7 +13,7 @@ import 'package:tdesign_flutter/tdesign_flutter.dart';
 import 'package:http/http.dart' as http;
 
 class MyAccountAvatar extends StatelessWidget {
-  MyAccountAvatar({super.key});
+  const MyAccountAvatar({super.key});
 
   Future uploadNewAvatar(
       {required List<int> avatar, required String cookie}) async {
@@ -33,12 +32,12 @@ class MyAccountAvatar extends StatelessWidget {
     return Scaffold(
       appBar: PurlawAppTitleBar(title: '我的头像', showBack: true).build(context),
       body: Container(
-        padding: EdgeInsets.all(12),
+        padding: const EdgeInsets.all(12),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             UserAvatarLoader(
-              margin: EdgeInsets.all(47),
+              margin: const EdgeInsets.all(47),
                 avatar:
                     Provider.of<MainViewModel>(context).myUserInfoModel.avatar,
                 size: 144,
@@ -47,7 +46,7 @@ class MyAccountAvatar extends StatelessWidget {
               children: [
                 Expanded(
                   child: ElevatedButton(
-                      child: Text("上传新头像"),
+                      child: const Text("上传新头像"),
                       onPressed: () async {
                         var avatar = await ImagePicker().pickImage(
                             source: ImageSource.gallery,
@@ -56,7 +55,7 @@ class MyAccountAvatar extends StatelessWidget {
                         if (avatar == null) return;
                         var avatarData = await ImageCropper().cropImage(
                             sourcePath: avatar.path,
-                            aspectRatio: CropAspectRatio(ratioX: 1, ratioY: 1));
+                            aspectRatio: const CropAspectRatio(ratioX: 1, ratioY: 1));
                         if (avatarData == null) return;
                         TDToast.showText("上传中", context: context);
                         var response = await uploadNewAvatar(

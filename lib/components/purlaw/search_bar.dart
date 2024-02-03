@@ -3,7 +3,7 @@ import 'package:purlaw/common/utils/misc.dart';
 import 'package:tdesign_flutter/tdesign_flutter.dart';
 
 class SearchAppBar extends StatefulWidget {
-  SearchAppBar(
+  const SearchAppBar(
       {Key? key,
         required this.hintLabel,
         required this.onSubmitted,
@@ -48,8 +48,8 @@ class _SearchAppBarState extends State<SearchAppBar> {
       // width: Responsive.assignWidthSmall(queryData.size.width),
       height: widget.height,
       // 设置padding
-      padding: EdgeInsets.only(left: 20, top: 0),
-      margin: (widget.readOnly ? EdgeInsets.only(left: 12, right: 12, top: (rBreak ? 84 : 8)) : EdgeInsets.only(top: 6)),
+      padding: const EdgeInsets.only(left: 20, top: 0),
+      margin: (widget.readOnly ? EdgeInsets.only(left: 12, right: 12, top: (rBreak ? 84 : 8)) : const EdgeInsets.only(top: 6)),
       // 设置子级位置
       alignment: Alignment.centerLeft,
       // 设置修饰
@@ -69,9 +69,9 @@ class _SearchAppBarState extends State<SearchAppBar> {
         onTap: (widget.readOnly ? () {widget.onTap();} : null),
         decoration: InputDecoration(
             isDense: true,
-            contentPadding: EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+            contentPadding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
             hintText: widget.hintLabel,
-            hintStyle: TextStyle(color: Colors.grey),
+            hintStyle: const TextStyle(color: Colors.grey),
             // 取消掉文本框下面的边框
             border: InputBorder.none,
             icon: Padding(
@@ -82,13 +82,13 @@ class _SearchAppBarState extends State<SearchAppBar> {
                   color: Theme.of(context).colorScheme.primary,
                 )),
             //  关闭按钮，有值时才显示
-            suffixIcon: this.searchVal.isNotEmpty
+            suffixIcon: searchVal.isNotEmpty
                 ? IconButton(
-              icon: Icon(Icons.close),
+              icon: const Icon(Icons.close),
               onPressed: () {
                 //   清空内容
                 setState(() {
-                  this.searchVal = '';
+                  searchVal = '';
                   _controller.clear();
                 });
               },
@@ -96,7 +96,7 @@ class _SearchAppBarState extends State<SearchAppBar> {
                 : null),
         onChanged: (value) {
           setState(() {
-            this.searchVal = value;
+            searchVal = value;
           });
         },
         onSubmitted: (value) {

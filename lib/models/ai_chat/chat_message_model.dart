@@ -12,16 +12,16 @@ class ListAIChatMessageModels {
     if (json['AIChatMessageModel'] != null) {
       messages = <AIChatMessageModel>[];
       json['AIChatMessageModel'].forEach((v) {
-        messages!.add(new AIChatMessageModel.fromJson(v));
+        messages!.add(AIChatMessageModel.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.messages != null) {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    if (messages != null) {
       data['AIChatMessageModel'] =
-          this.messages!.map((v) => v.toJson()).toList();
+          messages!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -43,15 +43,15 @@ class AIChatMessageModel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['message'] = this.message;
-    data['isMine'] = this.isMine;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['message'] = message;
+    data['isMine'] = isMine;
     return data;
   }
 
   Future<void> append(String msg, Function refresh) async {
     for (int i = 0; i < msg.length; ++i) {
-      await Future.delayed(Duration(milliseconds: 100)).then((value) {
+      await Future.delayed(const Duration(milliseconds: 100)).then((value) {
         message += msg[i];
         refresh();
       });

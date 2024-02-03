@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:purlaw/common/network/chat_api.dart';
 import 'package:purlaw/common/utils/database/database_util.dart';
 import 'package:purlaw/viewmodels/base_viewmodel.dart';
-import 'package:purlaw/views/account_mgr/my_account_page.dart';
 
 import '../../common/constants/constants.dart';
 import '../../models/ai_chat/chat_message_model.dart';
@@ -31,7 +30,7 @@ class AIChatMsgListViewModel extends BaseViewModel {
 
   void scrollToBottom() {
     scrollController.animateTo(scrollController.position.maxScrollExtent,
-        duration: Duration(milliseconds: 500), curve: Curves.ease);
+        duration: const Duration(milliseconds: 500), curve: Curves.ease);
   }
   void setDisableWhenSubmit() {
     focusNode.unfocus();

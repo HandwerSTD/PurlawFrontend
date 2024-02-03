@@ -8,8 +8,8 @@ class OOBE extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(child: ElevatedButton(child: Text("oobe"), onPressed: () {
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => AccountLoginPage(showBack: false)));
+      body: Center(child: ElevatedButton(child: const Text("oobe"), onPressed: () {
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const AccountLoginPage(showBack: false)));
       },),),
     );
   }

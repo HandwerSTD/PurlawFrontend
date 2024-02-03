@@ -24,17 +24,19 @@ class HttpGet {
 
   static Future<String> get(String api, Map<String, String> headers) async {
     var response = await http.get(Uri.parse(getApi(api)), headers: headers);
-    if (response.statusCode != HTTP_OK)
+    if (response.statusCode != HTTP_OK) {
       throw HttpException(response.statusCode.toString());
+    }
     return const Utf8Decoder().convert(response.bodyBytes);
   }
 
   static Future<(String, String?)> postGetCookie(String api,
       Map<String, String> headers, Map<String, dynamic> body) async {
     var response = await http.post(Uri.parse(getApi(api)),
-        headers: headers, body: jsonEncode(body)).timeout(Duration(seconds: 10));
-    if (response.statusCode != HTTP_OK)
+        headers: headers, body: jsonEncode(body)).timeout(const Duration(seconds: 10));
+    if (response.statusCode != HTTP_OK) {
       throw HttpException(response.statusCode.toString());
+    }
     return (
       const Utf8Decoder().convert(response.bodyBytes),
       response.headers["set-cookie"]
@@ -44,9 +46,10 @@ class HttpGet {
   static Future<String> post(String api, Map<String, String> headers,
       Map<String, dynamic> body) async {
     var response = await http.post(Uri.parse(getApi(api)),
-        headers: headers, body: jsonEncode(body)).timeout(Duration(seconds: 10));
-    if (response.statusCode != HTTP_OK)
+        headers: headers, body: jsonEncode(body)).timeout(const Duration(seconds: 10));
+    if (response.statusCode != HTTP_OK) {
       throw HttpException(response.statusCode.toString());
+    }
     return const Utf8Decoder().convert(response.bodyBytes);
   }
   static Future<Uint8List> postGetBodyBytes(String api, Map<String, String> headers,
@@ -54,8 +57,9 @@ class HttpGet {
     print("getting bytes");
     var response = await http.post(Uri.parse(getApi(api)),
         headers: headers, body: jsonEncode(body));
-    if (response.statusCode != HTTP_OK)
+    if (response.statusCode != HTTP_OK) {
       throw HttpException(response.statusCode.toString());
+    }
     return (response.bodyBytes);
   }
 }
@@ -67,8 +71,9 @@ class NetworkRequest {
     var response = jsonDecode(await HttpGet.post(
         API.userInfo.api, HttpGet.jsonHeaders, {'user': user}));
     // print(response);
-    if (!(response["status"] as String).startsWith("success"))
+    if (!(response["status"] as String).startsWith("success")) {
       throw Exception(response["message"]);
+    }
     return MyUserInfoModel.fromJson((response["result"]), cookie);
   }
 

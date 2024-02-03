@@ -1,12 +1,8 @@
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:purlaw/common/provider/provider_widget.dart';
-import 'package:purlaw/common/utils/database/database_util.dart';
 import 'package:purlaw/common/utils/misc.dart';
 import 'package:purlaw/components/purlaw/purlaw_components.dart';
-import 'package:purlaw/models/ai_chat/chat_message_model.dart';
 import 'package:purlaw/models/theme_model.dart';
 import 'package:purlaw/viewmodels/ai_chat_page/chat_page_viewmodel.dart';
 import 'package:purlaw/viewmodels/main_viewmodel.dart';
@@ -26,9 +22,9 @@ class AIChatPageBody extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Expanded(
-            child: AIChatPageMessageList().build(context),
+            child: const AIChatPageMessageList().build(context),
           ),
-          Flexible(flex: 0, child: AIChatPageFooter())
+          const Flexible(flex: 0, child: AIChatPageFooter())
         ],
       ),
     );
@@ -105,7 +101,7 @@ class _AIChatPageFooterState extends State<AIChatPageFooter> {
                 width: Responsive.assignWidthMedium(constraint.maxWidth),
                 padding: EdgeInsets.only(
                     left: 12, right: 18, top: 2 + (lgBreak ? 2 : 0), bottom: 4),
-                margin: (lgBreak ? EdgeInsets.only(bottom: 4) : null),
+                margin: (lgBreak ? const EdgeInsets.only(bottom: 4) : null),
                 child: Row(
                   mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -267,9 +263,9 @@ class RecommendedActionButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Visibility(visible: show,child: PurlawRRectButton(
       margin: EdgeInsets.only(left: 8 + (isHeadOrTail == -1 ? 8 : 0), top: 8, bottom: 8, right: 8 + (isHeadOrTail == 1 ? 8 : 0)),
-      padding: EdgeInsets.symmetric(horizontal: 16),
-      backgroundColor: Provider.of<ThemeViewModel>(context).themeModel.colorModel.generalFillColorLight.withOpacity(0.2),
-      child: Text(title), width: null, onClick: onClick, radius: 18,),);
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      backgroundColor: Provider.of<ThemeViewModel>(context).themeModel.colorModel.generalFillColorLight.withOpacity(0.2), width: null, onClick: onClick, radius: 18,
+      child: Text(title),),);
   }
 }
 

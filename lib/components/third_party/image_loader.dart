@@ -1,4 +1,3 @@
-import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -72,7 +71,7 @@ class ImageLoaderWithMemory extends StatelessWidget {
           height: height,
           fit: BoxFit.cover,
           imageBuilder: (context, image) {
-            image.resolve(ImageConfiguration())
+            image.resolve(const ImageConfiguration())
                 .addListener(ImageStreamListener((image, _) {
                   // print("${image.image.height}x${image.image.width}");
               saveRatio(image.image.height.toDouble(), image.image.width.toDouble());

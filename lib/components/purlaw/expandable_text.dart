@@ -33,9 +33,7 @@ class _ExpandableTextState extends State<ExpandableText> {
   bool expand;
 
   _ExpandableTextState(this.text, this.maxLines, this.style, this.expand) {
-    if (expand == null) {
-      expand = false;
-    }
+    expand ??= false;
   }
 
   @override
@@ -66,7 +64,7 @@ class _ExpandableTextState extends State<ExpandableText> {
                 });
               },
               child: Container(
-                padding: EdgeInsets.only(top: 2),
+                padding: const EdgeInsets.only(top: 2),
                 child: Text(expand ? '收起' : '全文',
                     style: TextStyle(
                         fontSize: style != null ? style.fontSize : null,

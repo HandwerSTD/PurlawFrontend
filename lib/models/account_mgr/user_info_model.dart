@@ -13,10 +13,10 @@ class UserInfoModel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['avatar'] = this.avatar;
-    data['uid'] = this.uid;
-    data['user'] = this.user;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['avatar'] = avatar;
+    data['uid'] = uid;
+    data['user'] = user;
     return data;
   }
 }
@@ -37,10 +37,10 @@ class MyUserInfoModel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['avatar'] = this.avatar;
-    data['uid'] = this.uid;
-    data['user'] = this.user;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['avatar'] = avatar;
+    data['uid'] = uid;
+    data['user'] = user;
     return data;
   }
 

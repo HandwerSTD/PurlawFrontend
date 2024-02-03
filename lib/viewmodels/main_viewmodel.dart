@@ -1,10 +1,6 @@
-import 'dart:convert';
-import 'dart:io';
 
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:purlaw/common/constants/constants.dart';
-import 'package:purlaw/common/network/network_loading_state.dart';
 import 'package:purlaw/common/network/network_request.dart';
 import 'package:purlaw/common/utils/database/database_util.dart';
 import 'package:purlaw/main.dart';
@@ -25,13 +21,16 @@ class MainViewModel extends BaseViewModel {
     SystemNavigator.pop();
   }
 
-  void refreshCookies() async {
+  void refreshCookies({bool toast = false}) async {
     (String, String) login = DatabaseUtil.getUserNamePasswd();
     try {
       cookies = await NetworkRequest.refreshCookies(login.$1, login.$2);
       print("[MainViewModel] cookies refreshed");
       myUserInfoModel =
           await NetworkRequest.getUserInfoWhenLogin(login.$1, cookies);
+      if (toast) {
+        eventBus.fire(MainViewModelEventBus(toast: "刷新成功"));
+      }
     } catch(e) {
       print(e);
       eventBus.fire(MainViewModelEventBus(toast: "网络错误"));

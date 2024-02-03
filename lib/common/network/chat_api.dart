@@ -15,7 +15,7 @@ class ChatNetworkRequest {
     var response = jsonDecode(await HttpGet.post(
         API.chatCreateSession.api,
         HttpGet.jsonHeadersCookie(cookie),
-        ({"type": "ask", "data": text})).timeout(Duration(seconds: 10)));
+        ({"type": "ask", "data": text})).timeout(const Duration(seconds: 10)));
     print(response);
     String session = response["session_id"];
     print(session);

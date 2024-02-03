@@ -60,6 +60,7 @@ class _PurlawWaterfallListState extends State<PurlawWaterfallList> {
           ),
           readyWaitingWidget: widget.readyWidget,
           errorWidget: Container(
+            alignment: Alignment.center,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [

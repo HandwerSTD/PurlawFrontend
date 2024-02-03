@@ -4,7 +4,6 @@ import 'package:purlaw/components/multi_state_widget.dart';
 import 'package:purlaw/components/purlaw/appbar.dart';
 import 'package:purlaw/models/ai_chat/chat_message_model.dart';
 import 'package:purlaw/viewmodels/ai_chat_page/chat_history_viewmodel.dart';
-import 'package:purlaw/views/ai_chat_page/ai_chat_page.dart';
 import 'package:typicons_flutter/typicons_flutter.dart';
 
 import '../../common/provider/provider_widget.dart';
@@ -17,7 +16,7 @@ class ChatHistoryPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PurlawAppTitleBar(title: '对话历史', showBack: true).build(context),
-      body: ChatHistoryPageBody(),
+      body: const ChatHistoryPageBody(),
     );
   }
 }
