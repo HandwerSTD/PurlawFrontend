@@ -51,7 +51,7 @@ class AIChatMessageModel {
 
   Future<void> append(String msg, Function refresh) async {
     for (int i = 0; i < msg.length; ++i) {
-      await Future.delayed(const Duration(milliseconds: 100)).then((value) {
+      await Future.delayed(const Duration(milliseconds: 50)).then((value) {
         message += msg[i];
         refresh();
       });

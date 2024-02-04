@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:purlaw/common/utils/misc.dart';
 
 class Log {
-  static bool saveLog = true;
+  static bool saveLog = false;
   static bool printLog = true;
   static String logs = "";
   static Logger logger = Logger(
@@ -23,7 +23,7 @@ class Log {
   }
   static void append(message) {
     if (!saveLog) return;
-    logs += '$message\n';
+    logs += '${TimeUtils.formatDateTime(TimeUtils.timestamp)}\n$message\n';
   }
   static void i(message, {String? tag}) {
     message = "[${tag??""}] $message";

@@ -51,7 +51,7 @@ class _PurlawWaterfallListState extends State<PurlawWaterfallList> {
             width: Responsive.assignWidthMedium(constraints.maxWidth),
             child: WaterfallFlow.count(
               padding: (widget.useTopPadding
-                  ? EdgeInsets.only(top: (lgBreak ? 84 : 64))
+                  ? EdgeInsets.only(top: (lgBreak ? 84 : 68))
                   : null),
               crossAxisCount: (nsmBreak ? 4 : 2),
               controller: widget.controller,

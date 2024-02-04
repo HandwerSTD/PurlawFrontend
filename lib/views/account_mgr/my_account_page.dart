@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
@@ -19,7 +20,7 @@ Future openMyAccountPage(BuildContext context) {
       Provider.of<MainViewModel>(context, listen: false).cookies.isNotEmpty;
   if (logged) {
     return Navigator.push(
-        context, MaterialPageRoute(builder: (_) => const MyAccountPage()));
+        context, CupertinoPageRoute(builder: (_) => const MyAccountPage()));
   }
   return Navigator.push(context,
       MaterialPageRoute(builder: (_) => const AccountLoginPage(showBack: true)));
@@ -61,7 +62,7 @@ class _MyAccountPageState extends State<MyAccountPage> {
             Provider.of<MainViewModel>(context, listen: false).refreshCookies(toast: true);
           }, icon: const Icon(Icons.refresh)),
           IconButton(onPressed: (){
-            Navigator.push(context, MaterialPageRoute(builder: (_) => const SettingsPage()));
+            Navigator.push(context, CupertinoPageRoute(builder: (_) => const SettingsPage()));
           }, icon: const Icon(Icons.settings))
         ],
       ),

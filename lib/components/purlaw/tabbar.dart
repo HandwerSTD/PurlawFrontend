@@ -134,6 +134,6 @@ class PurlawPageTab extends StatelessWidget {
   }
 
   Widget buildView(BuildContext context) {
-    return TDTabBarView(controller: controller,children: children!,);
+    return TDTabBarView(controller: controller,isSlideSwitch: true,children: children!,);
   }
 }

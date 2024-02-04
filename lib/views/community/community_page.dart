@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:purlaw/common/constants/constants.dart';
@@ -214,7 +215,7 @@ class GridVideoBlock extends StatelessWidget {
           onTap: () {
             Navigator.push(
                 context,
-                MaterialPageRoute(
+                CupertinoPageRoute(
                     builder: (_) => ShortVideoPlayPage(paramVideo: video)));
           },
           child: Padding(

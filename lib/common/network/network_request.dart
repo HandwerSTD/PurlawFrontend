@@ -32,6 +32,7 @@ class HttpGet {
 
   static Future<(String, String?)> postGetCookie(String api,
       Map<String, String> headers, Map<String, dynamic> body) async {
+    Log.d(getApi(api), tag: "HTTP Network");
     var response = await http.post(Uri.parse(getApi(api)),
         headers: headers, body: jsonEncode(body)).timeout(const Duration(seconds: 10));
     if (response.statusCode != HTTP_OK) {
@@ -45,6 +46,8 @@ class HttpGet {
 
   static Future<String> post(String api, Map<String, String> headers,
       Map<String, dynamic> body) async {
+    Log.d(getApi(api), tag: "HTTP Network");
+
     var response = await http.post(Uri.parse(getApi(api)),
         headers: headers, body: jsonEncode(body)).timeout(const Duration(seconds: 10));
     if (response.statusCode != HTTP_OK) {

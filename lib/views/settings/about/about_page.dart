@@ -20,7 +20,7 @@ class AboutPage extends StatelessWidget {
               children: [
                 AppIconImage(margin: EdgeInsets.only(top: 96, bottom: 24),),
                 Text("紫藤法道", style: TextStyle(fontSize: 20),),
-                Text("版本 Beta v1.0"),
+                Text("版本 Beta v1.1"),
               ],
             ),
             Padding(padding: const EdgeInsets.all(24), child: Column(

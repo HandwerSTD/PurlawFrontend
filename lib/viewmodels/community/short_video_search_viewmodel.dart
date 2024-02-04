@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:purlaw/common/network/network_loading_state.dart';
 import 'package:purlaw/common/network/network_request.dart';
 import 'package:purlaw/models/community/short_video_info_model.dart';
@@ -13,6 +14,8 @@ class ShortVideoSearchViewModel extends BaseViewModel {
   String text = "";
   int pageNum = 1;
   int totalCount = 0;
+  ScrollController controller = ScrollController();
+
 
   ShortVideoSearchViewModel({super.context}) {
     super.state = NetworkLoadingState.READY_WAITING;

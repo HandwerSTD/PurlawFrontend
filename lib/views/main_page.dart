@@ -1,7 +1,12 @@
+import 'dart:ui';
+
+import 'package:fluro/fluro.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:purlaw/common/provider/provider_widget.dart';
 import 'package:purlaw/components/purlaw/tabbar.dart';
+import 'package:purlaw/main.dart';
 import 'package:purlaw/viewmodels/ai_chat_page/chat_page_viewmodel.dart';
 import 'package:purlaw/viewmodels/community/short_video_list_viewmodel.dart';
 import 'package:purlaw/viewmodels/main_page_viewmodel.dart';
@@ -14,6 +19,8 @@ import 'package:purlaw/views/utilities/utilities_index_page.dart';
 import '../common/utils/misc.dart';
 import 'community/community_search_page.dart';
 
+ValueNotifier<bool> blur = ValueNotifier(false);
+
 /// 程序首页的 UI，用脚手架搭建 AppBar 和三个 Tab
 class MainPage extends StatelessWidget {
   static int tabIndex = 1;
@@ -25,46 +32,63 @@ class MainPage extends StatelessWidget {
   }
 
   static Widget leftButton(BuildContext context) => IconButton(
-    onPressed: () {
-      // Navigator.push(context, MaterialPageRoute(builder: (_) => MyAccountPage()));
-      // Provider.of<ThemeViewModel>(context, listen: false).switchDarkMode();
-      Navigator.push(context, MaterialPageRoute(builder: (_) => const ChatHistoryPage()));
-    },
-    icon: const Icon(Icons.mark_chat_read_outlined),
-  );
+        onPressed: () {
+          // Navigator.push(
+          //     context, MaterialPageRoute(builder: (_) => ChatHistoryPage()));
+          Navigator.push(context, PageRouteBuilder(
+              pageBuilder: (_, __, ___) => ChatHistoryPage(),
+              barrierColor: Colors.black45,
+              transitionDuration: Duration(milliseconds: 400),
+              transitionsBuilder: (context, anim, secAnim, child) {
+                return SlideTransition(position: anim.drive(Tween(
+                    begin: Offset(-1, 0),
+                    end: Offset.zero
+                ).chain(CurveTween(curve: Curves.ease))),child: child,);
+              }
+          ),);
+        },
+        icon: const Icon(Icons.mark_chat_read_outlined),
+      );
   static Widget rightButton(BuildContext context, {bool rBreak = false}) =>
-      Padding(
-        padding: EdgeInsets.symmetric(horizontal: (tabIndex == 2 && rBreak) ? 4 : 0),
+      Container(
+        // padding: EdgeInsets.only(left: (tabIndex == 2 && rBreak) ? 4 : 0),
         child: Row(
           children: [
-            Visibility(visible: (tabIndex == 2 && rBreak),
+            Visibility(
+              visible: (tabIndex == 2 && rBreak),
               child: IconButton(
-              onPressed: () {
-                JumpToSearchPage(context);
-              },
-              icon: const Icon(Icons.search),
-            ),),
-            IconButton(
                 onPressed: () {
-            openMyAccountPage(context);
+                  JumpToSearchPage(context);
                 },
-                icon: const Icon(Icons.person_outline),
+                icon: const Icon(Icons.search),
               ),
+            ),
+            IconButton(
+              onPressed: () {
+                openMyAccountPage(context);
+              },
+              icon: const Icon(Icons.person_outline),
+            ),
           ],
         ),
       );
-  
+
   const MainPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider<MainPageViewModel>(create: (_) => MainPageViewModel()),
-        ChangeNotifierProvider<AIChatMsgListViewModel>(create: (_) => AIChatMsgListViewModel(context: _),),
-        ChangeNotifierProvider<ShortVideoListViewModel>(create: (_) => ShortVideoListViewModel(context: _),)
+        ChangeNotifierProvider<MainPageViewModel>(
+            create: (_) => MainPageViewModel()),
+        ChangeNotifierProvider<AIChatMsgListViewModel>(
+          create: (_) => AIChatMsgListViewModel(context: _),
+        ),
+        ChangeNotifierProvider<ShortVideoListViewModel>(
+          create: (_) => ShortVideoListViewModel(context: _),
+        )
       ],
-      builder: (_, __) => Scaffold(
+      builder: (context, __) => Scaffold(
           appBar: AppBar(
             toolbarHeight: 0,
           ),
@@ -73,7 +97,9 @@ class MainPage extends StatelessWidget {
               final width = MediaQuery.of(context).size.width;
               final String screenType = Responsive.checkWidth(width);
               bool rBreak = (screenType == Responsive.lg);
-              return (rBreak ? const LargeMainPageBody() : const NormalMainPageBody());
+              return (rBreak
+                  ? const LargeMainPageBody()
+                  : const NormalMainPageBody());
             },
           )),
     );
@@ -88,6 +114,8 @@ class NormalMainPageBody extends StatefulWidget {
 }
 
 class _NormalMainPageBodyState extends State<NormalMainPageBody> {
+  PageController controller = PageController(initialPage: MainPage.tabIndex);
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -99,28 +127,44 @@ class _NormalMainPageBodyState extends State<NormalMainPageBody> {
           tabs: [
             PurlawTabBarConfig(
                 onTap: () {
-                  setState(() {
-                    MainPage.tabIndex = 0;
-                  });
+                  controller.animateToPage(0,
+                      duration: Duration(milliseconds: 400),
+                      curve: Curves.easeOutQuad);
                 },
                 tabText: '工具'),
             PurlawTabBarConfig(
                 onTap: () {
-                  setState(() {
-                    MainPage.tabIndex = 1;
-                  });
+                  controller.animateToPage(1,
+                      duration: Duration(milliseconds: 400),
+                      curve: Curves.easeOutQuad);
                 },
                 tabText: '对话'),
             PurlawTabBarConfig(
                 onTap: () {
-                  setState(() {
-                    MainPage.tabIndex = 2;
-                  });
+                  controller.animateToPage(2,
+                      duration: Duration(milliseconds: 400),
+                      curve: Curves.easeOutQuad);
                 },
                 tabText: '社区')
-          ], selectedTab: MainPage.tabIndex,
+          ],
+          selectedTab: MainPage.tabIndex,
         ),
-        Expanded(child: MainPage.getTab(context, MainPage.tabIndex))
+        // Expanded(child: MainPage.getTab(context, MainPage.tabIndex))
+        Expanded(
+          child: PageView(
+            controller: controller,
+            children: [
+              MainPage.getTab(context, 0),
+              MainPage.getTab(context, 1),
+              MainPage.getTab(context, 2),
+            ],
+            onPageChanged: (index) {
+              setState(() {
+                MainPage.tabIndex = index;
+              });
+            },
+          ),
+        )
       ],
     );
   }
@@ -134,9 +178,10 @@ class LargeMainPageBody extends StatefulWidget {
 }
 
 class _LargeMainPageBodyState extends State<LargeMainPageBody> {
+  PageController controller = PageController(initialPage: MainPage.tabIndex);
+
   @override
   Widget build(BuildContext context) {
-    // TODO: 调布局
     return ProviderWidget<MainPageViewModel>(
       model: MainPageViewModel(),
       onReady: (model) {},
@@ -144,36 +189,46 @@ class _LargeMainPageBodyState extends State<LargeMainPageBody> {
         child: Stack(
           alignment: Alignment.topCenter,
           children: [
-            Container(
-              // 给悬浮 Tab 留出空间
-              // padding: EdgeInsets.only(top: 96),
-                child: MainPage.getTab(context, MainPage.tabIndex)),
+            PageView(
+              controller: controller,
+              children: [
+                MainPage.getTab(context, 0),
+                MainPage.getTab(context, 1),
+                MainPage.getTab(context, 2),
+              ],
+              onPageChanged: (index) {
+                setState(() {
+                  MainPage.tabIndex = index;
+                });
+              },
+            ),
             PurlawAppMainPageTabBar(
               leftButton: MainPage.leftButton(context),
               rightButton: MainPage.rightButton(context, rBreak: true),
               tabs: [
                 PurlawTabBarConfig(
                     onTap: () {
-                      setState(() {
-                        MainPage.tabIndex = 0;
-                      });
+                      controller.animateToPage(0,
+                          duration: Duration(milliseconds: 400),
+                          curve: Curves.easeOutQuad);
                     },
                     tabText: '工具'),
                 PurlawTabBarConfig(
                     onTap: () {
-                      setState(() {
-                        MainPage.tabIndex = 1;
-                      });
+                      controller.animateToPage(1,
+                          duration: Duration(milliseconds: 400),
+                          curve: Curves.easeOutQuad);
                     },
                     tabText: '对话'),
                 PurlawTabBarConfig(
                     onTap: () {
-                      setState(() {
-                        MainPage.tabIndex = 2;
-                      });
+                      controller.animateToPage(2,
+                          duration: Duration(milliseconds: 400),
+                          curve: Curves.easeOutQuad);
                     },
                     tabText: '社区')
-              ], selectedTab: MainPage.tabIndex,
+              ],
+              selectedTab: MainPage.tabIndex,
             ),
           ],
         ),

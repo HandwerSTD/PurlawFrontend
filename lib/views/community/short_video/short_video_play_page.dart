@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:chewie/chewie.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:purlaw/common/provider/provider_widget.dart';
@@ -9,6 +10,7 @@ import 'package:purlaw/main.dart';
 import 'package:purlaw/models/community/short_video_info_model.dart';
 import 'package:purlaw/viewmodels/community/short_video_play_viewmodel.dart';
 import 'package:purlaw/viewmodels/main_viewmodel.dart';
+import 'package:purlaw/viewmodels/theme_viewmodel.dart';
 import 'package:purlaw/views/account_mgr/account_login.dart';
 import 'package:purlaw/views/account_mgr/account_visit_page.dart';
 import 'package:purlaw/views/account_mgr/components/account_page_components.dart';
@@ -63,22 +65,19 @@ class _ShortVideoPlayPageState extends State<ShortVideoPlayPage> {
           backgroundColor: Colors.black,
           foregroundColor: Colors.white,
         ),
-        body: Container(
-          // padding: EdgeInsets.only(top: 24),
-          child: PageView.builder(
-            controller: model.controller,
-            scrollDirection: Axis.vertical,
-            onPageChanged: (index) {
-              if (index == model.videoList.result!.length - 1) {
-                Log.d(tag: tag, "[ShortVideoPlay] Scrolled to end");
-                model.loadMoreVideo(cookie);
-              }
-            },
-            itemCount: model.videoList.result!.length,
-            itemBuilder: (BuildContext context, int index) {
-              return VideoPlayBlock(nowPlaying: model.videoList.result![index]);
-            },
-          ),
+        body: PageView.builder(
+          controller: model.controller,
+          scrollDirection: Axis.vertical,
+          onPageChanged: (index) {
+            if (index == model.videoList.result!.length - 1) {
+              Log.d(tag: tag, "[ShortVideoPlay] Scrolled to end");
+              model.loadMoreVideo(cookie);
+            }
+          },
+          itemCount: model.videoList.result!.length,
+          itemBuilder: (BuildContext context, int index) {
+            return VideoPlayBlock(nowPlaying: model.videoList.result![index]);
+          },
         ),
       ),
     );
@@ -321,48 +320,79 @@ class _VideoPlayBlockState extends State<VideoPlayBlock> {
                               showModalBottomSheet(
                                   context: context,
                                   builder: (context) {
-                                    return Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                              left: 24,
-                                              right: 24,
-                                              top: 24,
-                                              bottom: 0),
-                                          child: Text(
-                                            video.title!,
-                                            style:
-                                                const TextStyle(fontSize: 20),
+                                    return Container(
+                                      decoration: BoxDecoration(
+                                          color: getThemeModel(context).themeData.scaffoldBackgroundColor,
+                                        borderRadius: BorderRadius.only(topLeft: Radius.circular(8), topRight: Radius.circular(8))
+                                      ),
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Container(
+                                            margin: const EdgeInsets.only(left: 24,  top: 12, right: 24),
+
+                                            child: Row(
+                                              children: [
+                                                UserAvatarLoader(
+                                                  avatar: video.avatar!,
+                                                  size: 40,
+                                                  radius: 20,
+                                                ),
+                                                Padding(
+                                                  padding: const EdgeInsets.only(left: 12, top: 2),
+                                                  child: Text(
+                                                    video.author!,
+                                                    maxLines: 1,
+                                                    overflow: TextOverflow.ellipsis,
+                                                    style: const TextStyle(
+                                                        fontSize: 14,
+                                                        color: Colors.black,
+                                                        fontWeight: FontWeight.bold),
+                                                  ),
+                                                )
+                                              ],
+                                            ),
                                           ),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 24, vertical: 4),
-                                          child: Text(
-                                            TimeUtils.formatDateTime(
-                                                video.timestamp!.toInt()),
-                                            style: const TextStyle(
-                                                color: Colors.black54),
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                left: 24,
+                                                right: 24,
+                                                top: 12,
+                                                bottom: 0),
+                                            child: Text(
+                                              video.title!,
+                                              style:
+                                                  const TextStyle(fontSize: 20),
+                                            ),
                                           ),
-                                        ),
-                                        const Padding(
-                                          padding: EdgeInsets.only(
-                                              left: 24, right: 24),
-                                          child: Divider(),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                              left: 24, right: 24, bottom: 24),
-                                          child: Text(
-                                            video.description!,
-                                            style:
-                                                const TextStyle(fontSize: 16),
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 24, vertical: 4),
+                                            child: Text(
+                                              TimeUtils.formatDateTime(
+                                                  video.timestamp!.toInt()),
+                                              style: const TextStyle(
+                                                  color: Colors.black54),
+                                            ),
                                           ),
-                                        )
-                                      ],
+                                          const Padding(
+                                            padding: EdgeInsets.only(
+                                                left: 24, right: 24),
+                                            child: Divider(),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                left: 24, right: 24, bottom: 24),
+                                            child: Text(
+                                              video.description!,
+                                              style:
+                                                  const TextStyle(fontSize: 16),
+                                            ),
+                                          )
+                                        ],
+                                      ),
                                     );
                                   });
                             },
@@ -376,7 +406,7 @@ class _VideoPlayBlockState extends State<VideoPlayBlock> {
                                   style: TextStyle(
                                       shadows: kElevationToShadow[3],
                                       color: Colors.white,
-                                      fontSize: 18,
+                                      fontSize: 14,
                                       fontWeight: FontWeight.bold),
                                   maxLines: 2,
                                 )
@@ -421,7 +451,17 @@ class _VideoPlayBlockState extends State<VideoPlayBlock> {
         } else {
           model.autoPlay = false;
         }
-        Navigator.push(context, MaterialPageRoute(builder: (_) => AccountVisitPage(userId: video.authorId!))).then((value) {
+        Navigator.push(context, PageRouteBuilder(
+            pageBuilder: (_, __, ___) => AccountVisitPage(userId: video.authorId!),
+          transitionDuration: Duration(milliseconds: 400),
+            reverseTransitionDuration: Duration(milliseconds: 400),
+          transitionsBuilder: (context, anim, secAnim, child) {
+          return SlideTransition(position: anim.drive(Tween(
+            begin: Offset(0, 1),
+            end: Offset.zero
+          ).chain(CurveTween(curve: Curves.linearToEaseOut))),child: child,);
+          }
+        ),).then((value) {
           model.autoPlay = true;
         });
       },
@@ -431,8 +471,8 @@ class _VideoPlayBlockState extends State<VideoPlayBlock> {
           children: [
             UserAvatarLoader(
               avatar: video.avatar!,
-              size: 48,
-              radius: 24,
+              size: 40,
+              radius: 20,
             ),
             Padding(
               padding: const EdgeInsets.only(left: 12, top: 2),
@@ -441,7 +481,7 @@ class _VideoPlayBlockState extends State<VideoPlayBlock> {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: const TextStyle(
-                    fontSize: 18,
+                    fontSize: 14,
                     color: Colors.white,
                     fontWeight: FontWeight.bold),
               ),
@@ -481,7 +521,7 @@ class _VideoPlayBlockState extends State<VideoPlayBlock> {
               } else {
                 model.autoPlay = false;
               }
-              Navigator.push(context, MaterialPageRoute(builder: (_) => ShortVideoCommentPage(video: video))).then((value) {
+              Navigator.push(context, CupertinoPageRoute(builder: (_) => ShortVideoCommentPage(video: video))).then((value) {
                 model.autoPlay = true;
               });
             }),

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:event_bus/event_bus.dart';
+import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:purlaw/common/network/network_loading_state.dart';
@@ -11,16 +12,17 @@ import 'package:purlaw/components/multi_state_widget.dart';
 import 'package:purlaw/components/third_party/image_loader.dart';
 import 'package:purlaw/viewmodels/main_viewmodel.dart';
 import 'package:purlaw/viewmodels/theme_viewmodel.dart';
+import 'package:purlaw/views/ai_chat_page/chat_history_page.dart';
 import 'package:purlaw/views/main_page.dart';
 import 'package:purlaw/views/oobe/oobe.dart';
 import 'package:tdesign_flutter/tdesign_flutter.dart';
 import 'package:purlaw/common/utils/log_utils.dart';
+
 void main() {
   runApp(const MyApp());
 }
 
-EventBus eventBus = EventBus();
-
+final EventBus eventBus = EventBus();
 /// 程序入口
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -69,7 +71,6 @@ class _ProgramEntryState extends State<ProgramEntry> {
       // 首次使用应用引导
       if (DatabaseUtil.isFirstOpen()) {
         DatabaseUtil.setFirstOpen();
-        // TODO: set first open
         Navigator.push(
             context,
             MaterialPageRoute(

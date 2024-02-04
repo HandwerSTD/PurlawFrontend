@@ -36,6 +36,7 @@ class CommunitySearchPage extends StatelessWidget {
                 onPressed: (){ Navigator.pop(context); },
               ),
               title: SearchAppBar(
+                key: const Key('community_search_bar'),
                 height: 48,
                 hintLabel: '搜索',
                 onSubmitted: (value) {
@@ -47,46 +48,20 @@ class CommunitySearchPage extends StatelessWidget {
               bottom: const PreferredSize(preferredSize: Size.fromHeight(1), child: Divider(),),
               toolbarHeight: 72,
             ),
-            body: const CommunitySearchPageBody(),
+            body: PurlawWaterfallList(
+              useTopPadding: false,
+              list: List.generate((model.videoList.result?.length) ?? 0, (index) {
+                return GridVideoBlock(
+                  video: model.videoList.result![index],
+                  indexInList: index,
+                  videoList: model.videoList,
+                  loadMore: model.loadMoreVideo,
+                );
+              }),
+              controller: model.controller, onPullRefresh: () async {
+              await model.searchVideo(getCookie(context, listen: false), model.text);
+            }, loadingState: model.state, readyWidget: Container(),),
           );
         });
-  }
-}
-
-class CommunitySearchPageBody extends StatefulWidget {
-  const CommunitySearchPageBody({super.key});
-
-  @override
-  State<CommunitySearchPageBody> createState() =>
-      _CommunitySearchPageBodyState();
-}
-
-class _CommunitySearchPageBodyState extends State<CommunitySearchPageBody> {
-  ScrollController controller = ScrollController();
-
-  @override
-  void initState() {
-    super.initState();
-    controller.addListener(() {});
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return ProviderWidget<ShortVideoSearchViewModel>(
-        model: Provider.of<ShortVideoSearchViewModel>(context),
-        onReady: (_) {},
-        builder: (_, model, __) => PurlawWaterfallList(
-          useTopPadding: false,
-            list: List.generate((model.videoList.result?.length) ?? 0, (index) {
-              return GridVideoBlock(
-                video: model.videoList.result![index],
-                indexInList: index,
-                videoList: model.videoList,
-                loadMore: model.loadMoreVideo,
-              );
-            }),
-            controller: controller, onPullRefresh: () async {
-            await model.searchVideo(getCookie(context, listen: false), model.text);
-        }, loadingState: model.state, readyWidget: Container(),));
   }
 }
