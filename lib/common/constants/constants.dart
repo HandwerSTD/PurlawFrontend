@@ -23,7 +23,7 @@ enum API {
 
   chatCreateSession("/api/chat/create_session"),
   chatFlushSession("/api/chat/flush_session"),
-  chatRequestVoice("/api/voice/request_voice");
+  chatRequestVoice("/api/voice/request_voice/");
 
   const API(this.api);
   final String api;

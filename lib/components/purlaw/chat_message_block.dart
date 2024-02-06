@@ -1,19 +1,18 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
-import 'package:audioplayers/audioplayers.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:purlaw/common/constants/constants.dart';
 import 'package:purlaw/common/network/network_request.dart';
-import 'package:purlaw/common/utils/database/database_util.dart';
 import 'package:purlaw/common/utils/misc.dart';
 import 'package:purlaw/components/purlaw/purlaw_components.dart';
 import 'package:purlaw/models/theme_model.dart';
 import 'package:purlaw/viewmodels/main_viewmodel.dart';
 import 'package:purlaw/viewmodels/theme_viewmodel.dart';
 import 'package:tdesign_flutter/tdesign_flutter.dart';
-import 'package:async/async.dart';
 
 import '../../common/utils/log_utils.dart';
 import '../../models/ai_chat/chat_message_model.dart';
@@ -30,8 +29,9 @@ class PurlawChatMessageBlock extends StatefulWidget {
 
 class _PurlawChatMessageBlockState extends State<PurlawChatMessageBlock> {
   AudioPlayer audioPlayer = AudioPlayer();
-  CancelableOperation? audioFuture;
   ValueNotifier<int> playedProgress = ValueNotifier(-1);
+  ValueNotifier<int> bufferedProgress = ValueNotifier(-1);
+
   ValueNotifier<bool> showAudio = ValueNotifier(false);
   int totalLength = 0;
 
@@ -39,12 +39,44 @@ class _PurlawChatMessageBlockState extends State<PurlawChatMessageBlock> {
   void initState() {
     super.initState();
     widget.msg.audioIsPlaying.value = -1;
-    audioPlayer.onPlayerComplete.listen((event) {
-      widget.msg.audioIsPlaying.value = 3;
-      audioPlayer.seek(Duration.zero);
+    // audioPlayer.onPlayerComplete.listen((event) {
+    //   widget.msg.audioIsPlaying.value = 3;
+    //   audioPlayer.seek(Duration.zero);
+    // });
+    audioPlayer.durationStream.listen((event) {
+      if (event == null) return;
+      totalLength = event.inMilliseconds;
     });
-    audioPlayer.onPositionChanged.listen((event) {
-      playedProgress.value = event.inSeconds;
+    audioPlayer.positionStream.listen((event) {
+      playedProgress.value = event.inMilliseconds;
+    });
+    audioPlayer.bufferedPositionStream.listen((event) {
+      bufferedProgress.value = event.inMilliseconds;
+    });
+    audioPlayer.playbackEventStream.listen((event) {},
+        onError: (Object e, StackTrace st) {
+      widget.msg.audioIsPlaying.value = -2;
+      Log.e(e, tag: "Chat MessageBlock Audio");
+    });
+    audioPlayer.playerStateStream.listen((event) async {
+      switch (event.processingState) {
+        case ProcessingState.idle:
+          widget.msg.audioIsPlaying.value = -1;
+          break;
+
+        case ProcessingState.loading:
+          widget.msg.audioIsPlaying.value = 0;
+          break;
+
+        case ProcessingState.completed:
+          await audioPlayer.seek(Duration.zero);
+          await audioPlayer.stop();
+          widget.msg.audioIsPlaying.value = 3;
+          break;
+
+        case ProcessingState.buffering:
+        case ProcessingState.ready:
+      }
     });
   }
 
@@ -52,7 +84,6 @@ class _PurlawChatMessageBlockState extends State<PurlawChatMessageBlock> {
   void dispose() {
     super.dispose();
     audioPlayer.dispose();
-    audioFuture?.cancel();
   }
 
   @override
@@ -76,7 +107,7 @@ class _PurlawChatMessageBlockState extends State<PurlawChatMessageBlock> {
     // 总容器
     return Container(
       margin: EdgeInsets.only(
-        bottom: 6,
+          bottom: 6,
           top: (msgData.isFirst && rBreak)
               ? PurlawAppMainPageTabBar.avoidancePadding
               : 0.0),
@@ -175,7 +206,6 @@ class _PurlawChatMessageBlockState extends State<PurlawChatMessageBlock> {
                     radius: 12,
                     onClick: () {
                       if (showAudio.value) {
-                        audioFuture?.cancel();
                         audioPlayer.stop();
                         widget.msg.audioIsPlaying.value = -1;
                       }
@@ -233,32 +263,37 @@ class _PurlawChatMessageBlockState extends State<PurlawChatMessageBlock> {
             ),
           ),
           ValueListenableBuilder(
-              valueListenable: playedProgress,
-              builder: (context, progress, child) {
-                if (progress == -1) return Container();
-                return Padding(
-                  padding: const EdgeInsets.only(top: 8.0),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: ProgressBar(
-                          progress: Duration(seconds: progress),
-                          total: Duration(seconds: totalLength),
-                          onSeek: (dur) {
-                            audioPlayer.seek(dur);
-                          },
-                          timeLabelTextStyle: Theme.of(context)
-                              .textTheme
-                              .bodySmall
-                              ?.copyWith(height: 2.1),
-                          thumbRadius: 8,
-                          thumbGlowRadius: 16,
+              valueListenable: bufferedProgress,
+              builder: (context, bufProgress, child) {
+                return ValueListenableBuilder(
+                    valueListenable: playedProgress,
+                    builder: (context, progress, child) {
+                      if (progress == -1) return Container();
+                      return Padding(
+                        padding: const EdgeInsets.only(top: 8.0),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: ProgressBar(
+                                progress: Duration(milliseconds: progress),
+                                buffered: Duration(milliseconds: bufProgress),
+                                total: Duration(milliseconds: totalLength),
+                                onSeek: (dur) async {
+                                  await audioPlayer.seek(dur);
+                                  audioPlayer.play();
+                                },
+                                timeLabelTextStyle: Theme.of(context)
+                                    .textTheme
+                                    .bodySmall
+                                    ?.copyWith(height: 2.1),
+                                thumbRadius: 8,
+                                thumbGlowRadius: 16,
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
-                      // Text("  " + TimeUtils.getDurationTimeString(Duration(seconds: progress), Duration(seconds: totalLength)))
-                    ],
-                  ),
-                );
+                      );
+                    });
               })
         ],
       ),
@@ -274,39 +309,13 @@ class _PurlawChatMessageBlockState extends State<PurlawChatMessageBlock> {
           widget.msg.audioIsPlaying.value == -2) {
         widget.msg.audioIsPlaying.value = 0;
         try {
-          if (widget.msg.audio == null) {
-            // load from network
-
-            audioFuture = CancelableOperation.fromFuture(
-                HttpGet.postGetBodyBytes(
-                    API.chatRequestVoice.api,
-                    HttpGet.jsonHeadersCookie(
-                        getCookie(context, listen: false)),
-                    {"voice_text": widget.msg.message}), onCancel: () {
-              Log.i(tag: tag,"[Network] canceled");
-            });
-            var response = await audioFuture?.valueOrCancellation(null);
-            if (response == null) return;
-            Log.i(tag: tag,"voice got", );
-            try {
-              var failedBody = const Utf8Decoder().convert(response);
-              // failed
-              Log.i(tag: tag,failedBody);
-            } catch (e) {
-              // success
-              widget.msg.audio = response;
-              await audioPlayer.setSource(BytesSource(widget.msg.audio!));
-              totalLength = (await audioPlayer.getDuration())!.inSeconds;
-              audioPlayer.play(BytesSource(widget.msg.audio!));
-              widget.msg.audioIsPlaying.value = 1;
-            }
-          } else {
-            // load from local
-            await audioPlayer.setSource(BytesSource(widget.msg.audio!));
-            totalLength = (await audioPlayer.getDuration())!.inSeconds;
-            audioPlayer.play(BytesSource(widget.msg.audio!));
-            widget.msg.audioIsPlaying.value = 1;
-          }
+          await audioPlayer.setAudioSource(LockCachingAudioSource(
+              Uri.parse(HttpGet.getApi(API.chatRequestVoice.api) +
+                  widget.msg.message),
+              headers: HttpGet.jsonHeadersCookie(
+                  getCookie(context, listen: false))));
+          audioPlayer.play();
+          widget.msg.audioIsPlaying.value == 1;
           return;
         } catch (e) {
           Log.e(e, tag: "Chat MessageBlock");
@@ -322,13 +331,13 @@ class _PurlawChatMessageBlockState extends State<PurlawChatMessageBlock> {
       // paused
       if (widget.msg.audioIsPlaying.value == 2) {
         widget.msg.audioIsPlaying.value = 1;
-        audioPlayer.resume();
+        audioPlayer.play();
         return;
       }
       // completed
       if (widget.msg.audioIsPlaying.value == 3) {
         widget.msg.audioIsPlaying.value = 1;
-        audioPlayer.play(BytesSource(widget.msg.audio!));
+        audioPlayer.play();
       }
     } on Exception catch (e) {
       Log.e(e, tag: "Chat MessageBlock");

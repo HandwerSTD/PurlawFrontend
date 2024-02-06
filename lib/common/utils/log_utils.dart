@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:purlaw/common/utils/misc.dart';
 
 class Log {
-  static bool saveLog = false;
+  static bool saveLog = true;
   static bool printLog = true;
   static String logs = "";
   static Logger logger = Logger(

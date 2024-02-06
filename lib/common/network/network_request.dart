@@ -55,11 +55,11 @@ class HttpGet {
     }
     return const Utf8Decoder().convert(response.bodyBytes);
   }
-  static Future<Uint8List> postGetBodyBytes(String api, Map<String, String> headers,
-      Map<String, dynamic> body) async {
+  static Future<Uint8List> getBodyBytes(String api, Map<String, String> headers,
+      String text) async {
     Log.i("getting bytes", tag: "HTTP PostGetBodyBytes");
-    var response = await http.post(Uri.parse(getApi(api)),
-        headers: headers, body: jsonEncode(body));
+    var response = await http.get(Uri.parse("${getApi(api)}$text"),
+        headers: headers);
     if (response.statusCode != HTTP_OK) {
       throw HttpException(response.statusCode.toString());
     }

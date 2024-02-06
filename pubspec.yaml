@@ -59,6 +59,8 @@ dependencies:
   logger: ^2.0.2+1
   animations: ^2.0.11
   fluro: ^2.0.5
+  just_audio: ^0.9.36
+  just_audio_cache: ^0.1.2
 
 dev_dependencies:
   flutter_test:
