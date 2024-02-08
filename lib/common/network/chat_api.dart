@@ -12,7 +12,7 @@ class ChatNetworkRequest {
   static late Isolate isolate;
 
   static Future<void> submitNewMessage(
-      String text, String cookie, Function(String dt) append) async {
+      String text, String cookie, Function(String dt, String cookie) append) async {
     var response = jsonDecode(await HttpGet.post(
         API.chatCreateSession.api,
         HttpGet.jsonHeadersCookie(cookie),
@@ -24,7 +24,7 @@ class ChatNetworkRequest {
         session: session, cookie: cookie, callback: () {});
   }
 
-  static Future isolateFlushSession(Function(String dt) append,
+  static Future isolateFlushSession(Function(String dt, String cookie) append,
       {required String session,
       required String cookie,
       required Function callback}) async {
@@ -36,13 +36,13 @@ class ChatNetworkRequest {
         if (message.endsWith("<H_EOF>")) {
           // 到达结尾
           message = message.replaceAll("<EOF>", "");
-          await append(message);
+          await append(message, cookie);
           Log.i("[ChatAPI] Isolate killed");
           isolate.kill(priority: Isolate.immediate);
           callback();
         } else if (message.startsWith("<H_ERR>")) {
           // 出现错误
-          Log.i("[ChatAPI] Isolate killed due to error");
+          Log.e("[ChatAPI] Isolate killed due to error");
           isolate.kill(priority: Isolate.immediate);
           throw Exception(message.replaceAll("<H_ERR>", ""));
         } else {
@@ -50,7 +50,7 @@ class ChatNetworkRequest {
             message = message.replaceAll('\n', '');
             start = false;
           }
-          await append(message);
+          await append(message, cookie);
         }
       }
       if (message is SendPort) {

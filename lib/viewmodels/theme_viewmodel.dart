@@ -13,9 +13,9 @@ class ThemeViewModel extends BaseViewModel {
     themeModel = ThemeModel(dark: dark);
   }
 
-  void setThemeColor(Color color, {bool update = true}) {
-    themeModel.setThemeColor(color);
-    if (update) DatabaseUtil.updateThemeColor(ColorsUtil.colorTo6Str(color));
+  void setThemeColor(int index, {bool update = true}) {
+    themeModel.setThemeColor(index);
+    if (update) DatabaseUtil.updateThemeIndex(index);
     notifyListeners();
   }
 

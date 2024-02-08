@@ -1,37 +1,122 @@
-import 'dart:convert';
-import 'dart:io';
 
-import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
-import 'package:just_audio/just_audio.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:purlaw/common/constants/constants.dart';
-import 'package:purlaw/common/network/network_request.dart';
 import 'package:purlaw/common/utils/misc.dart';
 import 'package:purlaw/components/purlaw/purlaw_components.dart';
 import 'package:purlaw/models/theme_model.dart';
-import 'package:purlaw/viewmodels/main_viewmodel.dart';
 import 'package:purlaw/viewmodels/theme_viewmodel.dart';
 import 'package:tdesign_flutter/tdesign_flutter.dart';
 
 import '../../common/utils/log_utils.dart';
 import '../../models/ai_chat/chat_message_model.dart';
+import '../third_party/modified_just_audio.dart';
 
 const tag = "Chat MessageBlock";
 
-class PurlawChatMessageBlock extends StatefulWidget {
+class PurlawChatMessageBlockViewOnly extends StatelessWidget {
   final AIChatMessageModel msg;
-  const PurlawChatMessageBlock({required this.msg, super.key});
+  const PurlawChatMessageBlockViewOnly({required this.msg, super.key});
 
   @override
-  State<PurlawChatMessageBlock> createState() => _PurlawChatMessageBlockState();
+  Widget build(BuildContext context) {
+    return chatMessageBlock(context, msg);
+  }
+
+  Widget chatMessageBlock(BuildContext context, AIChatMessageModel msgData) {
+    bool rBreak = (Responsive.checkWidth(MediaQuery.of(context).size.width) ==
+        Responsive.lg);
+    ThemeModel themeModel = Provider.of<ThemeViewModel>(context).themeModel;
+    Color foreground = (msgData.isMine
+        ? Colors.white
+        : (themeModel.dark ? Colors.white : Colors.black87));
+    Color background = (msgData.isMine
+        ? themeModel.colorModel.generalFillColor
+        : (themeModel.dark ? Colors.black : Colors.white));
+    double leftMargin = 24 + (msgData.isMine ? (rBreak ? 500 : 24) : 0);
+    double rightMargin = 24 + (msgData.isMine ? 0 : (rBreak ? 500 : 0));
+    // 总容器
+    return Container(
+      margin: EdgeInsets.only(
+          top: (msgData.isFirst && rBreak)
+              ? PurlawAppMainPageTabBar.avoidancePadding
+              : 0.0),
+      child: Row(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment:
+        (msgData.isMine ? MainAxisAlignment.end : MainAxisAlignment.start),
+        children: [
+          Flexible(
+            // 文字容器
+            child: Container(
+              margin: EdgeInsets.only(
+                  left: leftMargin, right: rightMargin, top: 12, bottom: 12),
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                  border:
+                  Border.all(color: themeModel.colorModel.generalFillColorLight, width: 1),
+                  color: background,
+                  boxShadow: [
+                    BoxShadow(color: Colors.black12, blurRadius: 5),
+                    BoxShadow(
+                        color: (themeModel.dark
+                            ? Colors.grey[800]!.withOpacity(0.2)
+                            : Colors.lightBlue[50]!.withOpacity(0.5)),
+                        blurRadius: (themeModel.dark ? 20 : 30),
+                        spreadRadius: 5,
+                        offset: const Offset(0, 10)
+                    )
+                  ],
+                  borderRadius: BorderRadius.only(
+                      bottomLeft: const Radius.circular(20),
+                      bottomRight: const Radius.circular(20),
+                      topLeft: (msgData.isMine
+                          ? const Radius.circular(20)
+                          : const Radius.circular(0)),
+                      topRight: (!msgData.isMine
+                          ? const Radius.circular(20)
+                          : const Radius.circular(0)))),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SelectableText(
+                    (msgData.message == "" ? "思考中..." : msgData.message),
+                    // softWrap: true,
+                    style:
+                    TextStyle(color: foreground, height: 1.5, fontSize: 15),
+                  ),
+                  if (!msgData.isMine)
+                    {
+                      const Padding(
+                        padding: EdgeInsets.only(top: 4),
+                        child: Text(
+                          "对话由 AI 大模型生成，仅供参考",
+                          style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.grey),
+                        ),
+                      )
+                    }.first
+                ],
+              ),
+            ),
+          )
+        ],
+      ),
+    );
+  }
 }
 
-class _PurlawChatMessageBlockState extends State<PurlawChatMessageBlock> {
-  AudioPlayer audioPlayer = AudioPlayer();
-  ValueNotifier<int> playedProgress = ValueNotifier(-1);
-  ValueNotifier<int> bufferedProgress = ValueNotifier(-1);
 
+class PurlawChatMessageBlockWithAudio extends StatefulWidget {
+  final AIChatMessageModelWithAudio msg;
+  const PurlawChatMessageBlockWithAudio({required this.msg, super.key});
+
+  @override
+  State<PurlawChatMessageBlockWithAudio> createState() => _PurlawChatMessageBlockWithAudioState();
+}
+
+class _PurlawChatMessageBlockWithAudioState extends State<PurlawChatMessageBlockWithAudio> {
   ValueNotifier<bool> showAudio = ValueNotifier(false);
   int totalLength = 0;
 
@@ -39,26 +124,26 @@ class _PurlawChatMessageBlockState extends State<PurlawChatMessageBlock> {
   void initState() {
     super.initState();
     widget.msg.audioIsPlaying.value = -1;
-    // audioPlayer.onPlayerComplete.listen((event) {
-    //   widget.msg.audioIsPlaying.value = 3;
-    //   audioPlayer.seek(Duration.zero);
-    // });
-    audioPlayer.durationStream.listen((event) {
+    widget.msg.player.durationStream.listen((event) {
       if (event == null) return;
       totalLength = event.inMilliseconds;
     });
-    audioPlayer.positionStream.listen((event) {
-      playedProgress.value = event.inMilliseconds;
+    widget.msg.player.positionStream.listen((event) {
+      // playedProgress.value = event.inMilliseconds;
+      // Log.d("PositionStream listen $event", tag: "Chat MessageBlock Audio");
+      if (event != Duration.zero) widget.msg.audioIsPlaying.value = 1;
     });
-    audioPlayer.bufferedPositionStream.listen((event) {
-      bufferedProgress.value = event.inMilliseconds;
+    widget.msg.player.bufferedPositionStream.listen((event) {
+      // bufferedProgress.value = event.inMilliseconds;
+      Log.d("Buffering to $event", tag: "Chat MessageBlock Audio");
     });
-    audioPlayer.playbackEventStream.listen((event) {},
+    widget.msg.player.playbackEventStream.listen((event) {},
         onError: (Object e, StackTrace st) {
       widget.msg.audioIsPlaying.value = -2;
       Log.e(e, tag: "Chat MessageBlock Audio");
     });
-    audioPlayer.playerStateStream.listen((event) async {
+    widget.msg.player.playerStateStream.listen((event) async {
+      Log.d("PlayerState listen $event", tag:"Chat MessageBlock Audio");
       switch (event.processingState) {
         case ProcessingState.idle:
           widget.msg.audioIsPlaying.value = -1;
@@ -69,13 +154,18 @@ class _PurlawChatMessageBlockState extends State<PurlawChatMessageBlock> {
           break;
 
         case ProcessingState.completed:
-          await audioPlayer.seek(Duration.zero);
-          await audioPlayer.stop();
+          await widget.msg.player.seek(Duration.zero, index: 0);
+          await widget.msg.player.stop();
           widget.msg.audioIsPlaying.value = 3;
           break;
 
         case ProcessingState.buffering:
+          widget.msg.audioIsPlaying.value = 4;
+          break;
+
         case ProcessingState.ready:
+          widget.msg.audioIsPlaying.value = -1;
+          break;
       }
     });
   }
@@ -83,16 +173,15 @@ class _PurlawChatMessageBlockState extends State<PurlawChatMessageBlock> {
   @override
   void dispose() {
     super.dispose();
-    audioPlayer.dispose();
+    widget.msg.player.stop();
   }
 
   @override
   Widget build(BuildContext context) {
-    return chatMessageBlock(context, widget.msg, audioPlayer);
+    return chatMessageBlock(context, widget.msg);
   }
 
-  Widget chatMessageBlock(BuildContext context, AIChatMessageModel msgData,
-      AudioPlayer audioPlayer) {
+  Widget chatMessageBlock(BuildContext context, AIChatMessageModelWithAudio msgData) {
     bool rBreak = (Responsive.checkWidth(MediaQuery.of(context).size.width) ==
         Responsive.lg);
     ThemeModel themeModel = Provider.of<ThemeViewModel>(context).themeModel;
@@ -158,7 +247,7 @@ class _PurlawChatMessageBlockState extends State<PurlawChatMessageBlock> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       SelectableText(
-                        (msgData.message == "" ? "思考中..." : msgData.message),
+                        (msgData.sentences.isEmpty ? "思考中..." : msgData.getString()),
                         // softWrap: true,
                         style: TextStyle(
                             color: foreground, height: 1.5, fontSize: 15),
@@ -204,9 +293,9 @@ class _PurlawChatMessageBlockState extends State<PurlawChatMessageBlock> {
                     height: 24,
                     width: 24,
                     radius: 12,
-                    onClick: () {
+                    onClick: () async {
                       if (showAudio.value) {
-                        audioPlayer.stop();
+                        await widget.msg.player.stop();
                         widget.msg.audioIsPlaying.value = -1;
                       }
                       showAudio.value = !showAudio.value;
@@ -240,7 +329,7 @@ class _PurlawChatMessageBlockState extends State<PurlawChatMessageBlock> {
             style: const ButtonStyle(
                 shadowColor: MaterialStatePropertyAll(Colors.transparent)),
             onPressed: () {
-              playAudio();
+              widget.msg.player.play();
             },
             child: Row(
               children: [
@@ -256,94 +345,16 @@ class _PurlawChatMessageBlockState extends State<PurlawChatMessageBlock> {
                       if (value == 1) return const Text("播放中");
                       if (value == 2) return const Text("已暂停");
                       if (value == 3) return const Text("播放完毕");
+                      if (value == 4) return const Text("缓冲中");
                       if (value == -2) return const Text("加载失败");
                       return const Text("");
                     }),
               ],
             ),
           ),
-          ValueListenableBuilder(
-              valueListenable: bufferedProgress,
-              builder: (context, bufProgress, child) {
-                return ValueListenableBuilder(
-                    valueListenable: playedProgress,
-                    builder: (context, progress, child) {
-                      if (progress == -1) return Container();
-                      return Padding(
-                        padding: const EdgeInsets.only(top: 8.0),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: ProgressBar(
-                                progress: Duration(milliseconds: progress),
-                                buffered: Duration(milliseconds: bufProgress),
-                                total: Duration(milliseconds: totalLength),
-                                onSeek: (dur) async {
-                                  await audioPlayer.seek(dur);
-                                  audioPlayer.play();
-                                },
-                                timeLabelTextStyle: Theme.of(context)
-                                    .textTheme
-                                    .bodySmall
-                                    ?.copyWith(height: 2.1),
-                                thumbRadius: 8,
-                                thumbGlowRadius: 16,
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
-                    });
-              })
+
         ],
       ),
     );
-  }
-
-  void playAudio() async {
-    // network loading
-    if (widget.msg.audioIsPlaying.value == 0) return;
-    try {
-      // first load
-      if (widget.msg.audioIsPlaying.value == -1 ||
-          widget.msg.audioIsPlaying.value == -2) {
-        widget.msg.audioIsPlaying.value = 0;
-        try {
-          await audioPlayer.setAudioSource(LockCachingAudioSource(
-              Uri.parse(HttpGet.getApi(API.chatRequestVoice.api) +
-                  widget.msg.message),
-              headers: HttpGet.jsonHeadersCookie(
-                  getCookie(context, listen: false))));
-          audioPlayer.play();
-          widget.msg.audioIsPlaying.value == 1;
-          return;
-        } catch (e) {
-          Log.e(e, tag: "Chat MessageBlock");
-          widget.msg.audioIsPlaying.value = -2;
-        }
-      }
-      // playing
-      if (widget.msg.audioIsPlaying.value == 1) {
-        widget.msg.audioIsPlaying.value = 2;
-        audioPlayer.pause();
-        return;
-      }
-      // paused
-      if (widget.msg.audioIsPlaying.value == 2) {
-        widget.msg.audioIsPlaying.value = 1;
-        audioPlayer.play();
-        return;
-      }
-      // completed
-      if (widget.msg.audioIsPlaying.value == 3) {
-        widget.msg.audioIsPlaying.value = 1;
-        audioPlayer.play();
-      }
-    } on Exception catch (e) {
-      Log.e(e, tag: "Chat MessageBlock");
-      if (context.mounted) {
-        TDToast.showText("播放失败", context: context);
-      }
-    }
   }
 }

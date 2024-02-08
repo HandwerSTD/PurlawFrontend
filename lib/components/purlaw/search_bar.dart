@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:purlaw/common/utils/misc.dart';
+import 'package:purlaw/viewmodels/theme_viewmodel.dart';
 import 'package:tdesign_flutter/tdesign_flutter.dart';
 
 class SearchAppBar extends StatefulWidget {
@@ -57,7 +58,7 @@ class _SearchAppBarState extends State<SearchAppBar> {
         border: (widget.readOnly ? null : Border.all(width: 1, color: Colors.grey)),
         boxShadow: (widget.readOnly ? TDTheme.defaultData().shadowsTop : null),
           borderRadius: BorderRadius.circular(10),
-          color: Theme.of(context).scaffoldBackgroundColor),
+          color: getThemeModel(context).dark ? Colors.black : Theme.of(context).scaffoldBackgroundColor),
       child: TextField(
         // style: TextStyle(height: 1),
         textAlignVertical: TextAlignVertical.center,

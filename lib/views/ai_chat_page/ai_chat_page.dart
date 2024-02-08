@@ -45,8 +45,8 @@ class AIChatPageMessageList extends StatelessWidget {
           child: SingleChildScrollView(
             controller: model.scrollController,
             child: Column(
-                children: model.messageModels.messages!
-                    .map((e) => PurlawChatMessageBlock(msg: e,))
+                children: model.messageModels.messages
+                    .map((e) => PurlawChatMessageBlockWithAudio(msg: e,))
                     .toList()),
           ),
         ),
@@ -84,7 +84,7 @@ class _AIChatPageFooterState extends State<AIChatPageFooter> {
                 }, show: model.replying, isHeadOrTail: -1,),
                 RecommendedActionButton(title: '保存并清除对话', onClick: (){
                   model.saveMessage();
-                }, show: (!model.replying && model.messageModels.messages!.length > 1), isHeadOrTail: 1,)
+                }, show: (!model.replying && model.messageModels.messages.length > 1), isHeadOrTail: 1,)
               ],),
               Container(
                 alignment: Alignment.center,

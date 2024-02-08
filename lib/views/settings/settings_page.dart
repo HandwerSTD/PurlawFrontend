@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:purlaw/common/network/network_request.dart';
+import 'package:purlaw/common/utils/cache_utils.dart';
 import 'package:purlaw/common/utils/database/database_util.dart';
 import 'package:purlaw/common/utils/database/kvstore.dart';
 import 'package:purlaw/common/utils/log_utils.dart';
@@ -86,66 +87,74 @@ class _SettingsPageBodyState extends State<SettingsPageBody> {
               ],
             ),
           ),
-          Visibility(
-            visible: getCookie(context).isNotEmpty,
-            child: MySettingsGroup(
-              settingsGroupTitle: '  通用设置',
-              items: [
-                SettingsItem(
-                    icons: Icons.dark_mode,
-                    title: '深色模式',
-                    trailing: TDSwitch(
-                      enable: true,
-                      trackOnColor: Provider.of<ThemeViewModel>(context)
-                          .themeModel
-                          .colorModel
-                          .generalFillColor,
-                      isOn:
-                          Provider.of<ThemeViewModel>(context).themeModel.dark,
-                      onChanged: (bool value) {
-                        Provider.of<ThemeViewModel>(context, listen: false)
-                            .switchDarkMode();
-                      },
-                    ),
-                    iconStyle: IconStyle(
-                      iconsColor: Provider.of<ThemeViewModel>(context)
-                          .themeModel
-                          .colorModel
-                          .generalFillColor,
-                      backgroundColor: Provider.of<ThemeViewModel>(context)
-                          .themeModel
-                          .colorModel
-                          .generalFillColorBright,
-                    ),
-                    titleStyle: TextStyle(fontSize: 16)),
-                SettingsItem(
-                    icons: Icons.multitrack_audio_rounded,
-                    title: '自动语音播报',
-                    subtitle: '开启后所有回答将会自动进行语音播报',
-                    trailing: TDSwitch(
-                      enable: true,
-                      trackOnColor: Provider.of<ThemeViewModel>(context)
-                          .themeModel
-                          .colorModel
-                          .generalFillColor,
-                      isOn: autoPlayAudio,
-                      onChanged: (bool value) {
-                        KVBox.insert(DatabaseConst.autoAudioPlay, (autoPlayAudio ? DatabaseConst.dbFalse : DatabaseConst.dbTrue));
-                      },
-                    ),
-                    iconStyle: IconStyle(
-                      iconsColor: Provider.of<ThemeViewModel>(context)
-                          .themeModel
-                          .colorModel
-                          .generalFillColor,
-                      backgroundColor: Provider.of<ThemeViewModel>(context)
-                          .themeModel
-                          .colorModel
-                          .generalFillColorBright,
-                    ),
-                    titleStyle: TextStyle(fontSize: 16)),
-              ],
-            ),
+          MySettingsGroup(
+            settingsGroupTitle: '  通用设置',
+            items: [
+              MySettingsItem(
+                  icons: Icons.draw_rounded, title: '主题切换', onTap: (){
+                    Navigator.push(context, MaterialPageRoute(builder: (_) => SettingsChangeThemePage(current: getThemeModel(context).index)));
+              })
+                  .build(context),
+              SettingsItem(
+                  icons: Icons.dark_mode,
+                  title: '深色模式',
+                  trailing: TDSwitch(
+                    enable: true,
+                    trackOnColor: Provider.of<ThemeViewModel>(context)
+                        .themeModel
+                        .colorModel
+                        .generalFillColor,
+                    isOn:
+                        Provider.of<ThemeViewModel>(context).themeModel.dark,
+                    onChanged: (bool value) {
+                      Provider.of<ThemeViewModel>(context, listen: false)
+                          .switchDarkMode();
+                    },
+                  ),
+                  iconStyle: IconStyle(
+                    iconsColor: Provider.of<ThemeViewModel>(context)
+                        .themeModel
+                        .colorModel
+                        .generalFillColor,
+                    backgroundColor: Provider.of<ThemeViewModel>(context)
+                        .themeModel
+                        .colorModel
+                        .generalFillColorBright,
+                  ),
+                  titleStyle: TextStyle(fontSize: 16)),
+              SettingsItem(
+                  icons: Icons.multitrack_audio_rounded,
+                  title: '自动语音播报',
+                  subtitle: '开启后所有回答将会自动进行语音播报',
+                  trailing: TDSwitch(
+                    enable: true,
+                    trackOnColor: Provider.of<ThemeViewModel>(context)
+                        .themeModel
+                        .colorModel
+                        .generalFillColor,
+                    isOn: autoPlayAudio,
+                    onChanged: (bool value) {
+                      KVBox.insert(DatabaseConst.autoAudioPlay, (autoPlayAudio ? DatabaseConst.dbFalse : DatabaseConst.dbTrue));
+                    },
+                  ),
+                  iconStyle: IconStyle(
+                    iconsColor: Provider.of<ThemeViewModel>(context)
+                        .themeModel
+                        .colorModel
+                        .generalFillColor,
+                    backgroundColor: Provider.of<ThemeViewModel>(context)
+                        .themeModel
+                        .colorModel
+                        .generalFillColorBright,
+                  ),
+                  titleStyle: TextStyle(fontSize: 16)),
+              MySettingsItem(
+                  icons: Icons.auto_delete_rounded, title: '清除缓存', onTap: (){
+                    CacheUtil.clear();
+                    TDToast.showText('清除成功', context: context);
+              })
+                  .build(context),
+            ],
           ),
           MySettingsGroup(
             settingsGroupTitle: '  开发者设置',
@@ -256,9 +265,9 @@ class _SettingsPageBodyState extends State<SettingsPageBody> {
 
 class MySettingsGroup extends StatelessWidget {
   final List<SettingsItem> items;
-  final String settingsGroupTitle;
+  final String? settingsGroupTitle;
   const MySettingsGroup(
-      {super.key, required this.items, required this.settingsGroupTitle});
+      {super.key, required this.items, this.settingsGroupTitle});
 
   @override
   Widget build(BuildContext context) {
@@ -304,45 +313,46 @@ class MySettingsItem {
     );
   }
 }
-//
-// class SettingsChangeThemePage extends StatefulWidget {
-//   final int current;
-//   const SettingsChangeThemePage({super.key, required this.current});
-//
-//   @override
-//   State<SettingsChangeThemePage> createState() => _SettingsChangeThemePageState();
-// }
-//
-// class _SettingsChangeThemePageState extends State<SettingsChangeThemePage> {
-//   int value = 0;
-//
-//   @override
-//   void initState() {
-//     super.initState();
-//     value = widget.current;
-//   }
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: PurlawAppTitleBar(title: '主题更换', showBack: true).build(context),
-//       body: MySettingsGroup(
-//         settingsGroupTitle: '选择主题',
-//         items: List.generate(ThemeModel.presetThemes.length, (index) {
-//           return SettingsItem(
-//             icons: Icons.circle,
-//             title: ThemeModel.presetNames[index],
-//             iconStyle: IconStyle(
-//                 withBackground: false,
-//                 iconsColor: ThemeModel.presetThemes[index]),
-//             trailing: Radio<int>(value: index, groupValue: value, onChanged: (_) {
-//               setState(() {
-//                 value = index;
-//               });
-//             },),
-//           );
-//         }),
-//       ),
-//     );
-//   }
-// }
+
+class SettingsChangeThemePage extends StatefulWidget {
+  final int current;
+  const SettingsChangeThemePage({super.key, required this.current});
+
+  @override
+  State<SettingsChangeThemePage> createState() => _SettingsChangeThemePageState();
+}
+
+class _SettingsChangeThemePageState extends State<SettingsChangeThemePage> {
+  int value = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    value = widget.current;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: PurlawAppTitleBar(title: '主题更换', showBack: true).build(context),
+      body: MySettingsGroup(
+        items: List.generate(ThemeModel.presetThemes.length, (index) {
+          return SettingsItem(
+            icons: Icons.circle,
+            title: ThemeModel.presetNames[index],
+            iconStyle: IconStyle(
+                withBackground: true,
+                backgroundColor: Colors.transparent,
+                iconsColor: ThemeModel.presetThemes[index]),
+            trailing: Radio<int>(value: index, groupValue: value, onChanged: (_) {
+              setState(() {
+                value = index;
+              });
+              Provider.of<ThemeViewModel>(context, listen: false).setThemeColor(index);
+            },),
+          );
+        }),
+      ),
+    );
+  }
+}

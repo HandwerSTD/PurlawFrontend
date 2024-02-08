@@ -1,11 +1,11 @@
 import 'dart:async';
 
 import 'package:event_bus/event_bus.dart';
-import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:purlaw/common/network/network_loading_state.dart';
 import 'package:purlaw/common/network/network_request.dart';
+import 'package:purlaw/common/utils/cache_utils.dart';
 import 'package:purlaw/common/utils/database/database_util.dart';
 import 'package:purlaw/common/utils/database/kvstore.dart';
 import 'package:purlaw/components/multi_state_widget.dart';
@@ -79,10 +79,10 @@ class _ProgramEntryState extends State<ProgramEntry> {
       }
 
       // 获取主题色
-      final String themeColor = DatabaseUtil.getThemeColor();
+      final themeColor = DatabaseUtil.getThemeIndex();
       Log.i(tag: "Main", "read theme color = $themeColor");
       Provider.of<ThemeViewModel>(context, listen: false)
-          .setThemeColor(ColorsUtil.hexToColor(themeColor), update: false);
+          .setThemeColor(themeColor, update: false);
       if ((MediaQuery.of(context).platformBrightness == Brightness.dark) != Provider.of<ThemeViewModel>(context, listen: false).themeModel.dark) {
         Provider.of<ThemeViewModel>(context, listen: false).switchDarkMode();
       }

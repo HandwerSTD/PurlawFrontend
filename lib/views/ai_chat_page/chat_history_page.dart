@@ -99,7 +99,7 @@ class _HistoryChatDetailPageState extends State<HistoryChatDetailPage> {
               child: SingleChildScrollView(
                 child: Column(
                     children: widget.list.messages!
-                        .map((e) => PurlawChatMessageBlock(msg: e))
+                        .map((e) => PurlawChatMessageBlockViewOnly(msg: e))
                         .toList()),
               ),
             ),

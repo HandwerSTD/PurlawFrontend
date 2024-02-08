@@ -11,15 +11,15 @@ class DatabaseUtil {
   }
   static void setFirstOpen() {
     KVBox.insert(DatabaseConst.firstOpen, DatabaseConst.dbTrue);
-    KVBox.insert(DatabaseConst.themeColor, "#ca80ba");
+    KVBox.insert(DatabaseConst.themeColor, "0");
     KVBox.insert(DatabaseConst.autoAudioPlay, DatabaseConst.dbFalse);
     storeServerAddress("http://100.86.9.47:5000");
   }
 
-  static void updateThemeColor(String color) {
-    KVBox.insert(DatabaseConst.themeColor, color);
+  static void updateThemeIndex(int color) {
+    KVBox.insert(DatabaseConst.themeColor, color.toString());
   }
-  static String getThemeColor() => KVBox.query(DatabaseConst.themeColor);
+  static int getThemeIndex() => int.parse(KVBox.query(DatabaseConst.themeColor));
 
   static void storeCookie(String cookie) {
     KVBox.insert(DatabaseConst.userCookie, cookie);
