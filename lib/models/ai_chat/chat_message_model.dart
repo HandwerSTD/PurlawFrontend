@@ -80,34 +80,20 @@ class ListAIChatMessageModelsWithAudio {
 
 class AIChatMessageModelWithAudio {
   List<String> sentences = [];
+  String showedText = "";
   List<bool> sentenceCompleted = [];
   bool isMine = false;
   bool isFirst = false;
   ValueNotifier<bool> generateCompleted = ValueNotifier(false);
-  /// -1: 默认（不显示）
-  ///
-  /// 0：加载中
-  ///
-  /// 1：播放中
-  ///
-  /// 2：已暂停
-  ///
-  /// 3：播放完毕
-  ///
-  /// 4：缓冲中
-  ///
-  /// -2：加载失败
-  ValueNotifier<int> audioIsPlaying = ValueNotifier(-1);
   AudioPlayer player = AudioPlayer();
   final playlist = ConcatenatingAudioSource(children: []);
 
   AIChatMessageModelWithAudio();
 
   Future<void> animatedAdd(String msg, Function refresh) async {
-    sentences.add("");
     for (var ch in msg.split('')) {
       await Future.delayed(Duration(milliseconds: 50));
-      sentences.last += ch;
+      showedText += ch;
       refresh();
     }
   }
@@ -120,7 +106,9 @@ class AIChatMessageModelWithAudio {
 
   Future<void> append(String msg, bool completed, Function refresh, Function(String, int) submit) async {
     if (sentences.isEmpty || sentenceCompleted.last) {
-      await animatedAdd(msg, refresh);
+      // await animatedAdd(msg, refresh);
+      sentences.add(msg);
+      refresh();
       sentenceCompleted.add(completed);
       if (completed) {
         // submit to request
@@ -131,7 +119,9 @@ class AIChatMessageModelWithAudio {
       refresh();
       return;
     }
-    await animatedAdd(msg, refresh);
+    // await animatedAdd(msg, refresh);
+    sentences.last += (msg);
+    refresh();
     sentenceCompleted.last = completed;
     if (completed) {
       // submit to request

@@ -49,7 +49,7 @@ class HttpGet {
     Log.d(getApi(api), tag: "HTTP Network");
 
     var response = await http.post(Uri.parse(getApi(api)),
-        headers: headers, body: jsonEncode(body)).timeout(const Duration(seconds: 10));
+        headers: headers, body: jsonEncode(body));
     if (response.statusCode != HTTP_OK) {
       throw HttpException(response.statusCode.toString());
     }

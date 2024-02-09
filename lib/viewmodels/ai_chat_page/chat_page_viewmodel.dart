@@ -59,9 +59,18 @@ class AIChatMsgListViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  void reEnableAfterReceive() {
-    messageModels.messages.last.generateCompleted.value = true;
+  void reEnableAfterReceive(String cookie) {
+    if (messageModels.messages.last.sentenceCompleted.isNotEmpty && !messageModels.messages.last.sentenceCompleted.last) {
+      messageModels.messages.last.playlist.add(LockCachingAudioSource(
+          Uri.parse(HttpGet.getApi(API.chatRequestVoice.api) +
+              messageModels.messages.last.sentences.last),
+          headers: HttpGet.jsonHeadersCookie(cookie)));
+    }
+    Log.i("Message completed, re-enabling", tag:"Chat Page ViewModel");
 
+    Log.d(messageModels.messages.last.sentences, tag:"Chat Page ViewModel");
+    Log.d(messageModels.messages.last.sentenceCompleted, tag:"Chat Page ViewModel");
+    messageModels.messages.last.generateCompleted.value = true;
     replying = false;
     notifyListeners();
   }
@@ -74,7 +83,9 @@ class AIChatMsgListViewModel extends BaseViewModel {
     } on Exception catch (e) {
       Log.e(tag: tag, e);
     } finally {
-      reEnableAfterReceive();
+      messageModels.messages.last.generateCompleted.value = true;
+    replying = false;
+    notifyListeners();
     }
   }
 
@@ -85,14 +96,17 @@ class AIChatMsgListViewModel extends BaseViewModel {
     refresh(){
       notifyListeners();
     }
-    submitAudio(String sentence, int id) async {
+    Future<void> submitAudio(String sentence, int id) async {
+      if (sentence.isEmpty) return;
+      Log.d(HttpGet.getApi(API.chatRequestVoice.api) +
+          sentence, tag: "Chat Audio API SubmitAudio");
       await messageModels.messages.last.playlist.add(LockCachingAudioSource(
           Uri.parse(HttpGet.getApi(API.chatRequestVoice.api) +
               sentence),
           headers: HttpGet.jsonHeadersCookie(cookie)));
       if (autoPlay) messageModels.messages.last.player.play();
     }
-    // Log.d(sentences, tag:"Chat Page ViewModel appendMessage");
+    Log.d(sentences, tag:"Chat Page ViewModel appendMessage");
     for (int index = 0; index < sentences.length - 1; ++index) {
       await messageModels.messages.last.append(sentences[index], true, refresh, submitAudio);
     }
@@ -114,11 +128,13 @@ class AIChatMsgListViewModel extends BaseViewModel {
     messageModels.messages.add(AIChatMessageModelWithAudio());
     try {
       autoPlay = DatabaseUtil.getAutoAudioPlay;
+      Log.d("autoPlay = $autoPlay", tag: "Chat Page ViewModel");
       messageModels.messages.last.player.setAudioSource(messageModels.messages.last.playlist);
-      await appendMessage("response for 测试第一个句子。 $text", cookie);
-      // await ChatNetworkRequest.submitNewMessage(text, cookie, appendMessage);
-      reEnableAfterReceive();
-      notifyListeners();
+      // await appendMessage("response for 测试第一个句子。 $text", cookie);
+      await ChatNetworkRequest.submitNewMessage(text, cookie, appendMessage, (){
+        reEnableAfterReceive(cookie);
+        notifyListeners();
+      });
     } on Exception catch (e) {
       Log.e(tag: tag, e);
       makeToast("生成失败");

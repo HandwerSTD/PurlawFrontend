@@ -12,19 +12,19 @@ class ChatNetworkRequest {
   static late Isolate isolate;
 
   static Future<void> submitNewMessage(
-      String text, String cookie, Function(String dt, String cookie) append) async {
+      String text, String cookie, Future<void> Function(String dt, String cookie) append, Function callback) async {
     var response = jsonDecode(await HttpGet.post(
         API.chatCreateSession.api,
         HttpGet.jsonHeadersCookie(cookie),
-        ({"type": "ask", "data": text})).timeout(const Duration(seconds: 10)));
+        ({"type": "chat", "data": text})).timeout(const Duration(seconds: 10)));
     Log.i(response);
     String session = response["session_id"];
     Log.i(session);
     await isolateFlushSession(append,
-        session: session, cookie: cookie, callback: () {});
+        session: session, cookie: cookie, callback: callback);
   }
 
-  static Future isolateFlushSession(Function(String dt, String cookie) append,
+  static Future isolateFlushSession(Future<void> Function(String dt, String cookie) append,
       {required String session,
       required String cookie,
       required Function callback}) async {
@@ -35,7 +35,7 @@ class ChatNetworkRequest {
       if (message is String) {
         if (message.endsWith("<H_EOF>")) {
           // 到达结尾
-          message = message.replaceAll("<EOF>", "");
+          message = message.replaceAll("<H_EOF>", "");
           await append(message, cookie);
           Log.i("[ChatAPI] Isolate killed");
           isolate.kill(priority: Isolate.immediate);
@@ -55,7 +55,11 @@ class ChatNetworkRequest {
       }
       if (message is SendPort) {
         Log.i("[ChatAPI] sendPort got");
-        message.send({"cookie": cookie, "session": session});
+        try {
+          message.send({"cookie": cookie, "session": session});
+        } on Exception catch (e) {
+          Log.e("Send message failed", error: e, tag: "Chat API");
+        }
       }
     });
   }
@@ -67,6 +71,7 @@ class ChatNetworkRequest {
     receivePort.listen((message) async {
       cookie = message["cookie"];
       session = message["session"];
+      Log.d("Received message from Main $session", tag: "ChatAPI");
       try {
         while (true) {
           // var value = await http
@@ -74,6 +79,7 @@ class ChatNetworkRequest {
           //     headers: jsonHeadersWithCookie(cookie),
           //     body: jsonEncode({"session_id": session}));
           // var chatRes = jsonDecode(Utf8Decoder().convert(value.bodyBytes));
+          await Future.delayed(Duration(milliseconds: 100));
           var chatRes = jsonDecode(await HttpGet.post(API.chatFlushSession.api,
               HttpGet.jsonHeadersCookie(cookie), {"session_id": session}));
           Log.i(chatRes);
@@ -89,7 +95,7 @@ class ChatNetworkRequest {
         }
       } catch (err) {
         Log.e(tag:"ChatAPI", err);
-        sp.send("<H_ERR>$err");
+        sp.send("<H_ERR>err: $err");
       } finally {
         sp.send("<H_EOF>");
       }

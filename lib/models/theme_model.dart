@@ -115,7 +115,7 @@ const ColorModel light2 = ColorModel(
 const ColorModel dark2 = ColorModel(
     loginTextFieldColor: Colors.black,
     generalFillColorBright: Color(0xff93baff),
-    generalFillColorLight: Color(0xff5291ff),
+    generalFillColorLight: Color(0xff74a6ff),
     generalFillColor: Color(0xff317af7),
     chatInputDividerColor: Color(0xff5291ff),
     loginTextIndicatorColor: Color(0xffffffff),

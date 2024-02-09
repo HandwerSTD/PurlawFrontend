@@ -123,50 +123,21 @@ class _PurlawChatMessageBlockWithAudioState extends State<PurlawChatMessageBlock
   @override
   void initState() {
     super.initState();
-    widget.msg.audioIsPlaying.value = -1;
     widget.msg.player.durationStream.listen((event) {
       if (event == null) return;
       totalLength = event.inMilliseconds;
     });
     widget.msg.player.positionStream.listen((event) {
-      // playedProgress.value = event.inMilliseconds;
-      // Log.d("PositionStream listen $event", tag: "Chat MessageBlock Audio");
-      if (event != Duration.zero) widget.msg.audioIsPlaying.value = 1;
     });
     widget.msg.player.bufferedPositionStream.listen((event) {
-      // bufferedProgress.value = event.inMilliseconds;
       Log.d("Buffering to $event", tag: "Chat MessageBlock Audio");
     });
     widget.msg.player.playbackEventStream.listen((event) {},
         onError: (Object e, StackTrace st) {
-      widget.msg.audioIsPlaying.value = -2;
       Log.e(e, tag: "Chat MessageBlock Audio");
     });
     widget.msg.player.playerStateStream.listen((event) async {
-      Log.d("PlayerState listen $event", tag:"Chat MessageBlock Audio");
-      switch (event.processingState) {
-        case ProcessingState.idle:
-          widget.msg.audioIsPlaying.value = -1;
-          break;
-
-        case ProcessingState.loading:
-          widget.msg.audioIsPlaying.value = 0;
-          break;
-
-        case ProcessingState.completed:
-          await widget.msg.player.seek(Duration.zero, index: 0);
-          await widget.msg.player.stop();
-          widget.msg.audioIsPlaying.value = 3;
-          break;
-
-        case ProcessingState.buffering:
-          widget.msg.audioIsPlaying.value = 4;
-          break;
-
-        case ProcessingState.ready:
-          widget.msg.audioIsPlaying.value = -1;
-          break;
-      }
+      Log.d("listen: ${event.processingState}", tag:"Chat MessageBlock Audio PlayerState");
     });
   }
 
@@ -295,8 +266,7 @@ class _PurlawChatMessageBlockWithAudioState extends State<PurlawChatMessageBlock
                     radius: 12,
                     onClick: () async {
                       if (showAudio.value) {
-                        await widget.msg.player.stop();
-                        widget.msg.audioIsPlaying.value = -1;
+                        widget.msg.player.stop();
                       }
                       showAudio.value = !showAudio.value;
                     },
@@ -325,32 +295,51 @@ class _PurlawChatMessageBlockWithAudioState extends State<PurlawChatMessageBlock
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          ElevatedButton(
-            style: const ButtonStyle(
-                shadowColor: MaterialStatePropertyAll(Colors.transparent)),
-            onPressed: () {
-              widget.msg.player.play();
-            },
-            child: Row(
-              children: [
-                const Icon(Icons.multitrack_audio_rounded),
-                const Text(
-                  "  语音",
-                  style: TextStyle(fontSize: 16),
+          StreamBuilder<PlayerState>(
+            stream: widget.msg.player.playerStateStream,
+            builder: (context, snapshot) {
+              final playingState = snapshot.data;
+              final processingState = playingState?.processingState;
+              final playing = playingState?.playing;
+              var text = "";
+              if (processingState == ProcessingState.loading ||
+                  processingState == ProcessingState.buffering) {
+                text = "加载中";
+              } else if (processingState == ProcessingState.completed) {
+                text = "播放完成";
+              } else if (playing == true) {
+                text = "播放中";
+              } else {
+                text = "";
+              }
+              return ElevatedButton(
+                style: const ButtonStyle(
+                    shadowColor: MaterialStatePropertyAll(Colors.transparent)),
+                onPressed: () async {
+                  if (processingState == ProcessingState.loading) return;
+                  if (playing == true && processingState != ProcessingState.completed) {
+                    widget.msg.player.pause();
+                  } else {
+                    if (processingState == ProcessingState.completed) {
+                      await widget.msg.player.seek(Duration.zero, index: 0);
+                    }
+                    widget.msg.player.play();
+                  }
+                },
+                child: Row(
+                  children: [
+                    const Icon(Icons.multitrack_audio_rounded),
+                    const Text(
+                      "  语音",
+                      style: TextStyle(fontSize: 16),
+                    ),
+                    Text(
+                      text
+                    )
+                  ],
                 ),
-                ValueListenableBuilder(
-                    valueListenable: widget.msg.audioIsPlaying,
-                    builder: (context, value, child) {
-                      if (value == 0) return const Text("加载中");
-                      if (value == 1) return const Text("播放中");
-                      if (value == 2) return const Text("已暂停");
-                      if (value == 3) return const Text("播放完毕");
-                      if (value == 4) return const Text("缓冲中");
-                      if (value == -2) return const Text("加载失败");
-                      return const Text("");
-                    }),
-              ],
-            ),
+              );
+            }
           ),
 
         ],
