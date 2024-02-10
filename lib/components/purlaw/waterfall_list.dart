@@ -36,8 +36,8 @@ class _PurlawWaterfallListState extends State<PurlawWaterfallList> {
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (_, constraints) {
-      bool nsmBreak =
-          (Responsive.checkWidth(constraints.maxWidth) != Responsive.sm);
+      bool break4 =
+          (constraints.maxWidth > 800), break3 = (constraints.maxWidth > 500);
       bool lgBreak =
           (Responsive.checkWidth(constraints.maxWidth) == Responsive.lg);
       var themeModel = Provider.of<ThemeViewModel>(context).themeModel;
@@ -53,7 +53,7 @@ class _PurlawWaterfallListState extends State<PurlawWaterfallList> {
               padding: (widget.useTopPadding
                   ? EdgeInsets.only(top: (lgBreak ? 84 : 68))
                   : null),
-              crossAxisCount: (nsmBreak ? 4 : 2),
+              crossAxisCount: (break4 ? 4 : (break3 ? 3 : 2)),
               controller: widget.controller,
               children: widget.list,
             ),

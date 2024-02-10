@@ -23,7 +23,8 @@ class PurlawChatMessageBlockViewOnly extends StatelessWidget {
   }
 
   Widget chatMessageBlock(BuildContext context, AIChatMessageModel msgData) {
-    bool rBreak = (Responsive.checkWidth(MediaQuery.of(context).size.width) ==
+    final width = MediaQuery.of(context).size.width;
+    bool rBreak = (Responsive.checkWidth(width) ==
         Responsive.lg);
     ThemeModel themeModel = Provider.of<ThemeViewModel>(context).themeModel;
     Color foreground = (msgData.isMine
@@ -32,8 +33,8 @@ class PurlawChatMessageBlockViewOnly extends StatelessWidget {
     Color background = (msgData.isMine
         ? themeModel.colorModel.generalFillColor
         : (themeModel.dark ? Colors.black : Colors.white));
-    double leftMargin = 24 + (msgData.isMine ? (rBreak ? 500 : 24) : 0);
-    double rightMargin = 24 + (msgData.isMine ? 0 : (rBreak ? 500 : 0));
+    double leftMargin = 24 + (msgData.isMine ? (rBreak ? width * 0.3 : 24) : 0);
+    double rightMargin = 24 + (msgData.isMine ? 0 : (rBreak ? width * 0.3 : 0));
     // 总容器
     return Container(
       margin: EdgeInsets.only(
@@ -153,7 +154,8 @@ class _PurlawChatMessageBlockWithAudioState extends State<PurlawChatMessageBlock
   }
 
   Widget chatMessageBlock(BuildContext context, AIChatMessageModelWithAudio msgData) {
-    bool rBreak = (Responsive.checkWidth(MediaQuery.of(context).size.width) ==
+    final width = MediaQuery.of(context).size.width;
+    bool rBreak = (Responsive.checkWidth(width) ==
         Responsive.lg);
     ThemeModel themeModel = Provider.of<ThemeViewModel>(context).themeModel;
     Color foreground = (msgData.isMine
@@ -162,8 +164,8 @@ class _PurlawChatMessageBlockWithAudioState extends State<PurlawChatMessageBlock
     Color background = (msgData.isMine
         ? themeModel.colorModel.generalFillColor
         : (themeModel.dark ? Colors.black : Colors.white));
-    double leftMargin = 24 + (msgData.isMine ? (rBreak ? 500 : 24) : 0);
-    double rightMargin = 24 + (msgData.isMine ? 0 : (rBreak ? 500 : 0));
+    double leftMargin = 24 + (msgData.isMine ? (rBreak ? width * 0.3 : 24) : 0);
+    double rightMargin = 24 + (msgData.isMine ? 0 : (rBreak ? width * 0.3 : 0));
     // 总容器
     return Container(
       margin: EdgeInsets.only(
