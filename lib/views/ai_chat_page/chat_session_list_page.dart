@@ -8,7 +8,6 @@ import 'package:purlaw/main.dart';
 import 'package:purlaw/viewmodels/ai_chat_page/chat_session_list_viewmodel.dart';
 import 'package:purlaw/viewmodels/main_viewmodel.dart';
 import 'package:purlaw/viewmodels/theme_viewmodel.dart';
-import 'package:tdesign_flutter/tdesign_flutter.dart';
 import 'package:typicons_flutter/typicons_flutter.dart';
 
 import '../../common/provider/provider_widget.dart';
@@ -59,7 +58,7 @@ class _ChatSessionListPageBodyState extends State<ChatSessionListPageBody> {
       },
       builder: (context, model, child) => Scaffold(
           appBar: AppBar(
-            title: Text("会话列表"),
+            title: const Text("会话列表"),
             centerTitle: true,
             actions: [
               Visibility(

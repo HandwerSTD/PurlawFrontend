@@ -1,8 +1,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:purlaw/common/utils/database/database_util.dart';
-import 'package:purlaw/common/utils/database/kvstore.dart';
 import 'package:purlaw/common/utils/misc.dart';
 import 'package:purlaw/components/purlaw/purlaw_components.dart';
 import 'package:purlaw/models/theme_model.dart';

@@ -3,13 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:purlaw/common/provider/provider_widget.dart';
 import 'package:purlaw/components/purlaw/tabbar.dart';
-import 'package:purlaw/main.dart';
 import 'package:purlaw/viewmodels/ai_chat_page/chat_page_viewmodel.dart';
 import 'package:purlaw/viewmodels/community/short_video_list_viewmodel.dart';
 import 'package:purlaw/viewmodels/main_page_viewmodel.dart';
 import 'package:purlaw/views/account_mgr/my_account_page.dart';
 import 'package:purlaw/views/ai_chat_page/ai_chat_page.dart';
-import 'package:purlaw/views/ai_chat_page/chat_history_page.dart';
 import 'package:purlaw/views/ai_chat_page/chat_session_list_page.dart';
 import 'package:purlaw/views/community/community_page.dart';
 import 'package:purlaw/views/utilities/utilities_index_page.dart';
@@ -33,12 +31,12 @@ class MainPage extends StatelessWidget {
           // Navigator.push(
           //     context, MaterialPageRoute(builder: (_) => ChatHistoryPage()));
           Navigator.push(context, PageRouteBuilder(
-              pageBuilder: (_, __, ___) => ChatSessionListPage(),
+              pageBuilder: (_, __, ___) => const ChatSessionListPage(),
               barrierColor: Colors.black45,
-              transitionDuration: Duration(milliseconds: 400),
+              transitionDuration: const Duration(milliseconds: 400),
               transitionsBuilder: (context, anim, secAnim, child) {
                 return SlideTransition(position: anim.drive(Tween(
-                    begin: Offset(-1, 0),
+                    begin: const Offset(-1, 0),
                     end: Offset.zero
                 ).chain(CurveTween(curve: Curves.ease))),child: child,);
               }
@@ -129,21 +127,21 @@ class _NormalMainPageBodyState extends State<NormalMainPageBody> {
             PurlawTabBarConfig(
                 onTap: () {
                   controller.animateToPage(0,
-                      duration: Duration(milliseconds: 400),
+                      duration: const Duration(milliseconds: 400),
                       curve: Curves.easeOutQuad);
                 },
                 tabText: '工具'),
             PurlawTabBarConfig(
                 onTap: () {
                   controller.animateToPage(1,
-                      duration: Duration(milliseconds: 400),
+                      duration: const Duration(milliseconds: 400),
                       curve: Curves.easeOutQuad);
                 },
                 tabText: '对话'),
             PurlawTabBarConfig(
                 onTap: () {
                   controller.animateToPage(2,
-                      duration: Duration(milliseconds: 400),
+                      duration: const Duration(milliseconds: 400),
                       curve: Curves.easeOutQuad);
                 },
                 tabText: '社区')
@@ -210,21 +208,21 @@ class _LargeMainPageBodyState extends State<LargeMainPageBody> {
                 PurlawTabBarConfig(
                     onTap: () {
                       controller.animateToPage(0,
-                          duration: Duration(milliseconds: 400),
+                          duration: const Duration(milliseconds: 400),
                           curve: Curves.easeOutQuad);
                     },
                     tabText: '工具'),
                 PurlawTabBarConfig(
                     onTap: () {
                       controller.animateToPage(1,
-                          duration: Duration(milliseconds: 400),
+                          duration: const Duration(milliseconds: 400),
                           curve: Curves.easeOutQuad);
                     },
                     tabText: '对话'),
                 PurlawTabBarConfig(
                     onTap: () {
                       controller.animateToPage(2,
-                          duration: Duration(milliseconds: 400),
+                          duration: const Duration(milliseconds: 400),
                           curve: Curves.easeOutQuad);
                     },
                     tabText: '社区')

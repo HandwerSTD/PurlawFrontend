@@ -323,7 +323,7 @@ class _VideoPlayBlockState extends State<VideoPlayBlock> {
                                     return Container(
                                       decoration: BoxDecoration(
                                           color: getThemeModel(context).themeData.scaffoldBackgroundColor,
-                                        borderRadius: BorderRadius.only(topLeft: Radius.circular(8), topRight: Radius.circular(8))
+                                        borderRadius: const BorderRadius.only(topLeft: Radius.circular(8), topRight: Radius.circular(8))
                                       ),
                                       child: Column(
                                         mainAxisSize: MainAxisSize.min,
@@ -453,11 +453,11 @@ class _VideoPlayBlockState extends State<VideoPlayBlock> {
         }
         Navigator.push(context, PageRouteBuilder(
             pageBuilder: (_, __, ___) => AccountVisitPage(userId: video.authorId!),
-          transitionDuration: Duration(milliseconds: 400),
-            reverseTransitionDuration: Duration(milliseconds: 400),
+          transitionDuration: const Duration(milliseconds: 400),
+            reverseTransitionDuration: const Duration(milliseconds: 400),
           transitionsBuilder: (context, anim, secAnim, child) {
           return SlideTransition(position: anim.drive(Tween(
-            begin: Offset(0, 1),
+            begin: const Offset(0, 1),
             end: Offset.zero
           ).chain(CurveTween(curve: Curves.linearToEaseOut))),child: child,);
           }

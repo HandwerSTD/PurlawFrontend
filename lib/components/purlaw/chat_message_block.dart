@@ -57,7 +57,7 @@ class PurlawChatMessageBlockViewOnly extends StatelessWidget {
                   Border.all(color: themeModel.colorModel.generalFillColorLight, width: 1),
                   color: background,
                   boxShadow: [
-                    BoxShadow(color: Colors.black12, blurRadius: 5),
+                    const BoxShadow(color: Colors.black12, blurRadius: 5),
                     BoxShadow(
                         color: (themeModel.dark
                             ? Colors.grey[800]!.withOpacity(0.2)

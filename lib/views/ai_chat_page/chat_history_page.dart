@@ -82,7 +82,7 @@ class _HistoryChatDetailPageState extends State<HistoryChatDetailPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: Text('对话详情'), centerTitle: true,
+        appBar: AppBar(title: const Text('对话详情'), centerTitle: true,
           actions: [
             IconButton(onPressed: (){
               showDialog(context: context, builder: setDeletePermanently).then((value) {
@@ -90,7 +90,7 @@ class _HistoryChatDetailPageState extends State<HistoryChatDetailPage> {
                   Navigator.pop(context, true);
                 }
               });
-            }, icon: Icon(Icons.delete_forever_rounded))
+            }, icon: const Icon(Icons.delete_forever_rounded))
           ],
         ),
         body: Column(
@@ -110,11 +110,11 @@ class _HistoryChatDetailPageState extends State<HistoryChatDetailPage> {
   Dialog setDeletePermanently(BuildContext context) {
     return Dialog(
       child: Container(
-        padding: EdgeInsets.all(12),
+        padding: const EdgeInsets.all(12),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text("确定要删除吗？"),
+            const Text("确定要删除吗？"),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -122,13 +122,13 @@ class _HistoryChatDetailPageState extends State<HistoryChatDetailPage> {
                     onPressed: () {
                       Navigator.pop(context, false);
                     },
-                    child: Text("取消")),
+                    child: const Text("取消")),
                 TextButton(
                     onPressed: () {
                       HistoryDatabaseUtil.deleteHistory(widget.ts);
                       Navigator.pop(context, true);
                     },
-                    child: Text("确定"))
+                    child: const Text("确定"))
               ],
             )
           ],

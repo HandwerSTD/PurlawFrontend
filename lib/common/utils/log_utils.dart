@@ -15,11 +15,11 @@ class Log {
 
   static void switchLogger() {
     printLog = !printLog;
-    logs += ("\n-----------Logger turned to ${printLog} at ${TimeUtils.formatDateTime(TimeUtils.timestamp)}------------\n");
+    logs += ("\n-----------Logger turned to $printLog at ${TimeUtils.formatDateTime(TimeUtils.timestamp)}------------\n");
   }
   static void switchSaver() {
     saveLog = !saveLog;
-    logs += ("\n-----------Switched to ${saveLog} at ${TimeUtils.formatDateTime(TimeUtils.timestamp)}------------\n");
+    logs += ("\n-----------Switched to $saveLog at ${TimeUtils.formatDateTime(TimeUtils.timestamp)}------------\n");
   }
   static void append(message) {
     if (!saveLog) return;
@@ -59,18 +59,18 @@ class _LoggerPageState extends State<LoggerPage> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text("日志"),
+        title: const Text("日志"),
         actions: [
           IconButton(onPressed: (){
             setState(() {
               Log.switchSaver();
             });
-          }, icon: Icon(Icons.switch_camera_outlined)),
+          }, icon: const Icon(Icons.switch_camera_outlined)),
           IconButton(onPressed: (){
             setState(() {
               Log.switchLogger();
             });
-          }, icon: Icon(Icons.closed_caption_disabled_outlined))
+          }, icon: const Icon(Icons.closed_caption_disabled_outlined))
         ],
       ),
       body: Padding(
@@ -79,7 +79,7 @@ class _LoggerPageState extends State<LoggerPage> {
           children: [
             Row(
               children: [
-                Expanded(child: SelectableText(Log.logs, style: TextStyle(
+                Expanded(child: SelectableText(Log.logs, style: const TextStyle(
                   fontFamily: 'Monospace'
                 ),))
               ],

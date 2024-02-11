@@ -1,5 +1,4 @@
 import 'package:babstrap_settings_screen/babstrap_settings_screen.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:purlaw/common/network/network_request.dart';
@@ -68,9 +67,9 @@ class _SettingsPageBodyState extends State<SettingsPageBody> {
                             builder: (_) => const MyAccountAvatar()));
                   },
                 ).build(context),
-                MySettingsItem(icons: const TypIconData(0xE036), title: '昵称')
+                const MySettingsItem(icons: TypIconData(0xE036), title: '昵称')
                     .build(context),
-                MySettingsItem(icons: Icons.manage_accounts, title: '帐户管理')
+                const MySettingsItem(icons: Icons.manage_accounts, title: '帐户管理')
                     .build(context),
                 MySettingsItem(
                   icons: Icons.logout,
@@ -121,7 +120,7 @@ class _SettingsPageBodyState extends State<SettingsPageBody> {
                         .colorModel
                         .generalFillColorBright,
                   ),
-                  titleStyle: TextStyle(fontSize: 16)),
+                  titleStyle: const TextStyle(fontSize: 16)),
               SettingsItem(
                   icons: Icons.multitrack_audio_rounded,
                   title: '自动语音播报',
@@ -147,7 +146,7 @@ class _SettingsPageBodyState extends State<SettingsPageBody> {
                         .colorModel
                         .generalFillColorBright,
                   ),
-                  titleStyle: TextStyle(fontSize: 16)),
+                  titleStyle: const TextStyle(fontSize: 16)),
               MySettingsItem(
                   icons: Icons.auto_delete_rounded, title: '清除缓存', onTap: (){
                     CacheUtil.clear();
@@ -171,7 +170,7 @@ class _SettingsPageBodyState extends State<SettingsPageBody> {
                 },
               ).build(context),
               MySettingsItem(icons: Icons.build_circle_outlined, title: '调试信息', onTap: (){
-                Navigator.push(context, MaterialPageRoute(builder: (_) => LoggerPage()));
+                Navigator.push(context, MaterialPageRoute(builder: (_) => const LoggerPage()));
               })
                   .build(context)
             ],
@@ -179,7 +178,7 @@ class _SettingsPageBodyState extends State<SettingsPageBody> {
           MySettingsGroup(
             settingsGroupTitle: '  应用信息',
             items: [
-              MySettingsItem(
+              const MySettingsItem(
                       icons: Icons.contact_support_rounded, title: '联系我们')
                   .build(context),
               MySettingsItem(
@@ -275,7 +274,7 @@ class MySettingsGroup extends StatelessWidget {
       items: items,
       settingsGroupTitle: settingsGroupTitle,
       settingsGroupTitleStyle:
-          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
       iconItemSize: 22,
     );
   }
@@ -308,7 +307,7 @@ class MySettingsItem {
             .colorModel
             .generalFillColorBright,
       ),
-      titleStyle: TextStyle(fontSize: 16),
+      titleStyle: const TextStyle(fontSize: 16),
       onTap: onTap,
     );
   }

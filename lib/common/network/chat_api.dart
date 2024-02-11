@@ -77,7 +77,7 @@ class ChatNetworkRequest {
           //     headers: jsonHeadersWithCookie(cookie),
           //     body: jsonEncode({"session_id": session}));
           // var chatRes = jsonDecode(Utf8Decoder().convert(value.bodyBytes));
-          await Future.delayed(Duration(milliseconds: 100));
+          await Future.delayed(const Duration(milliseconds: 100));
           var chatRes = jsonDecode(await HttpGet.post(API.chatFlushSession.api,
               HttpGet.jsonHeadersCookie(cookie), {"sid": session}));
           Log.i(chatRes);

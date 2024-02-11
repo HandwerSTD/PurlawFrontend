@@ -1,9 +1,7 @@
-import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:purlaw/common/utils/log_utils.dart';
 
-import '../../components/purlaw/chat_message_block.dart';
 import '../../components/third_party/modified_just_audio.dart';
 
 /// 单条对话的信息，适用于 AI 对话
@@ -98,7 +96,7 @@ class AIChatMessageModelWithAudio {
 
   Future<void> animatedAdd(String msg, Function refresh) async {
     for (var ch in msg.split('')) {
-      await Future.delayed(Duration(milliseconds: 50));
+      await Future.delayed(const Duration(milliseconds: 50));
       showedText += ch;
       refresh();
     }

@@ -3,7 +3,6 @@
 import 'dart:convert';
 import 'dart:isolate';
 
-import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:purlaw/common/network/chat_api.dart';
 import 'package:purlaw/common/utils/database/database_util.dart';
@@ -11,11 +10,8 @@ import 'package:purlaw/viewmodels/base_viewmodel.dart';
 import 'package:purlaw/common/utils/log_utils.dart';
 import '../../common/constants/constants.dart';
 import '../../common/network/network_request.dart';
-import '../../components/purlaw/chat_message_block.dart';
 import '../../components/third_party/modified_just_audio.dart';
 import '../../models/ai_chat/chat_message_model.dart';
-import '../main_viewmodel.dart';
-import 'package:path/path.dart' as p;
 
 const tag = "Chat ViewModel";
 

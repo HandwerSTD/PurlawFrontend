@@ -5,14 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:purlaw/common/network/network_loading_state.dart';
 import 'package:purlaw/common/network/network_request.dart';
-import 'package:purlaw/common/utils/cache_utils.dart';
 import 'package:purlaw/common/utils/database/database_util.dart';
 import 'package:purlaw/common/utils/database/kvstore.dart';
 import 'package:purlaw/components/multi_state_widget.dart';
 import 'package:purlaw/components/third_party/image_loader.dart';
+import 'package:purlaw/method_channels/method_channels.dart';
 import 'package:purlaw/viewmodels/main_viewmodel.dart';
 import 'package:purlaw/viewmodels/theme_viewmodel.dart';
-import 'package:purlaw/views/ai_chat_page/chat_history_page.dart';
 import 'package:purlaw/views/main_page.dart';
 import 'package:purlaw/views/oobe/oobe.dart';
 import 'package:tdesign_flutter/tdesign_flutter.dart';
@@ -89,6 +88,11 @@ class _ProgramEntryState extends State<ProgramEntry> {
 
       // 重置服务器设置
       HttpGet.switchBaseUrl(DatabaseUtil.getServerAddress());
+
+      // JNI 加载检测
+      callJavaFunction("Main init").then((value) {
+        Log.i(value, tag: "Main JNI");
+      });
 
       // 获取并刷新 Cookies
       final String cookie = DatabaseUtil.getCookie();

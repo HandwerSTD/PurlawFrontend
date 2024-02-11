@@ -149,7 +149,7 @@ class CommentBlock extends StatelessWidget {
       decoration: BoxDecoration(
         border: Border(bottom: BorderSide(color: Colors.grey[400]!, width: 0.5))
       ),
-      padding: EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
       child: Column(
         children: [
           Row(
