@@ -61,10 +61,16 @@ class AIChatMessageModel {
 }
 
 class ListAIChatMessageModelsWithAudio {
-  List<AIChatMessageModelWithAudio> messages;
+  late List<AIChatMessageModelWithAudio> messages;
 
   ListAIChatMessageModelsWithAudio({required this.messages});
 
+  ListAIChatMessageModelsWithAudio.fromDb(ListAIChatMessageModels model) {
+    messages = [];
+    messages.addAll(model.messages!.map((e) => AIChatMessageModelWithAudio.fromFull(
+      e.message, e.isMine, first: e.isFirst
+    )));
+  }
   ListAIChatMessageModels export() {
     ListAIChatMessageModels result = ListAIChatMessageModels(messages: []);
     result.messages!.addAll(messages.map((e) {

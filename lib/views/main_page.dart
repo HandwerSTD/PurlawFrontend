@@ -10,13 +10,13 @@ import 'package:purlaw/viewmodels/main_page_viewmodel.dart';
 import 'package:purlaw/views/account_mgr/my_account_page.dart';
 import 'package:purlaw/views/ai_chat_page/ai_chat_page.dart';
 import 'package:purlaw/views/ai_chat_page/chat_history_page.dart';
+import 'package:purlaw/views/ai_chat_page/chat_session_list_page.dart';
 import 'package:purlaw/views/community/community_page.dart';
 import 'package:purlaw/views/utilities/utilities_index_page.dart';
 
 import '../common/utils/misc.dart';
 import 'community/community_search_page.dart';
 
-ValueNotifier<bool> blur = ValueNotifier(false);
 
 /// 程序首页的 UI，用脚手架搭建 AppBar 和三个 Tab
 class MainPage extends StatelessWidget {
@@ -33,7 +33,7 @@ class MainPage extends StatelessWidget {
           // Navigator.push(
           //     context, MaterialPageRoute(builder: (_) => ChatHistoryPage()));
           Navigator.push(context, PageRouteBuilder(
-              pageBuilder: (_, __, ___) => ChatHistoryPage(),
+              pageBuilder: (_, __, ___) => ChatSessionListPage(),
               barrierColor: Colors.black45,
               transitionDuration: Duration(milliseconds: 400),
               transitionsBuilder: (context, anim, secAnim, child) {
@@ -42,7 +42,11 @@ class MainPage extends StatelessWidget {
                     end: Offset.zero
                 ).chain(CurveTween(curve: Curves.ease))),child: child,);
               }
-          ),);
+          ),).then((value) {
+            if (value == true) {
+              Provider.of<AIChatMsgListViewModel>(context, listen: false).switchToSessionMessages();
+            }
+          });
         },
         icon: const Icon(Icons.mark_chat_read_outlined),
       );

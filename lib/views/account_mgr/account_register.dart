@@ -75,9 +75,10 @@ class AccountRegisterPageBody extends StatelessWidget {
                             hint: '密码',
                             controller: model.passwdCtrl,
                             margin:
-                            const EdgeInsets.only(left: 32, right: 32, top: 6, bottom: 12),
+                            const EdgeInsets.only(left: 32, right: 32, top: 6),
                             secureText: true,
                           ),
+                          Text("密码需包含至少6个字符\n"),
                           Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [

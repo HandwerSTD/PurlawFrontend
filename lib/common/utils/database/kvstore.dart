@@ -5,11 +5,14 @@ class KVBox {
   static const historyChats = "historyChatBox";
   static const favoriteVideos = "favoriteBox";
   static const favoriteVideosIndex = "favoriteBoxIndex";
+  static const sessionLists = "sessionLists";
+  static const sessionListsIndex = "sessionListsIndex";
 
   static Future setupLocator() async {
     await Hive.initFlutter();
     await Hive.openBox(defaultBox);
     await Hive.openBox(favoriteVideosIndex);
+    await Hive.openBox(sessionListsIndex);
   }
   static void insert(String key, String value, {String useBox = KVBox.defaultBox}) {
     var box = Hive.box(useBox);

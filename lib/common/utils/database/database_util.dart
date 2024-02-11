@@ -2,9 +2,11 @@ import 'dart:convert';
 
 import 'package:hive/hive.dart';
 import 'package:purlaw/common/utils/database/kvstore.dart';
+import 'package:purlaw/common/utils/log_utils.dart';
 import 'package:purlaw/common/utils/misc.dart';
 import 'package:purlaw/models/community/short_video_info_model.dart';
 
+/// 数据库结构：{ key: value }
 class DatabaseUtil {
   static bool isFirstOpen() {
     return KVBox.query(DatabaseConst.firstOpen).isEmpty;
@@ -31,10 +33,10 @@ class DatabaseUtil {
   }
   static (String, String) getUserNamePasswd() => (KVBox.query(DatabaseConst.userLoginName), KVBox.query(DatabaseConst.userPasswdSha1));
 
-  static void storeLastAIChatMsg(String result) {
-    KVBox.insert(DatabaseConst.aiChatMsg, result);
+  static void storeLastAIChatSession(String sid) {
+    KVBox.insert(DatabaseConst.lastChatSession, sid);
   }
-  static String getLastAIChatMsg() => KVBox.query(DatabaseConst.aiChatMsg);
+  static String getLastAIChatSession() => KVBox.query(DatabaseConst.lastChatSession);
 
   static String getServerAddress() => KVBox.query(DatabaseConst.serverAddress);
   static void storeServerAddress(String server) {
@@ -43,6 +45,7 @@ class DatabaseUtil {
   static bool get getAutoAudioPlay => KVBox.query(DatabaseConst.autoAudioPlay) == DatabaseConst.dbTrue;
 }
 
+/// 数据库结构：{ timestamp: data }
 class HistoryDatabaseUtil {
   static Future<void> clearHistory() async {
     var box = await Hive.openLazyBox(KVBox.historyChats);
@@ -67,6 +70,11 @@ class HistoryDatabaseUtil {
   }
 }
 
+/// 数据库结构：
+///
+/// favoriteVideosIndex = { uid: "true" / "" }
+///
+/// favoriteVideos = { uid: data }
 class FavoriteDatabaseUtil {
   static Future<LazyBox> getBox() {
     return Hive.openLazyBox(KVBox.favoriteVideos);
@@ -95,6 +103,55 @@ class FavoriteDatabaseUtil {
   }
 }
 
+/// 数据库结构：
+///
+/// sessionListsIndex = { sid: name }
+///
+/// sessionLists = { sid: data }
+class SessionListDatabaseUtil {
+  static Future<LazyBox> getBox() {
+    return Hive.openLazyBox(KVBox.sessionLists);
+  }
+  static void add(String name, String sid) {
+    KVBox.insert(sid, name, useBox: KVBox.sessionListsIndex);
+  }
+  static void storeSessionList(List<(String, String)> res) async {
+    await clear();
+    for (var item in res) {
+      Hive.box(KVBox.sessionListsIndex).put(item.$1, item.$2);
+    }
+    Log.i("sessionList stored", tag: "SessionList DatabaseUtil");
+  }
+  static Future<void> storeHistoryBySid(String sid, String val) async {
+    var box = await getBox();
+    await box.put(sid, val);
+    Log.i("SID $sid saved.", tag: "SessionList DatabaseUtil");
+  }
+  /// 返回格式：(sid, name)
+  static Future<List<(String, String)>> getList() async {
+    var result = <(String, String)>[];
+    var indexBox = Hive.box(KVBox.sessionListsIndex);
+    for (var sid in indexBox.keys) {
+      result.add((sid, indexBox.get(sid)));
+    }
+    return result;
+  }
+  /// 返回 json 格式的纯文本
+  static Future<String> getHistoryBySid(String sid) async {
+    var box = await getBox();
+    return await box.get(sid, defaultValue: "");
+  }
+  static Future<void> delete(String sid) async {
+    var box = await getBox();
+    await box.delete(sid);
+    await Hive.box(KVBox.sessionListsIndex).delete(sid);
+  }
+  static Future<void> clear() async {
+    await (await getBox()).clear();
+    await Hive.box(KVBox.sessionListsIndex).clear();
+  }
+}
+
 class DatabaseConst {
   // Basic consts
   static const String dbTrue = "true";
@@ -111,7 +168,7 @@ class DatabaseConst {
   static const String userPasswdSha1 = "USER_PASSWD";
 
   // AI Chat
-  static const String aiChatMsg = "AI_CHAT_MSG";
+  static const String lastChatSession = "AI_CHAT_MSG";
 
   // Debug Settings
   static const String serverAddress = "SERVER_ADDRESS";

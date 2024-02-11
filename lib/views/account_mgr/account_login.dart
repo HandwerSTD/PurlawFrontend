@@ -11,7 +11,6 @@ import 'package:purlaw/viewmodels/account_mgr/account_login_viewmodel.dart';
 import 'package:purlaw/viewmodels/theme_viewmodel.dart';
 import 'package:purlaw/views/account_mgr/account_register.dart';
 import 'package:tdesign_flutter/tdesign_flutter.dart';
-import 'package:purlaw/common/utils/log_utils.dart';
 import '../../models/theme_model.dart';
 import '../settings/settings_page.dart';
 

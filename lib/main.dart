@@ -87,9 +87,6 @@ class _ProgramEntryState extends State<ProgramEntry> {
         Provider.of<ThemeViewModel>(context, listen: false).switchDarkMode();
       }
 
-      // 清空上次的对话信息
-      DatabaseUtil.storeLastAIChatMsg("");
-
       // 重置服务器设置
       HttpGet.switchBaseUrl(DatabaseUtil.getServerAddress());
 

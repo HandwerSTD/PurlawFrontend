@@ -81,10 +81,13 @@ class _AIChatPageFooterState extends State<AIChatPageFooter> {
               RecommendedActions(buttons: [
                 RecommendedActionButton(title: '停止对话', onClick: (){
                   model.manuallyBreak();
-                }, show: model.replying, isHeadOrTail: -1,),
+                }, show: model.replying,),
+                RecommendedActionButton(title: '清除对话', onClick: (){
+                  model.clearMessage();
+                }, show: (!model.replying && model.messageModels.messages.length > 1), ),
                 RecommendedActionButton(title: '保存并清除对话', onClick: (){
                   model.saveMessage();
-                }, show: (!model.replying && model.messageModels.messages.length > 1), isHeadOrTail: 1,)
+                }, show: (!model.replying && model.messageModels.messages.length > 1), )
               ],),
               Container(
                 alignment: Alignment.center,

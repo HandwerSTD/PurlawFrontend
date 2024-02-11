@@ -35,6 +35,23 @@ class AIChatMsgListViewModel extends BaseViewModel {
 
   AIChatMsgListViewModel({required super.context});
 
+  void switchToSessionMessages() async {
+    final sid = DatabaseUtil.getLastAIChatSession();
+    final data = await SessionListDatabaseUtil.getHistoryBySid(sid);
+    if (data == "") {
+      messageModels =
+          ListAIChatMessageModelsWithAudio(messages: [
+            AIChatMessageModelWithAudio.fromFull(Constants.firstOutput, false,
+                first: true)
+          ]);
+      notifyListeners();
+      return;
+    }
+    messageModels = ListAIChatMessageModelsWithAudio.fromDb(
+      ListAIChatMessageModels.fromJson(jsonDecode(data))
+    );
+    notifyListeners();
+  }
   void saveMessage() {
     HistoryDatabaseUtil.storeHistory(
         jsonEncode(messageModels.export().toJson()));
@@ -44,6 +61,13 @@ class AIChatMsgListViewModel extends BaseViewModel {
     ]);
     notifyListeners();
     makeToast("保存成功");
+  }
+  void clearMessage() {
+    messageModels = ListAIChatMessageModelsWithAudio(messages: [
+      AIChatMessageModelWithAudio.fromFull(Constants.firstOutput, false,
+          first: true)
+    ]);
+    notifyListeners();
   }
 
   void scrollToBottom() {
@@ -59,7 +83,7 @@ class AIChatMsgListViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  void reEnableAfterReceive(String cookie) {
+  void reEnableAfterReceive(String cookie, String sid) {
     if (messageModels.messages.last.sentenceCompleted.isNotEmpty && !messageModels.messages.last.sentenceCompleted.last) {
       messageModels.messages.last.playlist.add(LockCachingAudioSource(
           Uri.parse(HttpGet.getApi(API.chatRequestVoice.api) +
@@ -72,6 +96,7 @@ class AIChatMsgListViewModel extends BaseViewModel {
     Log.d(messageModels.messages.last.sentenceCompleted, tag:"Chat Page ViewModel");
     messageModels.messages.last.generateCompleted.value = true;
     replying = false;
+    SessionListDatabaseUtil.storeHistoryBySid(sid, jsonEncode(messageModels.export().toJson()));
     notifyListeners();
   }
 
@@ -115,8 +140,12 @@ class AIChatMsgListViewModel extends BaseViewModel {
   }
 
   void submitNewMessage(String cookie) async {
-    final text = controller.text;
+    final text = controller.text, session = DatabaseUtil.getLastAIChatSession();
     if (text.isEmpty) return;
+    if (session.isEmpty) {
+      makeToast("请先选择会话");
+      return;
+    }
 
     setDisableWhenSubmit();
     notifyListeners();
@@ -131,8 +160,8 @@ class AIChatMsgListViewModel extends BaseViewModel {
       Log.d("autoPlay = $autoPlay", tag: "Chat Page ViewModel");
       messageModels.messages.last.player.setAudioSource(messageModels.messages.last.playlist);
       // await appendMessage("response for 测试第一个句子。 $text", cookie);
-      await ChatNetworkRequest.submitNewMessage(text, cookie, appendMessage, (){
-        reEnableAfterReceive(cookie);
+      await ChatNetworkRequest.submitNewMessage(session, text, cookie, appendMessage, (){
+        reEnableAfterReceive(cookie, session);
         notifyListeners();
       });
     } on Exception catch (e) {

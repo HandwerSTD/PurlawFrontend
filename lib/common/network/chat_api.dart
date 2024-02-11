@@ -12,14 +12,12 @@ class ChatNetworkRequest {
   static late Isolate isolate;
 
   static Future<void> submitNewMessage(
-      String text, String cookie, Future<void> Function(String dt, String cookie) append, Function callback) async {
+      String session, String text, String cookie, Future<void> Function(String dt, String cookie) append, Function callback) async {
     var response = jsonDecode(await HttpGet.post(
-        API.chatCreateSession.api,
+        API.chatAppendSession.api,
         HttpGet.jsonHeadersCookie(cookie),
-        ({"type": "chat", "data": text})).timeout(const Duration(seconds: 10)));
+        ({"sid": session, "content": text})).timeout(const Duration(seconds: 10)));
     Log.i(response);
-    String session = response["session_id"];
-    Log.i(session);
     await isolateFlushSession(append,
         session: session, cookie: cookie, callback: callback);
   }
@@ -81,7 +79,7 @@ class ChatNetworkRequest {
           // var chatRes = jsonDecode(Utf8Decoder().convert(value.bodyBytes));
           await Future.delayed(Duration(milliseconds: 100));
           var chatRes = jsonDecode(await HttpGet.post(API.chatFlushSession.api,
-              HttpGet.jsonHeadersCookie(cookie), {"session_id": session}));
+              HttpGet.jsonHeadersCookie(cookie), {"sid": session}));
           Log.i(chatRes);
           if (chatRes["status"] != "success") {
             throw Exception(chatRes["message"]);
