@@ -1,6 +1,7 @@
 #include <jni.h>
 #include <string.h>
 #include <string>
+#include "opencv2/core.hpp"
 
 // Write C++ code here.
 //
@@ -13,12 +14,7 @@
 //       System.loadLibrary("purlaw");
 //    }
 //
-// Or, in MainActivity.kt:
-//    companion object {
-//      init {
-//         System.loadLibrary("purlaw")
-//      }
-//    }
+
 extern "C"
 JNIEXPORT jstring JNICALL
 Java_com_tianzhu_purlaw_MainActivity_HelloJNI(JNIEnv *env, jobject thiz, jstring arg) {
@@ -26,4 +22,9 @@ Java_com_tianzhu_purlaw_MainActivity_HelloJNI(JNIEnv *env, jobject thiz, jstring
     std::string res = strArg;
     env->ReleaseStringUTFChars(arg, strArg);
     return env->NewStringUTF(("Hello from purlaw.cpp!" + res).c_str());
+}
+extern "C"
+JNIEXPORT jstring JNICALL
+Java_com_tianzhu_purlaw_MainActivity_getCVBuildInfo(JNIEnv *env, jobject thiz) {
+    return env->NewStringUTF(("OpenCV Version " + cv::getVersionString()).c_str());
 }

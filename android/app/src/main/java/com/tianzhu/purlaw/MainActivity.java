@@ -19,7 +19,7 @@ public class MainActivity extends FlutterActivity {
                             result.success(HelloJNI(call.argument("arg1")));
                         }
                         case "getCVVersion" -> {
-                            result.success("Not implemented yet");
+                            result.success(getCVBuildInfo());
                         }
                     }
                 });
@@ -30,4 +30,5 @@ public class MainActivity extends FlutterActivity {
     }
 
     private native String HelloJNI(String arg);
+    private native String getCVBuildInfo();
 }

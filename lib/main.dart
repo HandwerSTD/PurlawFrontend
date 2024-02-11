@@ -90,7 +90,10 @@ class _ProgramEntryState extends State<ProgramEntry> {
       HttpGet.switchBaseUrl(DatabaseUtil.getServerAddress());
 
       // JNI 加载检测
-      callJavaFunction("Main init").then((value) {
+      callJavaFunction("testGetStringFromAndroid", {"arg1": "Main init"}).then((value) {
+        Log.i(value, tag: "Main JNI");
+      });
+      callJavaFunction("getCVVersion", {}).then((value) {
         Log.i(value, tag: "Main JNI");
       });
 

@@ -36,3 +36,7 @@ target_link_libraries(${CMAKE_PROJECT_NAME}
     # List libraries link to the target library
     android
     log)
+
+add_subdirectory(purlaw_backend)
+
+target_link_libraries(${CMAKE_PROJECT_NAME} purlaw_backend)

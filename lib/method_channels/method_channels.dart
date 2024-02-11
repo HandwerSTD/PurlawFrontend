@@ -6,10 +6,10 @@ import '../common/utils/log_utils.dart';
 const platform = MethodChannel('com.tianzhu.purlaw/channel');
 
 // 调用Java函数并传递参数
-Future<String> callJavaFunction(String parameter) async {
+Future<String> callJavaFunction(String methodName, Map<String, dynamic> parameter) async {
   try {
     // 发送消息到原生平台
-    final result = await platform.invokeMethod('testGetStringFromAndroid', {'arg1': parameter});
+    final result = await platform.invokeMethod(methodName, parameter);
     return result;
   } catch (e) {
     Log.e("Error calling function: $e", tag: "Method Channel");
