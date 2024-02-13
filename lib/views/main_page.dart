@@ -148,7 +148,6 @@ class _NormalMainPageBodyState extends State<NormalMainPageBody> {
           ],
           selectedTab: MainPage.tabIndex,
         ),
-        // Expanded(child: MainPage.getTab(context, MainPage.tabIndex))
         Expanded(
           child: PageView(
             controller: controller,

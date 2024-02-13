@@ -38,5 +38,7 @@ target_link_libraries(${CMAKE_PROJECT_NAME}
     log)
 
 add_subdirectory(purlaw_backend)
+set(ncnn_INCLUDE_DIRS purlaw_backend/3rdpart/ncnn/include)
+include_directories(${ncnn_INCLUDE_DIRS})
 
 target_link_libraries(${CMAKE_PROJECT_NAME} purlaw_backend)

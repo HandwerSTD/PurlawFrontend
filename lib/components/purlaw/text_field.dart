@@ -107,7 +107,7 @@ class PurlawChatTextField extends StatelessWidget {
     );
   }
 
-  InputDecoration chatInputDeco(String hint, Color fillColor, double? radius) {
+  static InputDecoration chatInputDeco(String hint, Color fillColor, double? radius) {
     return InputDecoration(
         isDense: true,
         contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),

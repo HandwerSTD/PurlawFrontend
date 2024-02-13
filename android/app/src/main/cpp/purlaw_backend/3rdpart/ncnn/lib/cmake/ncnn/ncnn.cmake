@@ -59,7 +59,7 @@ endif()
 add_library(ncnn SHARED IMPORTED)
 
 set_target_properties(ncnn PROPERTIES
-  INTERFACE_COMPILE_OPTIONS "-fno-rtti;-fno-exceptions"
+  INTERFACE_COMPILE_OPTIONS "-fno-rtti;-fexceptions"
   INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include/ncnn"
   INTERFACE_LINK_LIBRARIES "-fopenmp;-static-openmp;-Wl,-wrap,__kmp_affinity_determine_capable;Threads::Threads;android;jnigraphics;log"
   INTERFACE_POSITION_INDEPENDENT_CODE "ON"

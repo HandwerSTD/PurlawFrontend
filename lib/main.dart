@@ -5,8 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:purlaw/common/network/network_loading_state.dart';
 import 'package:purlaw/common/network/network_request.dart';
+import 'package:purlaw/common/utils/cache_utils.dart';
 import 'package:purlaw/common/utils/database/database_util.dart';
 import 'package:purlaw/common/utils/database/kvstore.dart';
+import 'package:purlaw/common/utils/misc.dart';
 import 'package:purlaw/components/multi_state_widget.dart';
 import 'package:purlaw/components/third_party/image_loader.dart';
 import 'package:purlaw/method_channels/method_channels.dart';
@@ -96,6 +98,12 @@ class _ProgramEntryState extends State<ProgramEntry> {
       callJavaFunction("getCVVersion", {}).then((value) {
         Log.i(value, tag: "Main JNI");
       });
+
+      // 复制模型文件
+      OCRModelCopyFilesUtils.doCopy();
+
+      // 语音 Cache 清理
+      CacheUtil.clearRemote();
 
       // 获取并刷新 Cookies
       final String cookie = DatabaseUtil.getCookie();

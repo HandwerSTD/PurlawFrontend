@@ -1,5 +1,12 @@
 
+import 'dart:io';
+
 import 'package:date_format/date_format.dart';
+import 'package:flutter/services.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:path/path.dart' as p;
+
+import 'log_utils.dart';
 
 
 /// 响应式开发断点设置
@@ -71,5 +78,29 @@ class TimeUtils {
     return "$nowTime / $totalTime";
   }
 
+}
+
+class OCRModelCopyFilesUtils {
+  static late Directory localPath;
+
+  static void _copyFiles(String filename, Directory localPath) async {
+    Log.i("File $filename, localPath: $localPath", tag:"Copy Files");
+    var file = File("${localPath.path}/$filename");
+    if (file.existsSync()) {
+      Log.i("[DEBUG] File exists");
+    }
+    var bytes = await rootBundle.load("assets/ocrmodel/$filename");
+    await file.writeAsBytes(bytes.buffer.asInt8List(bytes.offsetInBytes, bytes.lengthInBytes));
+  }
+
+  static void doCopy() async {
+    localPath = Directory(p.join((await getApplicationSupportDirectory()).path, 'ocr_models'));
+    await localPath.create();
+    _copyFiles("ch_PP-OCRv3_det_fp16.bin", localPath);
+    _copyFiles("ch_PP-OCRv3_det_fp16.param", localPath);
+    _copyFiles("ch_PP-OCRv3_rec_fp16.bin", localPath);
+    _copyFiles("ch_PP-OCRv3_rec_fp16.param", localPath);
+    _copyFiles("paddleocr_keys.txt", localPath);
+  }
 }
 

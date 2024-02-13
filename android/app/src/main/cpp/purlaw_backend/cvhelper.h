@@ -5,6 +5,8 @@
 #ifndef PURLAW_BACKEND_CVHELPER_H
 #define PURLAW_BACKEND_CVHELPER_H
 
+#include <ncnn/net.h>
+
 namespace purlaw {
     template <class ForwardIterator>
     inline static size_t argmax(ForwardIterator first, ForwardIterator last)

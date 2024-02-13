@@ -43,7 +43,7 @@ android {
         versionName flutterVersionName
         externalNativeBuild {
             cmake {
-                cppFlags ''
+                cppFlags '-fexceptions'
             }
         }
         ndk {

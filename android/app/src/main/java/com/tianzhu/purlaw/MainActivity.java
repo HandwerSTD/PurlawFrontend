@@ -2,6 +2,10 @@ package com.tianzhu.purlaw;
 
 import androidx.annotation.NonNull;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import io.flutter.embedding.android.FlutterActivity;
 import io.flutter.embedding.engine.FlutterEngine;
 import io.flutter.plugin.common.MethodChannel;
@@ -21,6 +25,14 @@ public class MainActivity extends FlutterActivity {
                         case "getCVVersion" -> {
                             result.success(getCVBuildInfo());
                         }
+                        case "documentRecognition" -> {
+                            final String filename = call.argument("filename");
+                            final String ocrModelPath = call.argument("ocrModelPath");
+                            final String[] recResult = (documentRecognition(filename, ocrModelPath));
+                            final ArrayList<String> res = new ArrayList<>(recResult.length);
+                            res.addAll(Arrays.asList(recResult));
+                            result.success(res);
+                        }
                     }
                 });
     }
@@ -31,4 +43,8 @@ public class MainActivity extends FlutterActivity {
 
     private native String HelloJNI(String arg);
     private native String getCVBuildInfo();
+
+    private native String[] documentRecognition(String filename, String ocrModelPath);
+
+    private native void documentRectify(String filename, String ocrModelPath);
 }

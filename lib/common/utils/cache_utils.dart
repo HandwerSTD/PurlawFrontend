@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
 class CacheUtil {
@@ -10,6 +11,10 @@ class CacheUtil {
 
   static Future<void> clear() async {
     Directory tempDir = await getTemporaryDirectory();
+    await _delete(tempDir);
+  }
+  static Future<void> clearRemote() async {
+    Directory tempDir = Directory(p.join((await getTemporaryDirectory()).path, 'just_audio_cache'));
     await _delete(tempDir);
   }
 
