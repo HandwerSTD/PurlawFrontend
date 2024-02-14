@@ -131,6 +131,11 @@ class _AIChatPageFooterState extends State<AIChatPageFooter> {
                         backgroundColor: themeModel.colorModel.generalFillColor,
                         onClick: () {
                           if (!model.replying) {
+                            bool refreshed = getMainViewModel(context, listen: false).myUserInfoModel.cookie.isNotEmpty;
+                            if (!refreshed) {
+                              TDToast.showText("请先刷新用户信息", context: context);
+                              return;
+                            }
                             model.submitNewMessage(
                                 Provider.of<MainViewModel>(context, listen: false)
                                     .cookies);

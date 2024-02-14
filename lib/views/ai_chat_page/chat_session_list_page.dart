@@ -8,6 +8,7 @@ import 'package:purlaw/main.dart';
 import 'package:purlaw/viewmodels/ai_chat_page/chat_session_list_viewmodel.dart';
 import 'package:purlaw/viewmodels/main_viewmodel.dart';
 import 'package:purlaw/viewmodels/theme_viewmodel.dart';
+import 'package:tdesign_flutter/tdesign_flutter.dart';
 import 'package:typicons_flutter/typicons_flutter.dart';
 
 import '../../common/provider/provider_widget.dart';
@@ -75,6 +76,11 @@ class _ChatSessionListPageBodyState extends State<ChatSessionListPageBody> {
                               content: '从网络下载会话列表，成功后会清除本地会话列表的对话数据，是否确定？',
                               rightBtnTitle: '确定',
                               acceptAction: () {
+                                bool refreshed = getMainViewModel(context, listen: false).myUserInfoModel.cookie.isNotEmpty;
+                                if (!refreshed) {
+                                  TDToast.showText("请先刷新用户信息", context: context);
+                                  return;
+                                }
                                 model.fetchSessionsFromNetwork(
                                     getCookie(context, listen: false));
                               });
@@ -162,6 +168,11 @@ class _ChatSessionListPageBodyState extends State<ChatSessionListPageBody> {
                                                             '确定要删除会话？此操作不可逆。',
                                                         rightBtnTitle: '确定',
                                                         acceptAction: () {
+                                                          bool refreshed = getMainViewModel(context, listen: false).myUserInfoModel.cookie.isNotEmpty;
+                                                          if (!refreshed) {
+                                                            TDToast.showText("请先刷新用户信息", context: context);
+                                                            return;
+                                                          }
                                                           model.deleteEntry(index, getCookie(context, listen: false));
                                                         });
                                                   },
@@ -207,6 +218,11 @@ class _ChatSessionListPageBodyState extends State<ChatSessionListPageBody> {
                             getThemeModel(context).colorModel.generalFillColor,
                         foregroundColor: Colors.white,
                         onPressed: () {
+                          bool refreshed = getMainViewModel(context, listen: false).myUserInfoModel.cookie.isNotEmpty;
+                          if (!refreshed) {
+                            TDToast.showText("请先刷新用户信息", context: context);
+                            return;
+                          }
                           model.createNewSession(
                               getCookie(context, listen: false));
                         })

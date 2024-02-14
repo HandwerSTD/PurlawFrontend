@@ -4,18 +4,6 @@
 #include "opencv2/opencv.hpp"
 #include "purlaw_backend/cvhelper.h"
 
-// Write C++ code here.
-//
-// Do not forget to dynamically load the C++ library into your application.
-//
-// For instance,
-//
-// In MainActivity.java:
-//    static {
-//       System.loadLibrary("purlaw");
-//    }
-//
-
 extern "C"
 JNIEXPORT jstring JNICALL
 Java_com_tianzhu_purlaw_MainActivity_HelloJNI(JNIEnv *env, jobject thiz, jstring arg) {
@@ -57,7 +45,17 @@ Java_com_tianzhu_purlaw_MainActivity_documentRecognition(JNIEnv *env, jobject th
 }
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_tianzhu_purlaw_MainActivity_documentRectify(JNIEnv *env, jobject thiz, jstring filename,
-                                                     jstring ocr_model_path) {
-    // TODO: implement documentRectify()
+Java_com_tianzhu_purlaw_MainActivity_documentRectify(JNIEnv *env, jobject thiz, jstring filename) {
+    const char* strFilename = env->GetStringUTFChars(filename, nullptr);
+    std::string sFilename = strFilename;
+    env->ReleaseStringUTFChars(filename, strFilename);
+
+    cv::Mat src = cv::imread(sFilename);
+
+    purlaw::cvhelper helper;
+    std::vector<cv::Point2f> points;
+    helper.GetDocumentRect(src, points);
+    if (points.size() < 4) return;
+    cv::Mat dst = helper.CutKeyPosition(src, points);
+    cv::imwrite(sFilename, dst);
 }

@@ -23,7 +23,7 @@ class HttpGet {
       {"content-type": "application/json", "cookie": cookie};
 
   static Future<String> get(String api, Map<String, String> headers) async {
-    var response = await http.get(Uri.parse(getApi(api)), headers: headers);
+    var response = await http.get(Uri.parse(getApi(api)), headers: headers).timeout(const Duration(seconds: 10));
     if (response.statusCode != HTTP_OK) {
       throw HttpException(response.statusCode.toString());
     }
@@ -49,7 +49,7 @@ class HttpGet {
     Log.d(getApi(api), tag: "HTTP Network");
 
     var response = await http.post(Uri.parse(getApi(api)),
-        headers: headers, body: jsonEncode(body));
+        headers: headers, body: jsonEncode(body)).timeout(const Duration(seconds: 10));
     if (response.statusCode != HTTP_OK) {
       throw HttpException(response.statusCode.toString());
     }

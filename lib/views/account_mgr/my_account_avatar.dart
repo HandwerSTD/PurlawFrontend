@@ -51,6 +51,11 @@ class MyAccountAvatar extends StatelessWidget {
                   child: ElevatedButton(
                       child: const Text("上传新头像"),
                       onPressed: () async {
+                        bool refreshed = getMainViewModel(context, listen: false).myUserInfoModel.cookie.isNotEmpty;
+                        if (!refreshed) {
+                          TDToast.showText("请先刷新用户信息", context: context);
+                          return;
+                        }
                         var avatar = await ImagePicker().pickImage(
                             source: ImageSource.gallery,
                             maxWidth: 1000,

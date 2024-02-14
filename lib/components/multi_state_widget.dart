@@ -57,7 +57,7 @@ class GeneralEmptyWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(child: Text("列表空"));
+    return const Center(child: Text("空空如也"));
   }
 }
 

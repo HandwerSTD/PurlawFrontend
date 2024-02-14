@@ -148,6 +148,11 @@ class MyAccountVideoListBody extends StatelessWidget {
               backgroundColor: Provider.of<ThemeViewModel>(context).themeModel.colorModel.generalFillColor,
               foregroundColor: Colors.white,
               onPressed: (){
+                bool refreshed = getMainViewModel(context, listen: false).myUserInfoModel.cookie.isNotEmpty;
+                if (!refreshed) {
+                  TDToast.showText("请先刷新用户信息", context: context);
+                  return;
+                }
                 ImagePicker()
                     .pickVideo(source: ImageSource.gallery)
                     .then((selectVideo) {

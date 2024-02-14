@@ -243,14 +243,14 @@ class _VideoPlayBlockState extends State<VideoPlayBlock> {
             return const CircularProgressIndicator();
           }
           return Icon(
-            Icons.play_arrow,
+            Icons.play_arrow_rounded,
             color: ((!model.loaded || (model.loaded && value.isPlaying))
                 ? Colors.transparent
-                : Colors.white54),
+                : Colors.white60),
             shadows: ((!model.loaded || (model.loaded && value.isPlaying))
                 ? []
                 : kElevationToShadow[6]),
-            size: 60,
+            size: 72,
           );
         });
   }
@@ -498,8 +498,9 @@ class _VideoPlayBlockState extends State<VideoPlayBlock> {
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         bottomFABSingle(
+          color: (video.meLiked == 1 ? Colors.white : getThemeModel(context).colorModel.generalFillColor).withOpacity(0.7),
             icon:
-                (video.meLiked == 1 ? Icons.thumb_up_rounded : Icons.thumb_up_outlined),
+                (Icons.thumb_up_rounded),
             onPressed: () {
               Log.i(tag: tag, "switchVideoLike");
               if (getCookie(context, listen: false).isEmpty) {
@@ -512,6 +513,7 @@ class _VideoPlayBlockState extends State<VideoPlayBlock> {
               model.switchVideoLike();
             }),
         bottomFABSingle(
+          color: Colors.white.withOpacity(0.7),
             icon: Icons.comment_rounded,
             onPressed: () {
               // if (!model.loaded) return;
@@ -526,6 +528,7 @@ class _VideoPlayBlockState extends State<VideoPlayBlock> {
               });
             }),
         bottomFABSingle(
+            color: (video.meLiked == 1 ? Colors.white : getThemeModel(context).colorModel.generalFillColor).withOpacity(0.7),
           iconSize: 48,
             margin: const EdgeInsets.only(top: 6, bottom: 12, right: 12),
             icon: (favorite ? Icons.star_rounded : Icons.star_border_rounded),
@@ -537,6 +540,7 @@ class _VideoPlayBlockState extends State<VideoPlayBlock> {
               });
             }),
         bottomFABSingle(
+          color: Colors.white.withOpacity(0.7),
             icon: Icons.share_rounded,
             margin: const EdgeInsets.only(top: 12, bottom: 36, right: 12, left: 12),
             onPressed: () {
@@ -550,7 +554,7 @@ class _VideoPlayBlockState extends State<VideoPlayBlock> {
   }
 
   Widget bottomFABSingle(
-      {required IconData icon, required Function onPressed, double iconSize = 36, EdgeInsetsGeometry? margin}) {
+      {required IconData icon, required Function onPressed, double iconSize = 36, EdgeInsetsGeometry? margin, required Color color}) {
     return Container(
       height: 52,
       width: 52,
@@ -563,7 +567,7 @@ class _VideoPlayBlockState extends State<VideoPlayBlock> {
           icon,
           size: iconSize,
           shadows: [fabBoxShadow],
-          color: Colors.white,
+          color: color,
         ),
       ),
     );

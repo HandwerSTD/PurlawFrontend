@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import io.flutter.embedding.android.FlutterActivity;
 import io.flutter.embedding.engine.FlutterEngine;
@@ -19,15 +18,12 @@ public class MainActivity extends FlutterActivity {
         new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(), CHANNEL_NAME)
                 .setMethodCallHandler((call, result) -> {
                     switch (call.method) {
-                        case "testGetStringFromAndroid" -> {
-                            result.success(HelloJNI(call.argument("arg1")));
-                        }
-                        case "getCVVersion" -> {
-                            result.success(getCVBuildInfo());
-                        }
+                        case "testGetStringFromAndroid" -> result.success(HelloJNI(call.argument("arg1")));
+                        case "getCVVersion" -> result.success(getCVBuildInfo());
                         case "documentRecognition" -> {
                             final String filename = call.argument("filename");
                             final String ocrModelPath = call.argument("ocrModelPath");
+//                            documentRectify(filename);
                             final String[] recResult = (documentRecognition(filename, ocrModelPath));
                             final ArrayList<String> res = new ArrayList<>(recResult.length);
                             res.addAll(Arrays.asList(recResult));
@@ -46,5 +42,5 @@ public class MainActivity extends FlutterActivity {
 
     private native String[] documentRecognition(String filename, String ocrModelPath);
 
-    private native void documentRectify(String filename, String ocrModelPath);
+    private native void documentRectify(String filename);
 }
