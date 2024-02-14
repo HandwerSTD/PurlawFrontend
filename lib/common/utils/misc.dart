@@ -96,10 +96,10 @@ class OCRModelCopyFilesUtils {
   static void doCopy() async {
     localPath = Directory(p.join((await getApplicationSupportDirectory()).path, 'ocr_models'));
     await localPath.create();
-    _copyFiles("ch_PP-OCRv3_det_fp16.bin", localPath);
-    _copyFiles("ch_PP-OCRv3_det_fp16.param", localPath);
-    _copyFiles("ch_PP-OCRv3_rec_fp16.bin", localPath);
-    _copyFiles("ch_PP-OCRv3_rec_fp16.param", localPath);
+    _copyFiles("ch_PP-OCRv3_det.bin", localPath);
+    _copyFiles("ch_PP-OCRv3_det.param", localPath);
+    _copyFiles("ch_PP-OCRv3_rec.bin", localPath);
+    _copyFiles("ch_PP-OCRv3_rec.param", localPath);
     _copyFiles("paddleocr_keys.txt", localPath);
   }
 }

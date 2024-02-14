@@ -15,6 +15,7 @@ class CacheUtil {
   }
   static Future<void> clearRemote() async {
     Directory tempDir = Directory(p.join((await getTemporaryDirectory()).path, 'just_audio_cache'));
+    if (!tempDir.existsSync()) return;
     await _delete(tempDir);
   }
 

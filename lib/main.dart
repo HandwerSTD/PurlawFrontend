@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:purlaw/common/network/network_loading_state.dart';
 import 'package:purlaw/common/network/network_request.dart';
@@ -97,6 +98,9 @@ class _ProgramEntryState extends State<ProgramEntry> {
       });
       callJavaFunction("getCVVersion", {}).then((value) {
         Log.i(value, tag: "Main JNI");
+      });
+      getExternalStorageDirectory().then((value) {
+        Log.i(value!);
       });
 
       // 复制模型文件

@@ -1,6 +1,7 @@
 #include <jni.h>
 #include <string.h>
 #include <string>
+#include <iostream>
 #include "opencv2/opencv.hpp"
 #include "purlaw_backend/cvhelper.h"
 

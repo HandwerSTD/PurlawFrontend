@@ -98,10 +98,10 @@ namespace purlaw {
         using namespace std;
         dbNet.opt.num_threads = 4;
         crnnNet.opt.num_threads = 1;
-        dbNet.load_param((model_path + "/ch_PP-OCRv3_det_fp16.param").c_str());
-        dbNet.load_model((model_path + "/ch_PP-OCRv3_det_fp16.bin").c_str());
-        crnnNet.load_param((model_path + "/ch_PP-OCRv3_rec_fp16.param").c_str());
-        crnnNet.load_model((model_path + "/ch_PP-OCRv3_rec_fp16.bin").c_str());
+        dbNet.load_param((model_path + "/ch_PP-OCRv3_det.param").c_str());
+        dbNet.load_model((model_path + "/ch_PP-OCRv3_det.bin").c_str());
+        crnnNet.load_param((model_path + "/ch_PP-OCRv3_rec.param").c_str());
+        crnnNet.load_model((model_path + "/ch_PP-OCRv3_rec.bin").c_str());
         ifstream keylist((model_path + "/paddleocr_keys.txt").c_str());
         string line;
         while (getline(keylist, line)) {
@@ -307,8 +307,10 @@ namespace purlaw {
         ncnn::Mat input = ncnn::Mat::from_pixels_resize(src.data, ncnn::Mat::PIXEL_RGB, width, height, w, h);
 
         // pad to target_size rectangle
-        int wpad = (w + dstHeight - 1) / dstHeight * dstHeight - w;
-        int hpad = (h + dstHeight - 1) / dstHeight * dstHeight - h;
+//        int wpad = (w + target_size - 1) / target_size * target_size - w;
+//        int hpad = (h + target_size - 1) / target_size * target_size - h;
+        int wpad = (w + 31) / 32 * 32 - w;
+        int hpad = (h + 31) / 32 * 32 - h;
         ncnn::Mat in_pad;
         ncnn::copy_make_border(input, in_pad, hpad / 2, hpad - hpad / 2, wpad / 2, wpad - wpad / 2,
                                ncnn::BORDER_CONSTANT, 0.f);
