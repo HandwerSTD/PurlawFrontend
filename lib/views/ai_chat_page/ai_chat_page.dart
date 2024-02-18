@@ -7,7 +7,7 @@ import 'package:purlaw/models/theme_model.dart';
 import 'package:purlaw/viewmodels/ai_chat_page/chat_page_viewmodel.dart';
 import 'package:purlaw/viewmodels/main_viewmodel.dart';
 import 'package:purlaw/viewmodels/theme_viewmodel.dart';
-import 'package:purlaw/views/ai_chat_page/ai_document_recognition.dart';
+import 'package:purlaw/views/utilities/document_scan/ai_document_recognition.dart';
 import 'package:tdesign_flutter/tdesign_flutter.dart';
 
 /// AI 对话界面的主体

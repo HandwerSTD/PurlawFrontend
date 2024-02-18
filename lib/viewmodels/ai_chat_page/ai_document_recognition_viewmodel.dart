@@ -1,46 +1,48 @@
+import 'dart:io';
+
+import 'package:cunning_document_scanner/cunning_document_scanner.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:purlaw/viewmodels/base_viewmodel.dart';
-import 'package:path/path.dart' as p;
-import 'package:image/image.dart' as img;
 import '../../method_channels/document_recognition.dart';
 
 class AIDocumentRecViewModel extends BaseViewModel {
   PageController controller = PageController();
-  List<String> results = [];
-  List<XFile?> images = [];
+  List<String> result = [];
+  List<AIDocumentRecBodyViewModel> viewModels = [];
 
-  void loadNew() {
-    results.add("加载中");
-    images.add(null);
+  void load() async {
+    final files = await CunningDocumentScanner.getPictures(true);
+    if (files == null) return;
+    for (var file in files) {
+      result.add(((file)));
+      viewModels.add(AIDocumentRecBodyViewModel(image: File(file)));
+    }
+    controller.animateToPage(result.length - 1 - (files.length - 1), duration: const Duration(milliseconds: 500), curve: Curves.easeOutExpo);
     notifyListeners();
   }
 
-  load(int index) async {
-    final image = await ImagePicker().pickImage(source: ImageSource.gallery);
-    if (image == null) {
-      results.removeLast();
-      images.removeLast();
-      notifyListeners();
-      return;
-    }
-    final ext = p.extension(image.path).toLowerCase();
-    // if (!(ext.isEmpty || ext == ".jpg" || ext == ".png" || ext == ".jpeg")) {
-    //   results[index] = "图片格式不支持";
-    //   notifyListeners();
-    //   return;
-    // }
-
-    images.last = image; notifyListeners();
-    var res = await DocumentRecognition.getResult(image);
-    results[index] = "识别结果：\n";
-    for (var str in res) {
-      results[index] += "$str\n";
-    }
+  void notify() {
     notifyListeners();
+  }
+}
 
-    if (results.length > 1) {
-      controller.animateToPage(results.length, duration: Duration(milliseconds: 400), curve: Curves.easeOutQuad);
+class AIDocumentRecBodyViewModel extends BaseViewModel {
+  TextEditingController controller = TextEditingController();
+  final File image;
+  AIDocumentRecBodyViewModel({required this.image});
+  bool ocrCompleted = false;
+  String ocrResult = "";
+
+  Future<void> loadOCR() async {
+    final res = await DocumentRecognition.getResult(XFile(image.absolute.path));
+    ocrResult = "识别结果：\n";
+    for (var str in res) {
+      ocrResult += "$str\n";
     }
+    print(ocrResult);
+    controller = TextEditingController(text: ocrResult);
+    ocrCompleted = true;
   }
 }

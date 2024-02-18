@@ -13,70 +13,86 @@
 
 
 namespace purlaw {
-    void cvhelper::getInnerRect(const cv::Mat &image, std::vector<cv::Point2f> &Rect_points) {
-        using namespace std;
-        vector<vector<cv::Point>> squares;
+    std::vector<std::vector<cv::Point>> cvhelper::findCorners(const cv::Mat &image) {
+        cv::Mat gaussImage;
+        cv::GaussianBlur(image, gaussImage, cv::Size(5, 5), 0);
+        cv::threshold(gaussImage, gaussImage, 0, 255, cv::THRESH_BINARY | cv::THRESH_OTSU);
+        cv::Canny(gaussImage, gaussImage, 50, 200);
+        cv::morphologyEx(gaussImage, gaussImage, cv::MORPH_CLOSE,
+                         cv::Mat::ones(5, 5, CV_32F));
+        std::vector<std::vector<cv::Point>> contours;
+        std::vector<cv::Vec4i> hierarchy;
+        cv::findContours(gaussImage, contours, hierarchy, cv::RETR_LIST, cv::CHAIN_APPROX_SIMPLE);
 
-        vector<vector<cv::Point>> contours;
-        vector<cv::Vec4i> hierarchy;
-        cv::findContours(image, contours, hierarchy, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE, cv::Point(0, 0));
-        vector<cv::Point> approx;
-//计算余弦
-#define angle(pt1, pt2, pt0) \
-    ((pt1.x - pt0.x) * (pt2.x - pt0.x) + (pt1.y - pt0.y)*(pt2.y - pt0.y)) / (sqrt((pt1.x - pt0.x)*(pt1.x - pt0.x) + (pt1.y - pt0.y)*(pt1.y - pt0.y))*sqrt((pt2.x - pt0.x)*(pt2.x - pt0.x) + (pt2.y - pt0.y)*(pt2.y - pt0.y))) \
 
-        for (int i = 0; i < contours.size(); i++) {
-            cv::approxPolyDP(cv::Mat(contours[i]), approx, cv::arcLength(cv::Mat(contours[i]), true) * 0.09, true);
-            if (approx.size() == 4 && fabs(cv::contourArea(cv::Mat(approx))) > 1000 &&
-                cv::isContourConvex(cv::Mat(approx))) {
-                double maxCosine = 0;
-                for (int j = 2; j < 5; j++) {
-                    double cosine = fabs(angle(approx[j % 4], approx[j - 2], approx[j - 1]));
-                    maxCosine = MAX(maxCosine, cosine);
-                }
-                // cout << "maxCosine:" << maxCosine << endl;
-                if (maxCosine < 0.3) {
-                    squares.push_back(approx);
-                }
+        std::vector<std::vector<cv::Point>> ret;
+
+        for (auto &contour: contours) {
+            double peri = cv::arcLength(contour, true);
+            std::vector<cv::Point> approx;
+            cv::approxPolyDP(contour, approx, 0.05 * peri, true);
+            if (approx.size() == 4 && cv::isContourConvex(approx) && cv::contourArea(approx) > 1000) {
+                ret.push_back(approx);
             }
         }
-        if (squares.size() == 0) {
-            // cout << "未找到矩形" << endl;
-            return;
-        }
-        //找到最大的矩形
-        int max_area = 0;
-        int max_index = 0;
-        for (int i = 0; i < squares.size(); i++) {
-            int area = cv::contourArea(squares[i]);
-            if (area > max_area) {
-                max_area = area;
-                max_index = i;
-            }
-        }
-        for (int i = 0; i < 4; i++) {
-            Rect_points.push_back(squares[max_index][i]);
-        }
+
+        return ret;
     }
 
-    void cvhelper::GetDocumentRect(cv::Mat &src, std::vector<cv::Point2f> &ret_points) {
-        cv::Mat gray;
-        cv::cvtColor(src, gray, cv::COLOR_BGR2GRAY);
-        //先降噪
-        cv::GaussianBlur(gray, gray, cv::Size(5, 5), 0);
-        //再膨胀
-        cv::Mat kernel = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(25, 25));
-        cv::dilate(gray, gray, kernel);
-        //再边缘检测
-        cv::Mat edges;
-        cv::Canny(gray, edges, 40, 100, 3);
-        //找到矩形
-        std::vector<cv::Point2f> Rect_points;
-        getInnerRect(edges, Rect_points);
-        if (Rect_points.size() != 4) {
+    void cvhelper::GetDocumentRect(cv::Mat &src, std::vector<cv::Point> &ret_points) {
+        int shrunkImageHeight = 500;
+        cv::Mat shrunkImage;
+        cv::resize(src, shrunkImage, cv::Size(shrunkImageHeight * src.cols / src.rows, shrunkImageHeight));
+
+        cv::cvtColor(shrunkImage, shrunkImage, cv::COLOR_BGR2Luv);
+        std::vector<cv::Mat> channels;
+        cv::split(shrunkImage, channels);
+
+        std::vector<std::vector<cv::Point>> documentCorners;
+
+        for (const auto &channel: channels) {
+            std::vector<std::vector<cv::Point>> corners = findCorners(channel);
+            if (!corners.empty()) {
+                double maxArea = 0.0;
+                std::vector<cv::Point> maxAreaContourIt;
+                for (const auto &contour: corners) {
+                    double area = cv::contourArea(contour);
+                    if (area > maxArea) {
+                        maxArea = area;
+                        maxAreaContourIt = contour;
+                    }
+                }
+
+                if (maxArea > 0) {
+                    std::vector<cv::Point> scaledContour;
+                    for (const auto &point: maxAreaContourIt) {
+                        cv::Point scaledPoint;
+                        scaledPoint.x = static_cast<int>(point.x * static_cast<double>(src.rows) /
+                                                         shrunkImageHeight);
+                        scaledPoint.y = static_cast<int>(point.y * static_cast<double>(src.rows) /
+                                                         shrunkImageHeight);
+                        scaledContour.push_back(scaledPoint);
+                    }
+                    documentCorners.push_back(scaledContour);
+                }
+            }
+        }
+
+        if (documentCorners.size() == 0) {
             return;
         }
-        ret_points = Rect_points;
+
+        std::vector<cv::Point> maxDocumentCorners;
+        double maxDocumentArea = 0.0;
+        for (const auto &documentCorner: documentCorners) {
+            double area = cv::contourArea(documentCorner);
+            if (area > maxDocumentArea) {
+                maxDocumentArea = area;
+                maxDocumentCorners = documentCorner;
+            }
+        }
+
+        ret_points = maxDocumentCorners;
     }
 
     cv::Mat cvhelper::CutKeyPosition(cv::Mat &src, std::vector<cv::Point2f> &src_points) {
@@ -87,10 +103,20 @@ namespace purlaw {
         dst_points[2] = cv::Point2f(0, src.rows);
         dst_points[3] = cv::Point2f(src.cols, src.rows);
 
+        cv::Point2f tL = src_points[1];
+        cv::Point2f tR = src_points[0];
+        cv::Point2f bR = src_points[3];
+        cv::Point2f bL = src_points[2];
+
+        int width = (std::min)(cv::norm(tR - tL), cv::norm(bR - bL));
+        int height = (std::min)(cv::norm(tR - bR), cv::norm(tL - bL));
+
 
         cv::Mat M = cv::getPerspectiveTransform(src_points.data(), dst_points);
         cv::Mat dst;
         cv::warpPerspective(src, dst, M, src.size());
+        // 缩放图像
+        cv::resize(dst, dst, cv::Size(width, height));
         return dst;
     }
 
@@ -98,10 +124,10 @@ namespace purlaw {
         using namespace std;
         dbNet.opt.num_threads = 4;
         crnnNet.opt.num_threads = 1;
-        dbNet.load_param((model_path + "/ch_PP-OCRv3_det.param").c_str());
-        dbNet.load_model((model_path + "/ch_PP-OCRv3_det.bin").c_str());
-        crnnNet.load_param((model_path + "/ch_PP-OCRv3_rec.param").c_str());
-        crnnNet.load_model((model_path + "/ch_PP-OCRv3_rec.bin").c_str());
+        dbNet.load_param((model_path + "/ch_PP-OCRv3_det_fp16.param").c_str());
+        dbNet.load_model((model_path + "/ch_PP-OCRv3_det_fp16.bin").c_str());
+        crnnNet.load_param((model_path + "/ch_PP-OCRv3_rec_fp16.param").c_str());
+        crnnNet.load_model((model_path + "/ch_PP-OCRv3_rec_fp16.bin").c_str());
         ifstream keylist((model_path + "/paddleocr_keys.txt").c_str());
         string line;
         while (getline(keylist, line)) {
@@ -307,10 +333,9 @@ namespace purlaw {
         ncnn::Mat input = ncnn::Mat::from_pixels_resize(src.data, ncnn::Mat::PIXEL_RGB, width, height, w, h);
 
         // pad to target_size rectangle
-//        int wpad = (w + target_size - 1) / target_size * target_size - w;
-//        int hpad = (h + target_size - 1) / target_size * target_size - h;
         int wpad = (w + 31) / 32 * 32 - w;
         int hpad = (h + 31) / 32 * 32 - h;
+
         ncnn::Mat in_pad;
         ncnn::copy_make_border(input, in_pad, hpad / 2, hpad - hpad / 2, wpad / 2, wpad - wpad / 2,
                                ncnn::BORDER_CONSTANT, 0.f);

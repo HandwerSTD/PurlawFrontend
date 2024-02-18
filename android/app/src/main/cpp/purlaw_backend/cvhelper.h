@@ -36,10 +36,10 @@ namespace purlaw {
 
     class cvhelper {
     public:
-        void GetDocumentRect(cv::Mat &src, std::vector<cv::Point2f> &ret_points);
-        cv::Mat CutKeyPosition(cv::Mat &src, std::vector<cv::Point2f> &ret_points);
+        void GetDocumentRect(cv::Mat &src, std::vector<cv::Point> &ret_points);
+        cv::Mat CutKeyPosition(cv::Mat &src, std::vector<cv::Point2f> &src_points);
     private:
-        void getInnerRect(const cv::Mat &image, std::vector<cv::Point2f> &Rect_points);
+        std::vector<std::vector<cv::Point>> findCorners(const cv::Mat &image);
 
     };
 
