@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:purlaw/views/utilities/contract_generation/contract_generation_page.dart';
+
+import '../../viewmodels/theme_viewmodel.dart';
 
 class UtilitiesIndexPage extends StatelessWidget {
   const UtilitiesIndexPage({super.key});
@@ -33,7 +37,9 @@ class UtilitiesIndexPage extends StatelessWidget {
             children: [
               UtilityGridBlock(title: '合同生成', iconAsset: const Icon(
                 Icons.gas_meter , size: 64,color: Colors.indigo,
-              ), onTap: (){}),
+              ), onTap: (){
+                Navigator.push(context, MaterialPageRoute(builder: (_) => ContractGenerationPage()));
+              }),
               UtilityGridBlock(title: '类似案例', iconAsset: const Icon(
                 Icons.mark_email_read_rounded, size: 64,color: Colors.indigo,
               ), onTap: (){})

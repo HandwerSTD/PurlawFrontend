@@ -1,12 +1,15 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:purlaw/common/provider/provider_widget.dart';
 import 'package:purlaw/common/utils/misc.dart';
 import 'package:purlaw/components/purlaw/purlaw_components.dart';
 import 'package:purlaw/viewmodels/ai_chat_page/ai_document_recognition_viewmodel.dart';
 import 'package:purlaw/viewmodels/theme_viewmodel.dart';
+import 'package:path/path.dart' as p;
+import 'package:tdesign_flutter/tdesign_flutter.dart';
 
 
 class AIDocumentRecognition extends StatelessWidget {
@@ -15,10 +18,20 @@ class AIDocumentRecognition extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PurlawAppTitleBar(
-        title: '文档识别',
-        showBack: true
-      ).build(context),
+      appBar: AppBar(
+        title: Text('文档识别'),
+        actions: [
+          IconButton(onPressed: (){
+            showDialog(context: context, builder: (context) {
+              return Dialog(
+                child: Container(
+                  margin: EdgeInsets.symmetric(horizontal: 12, vertical: 48),
+                    child: const Text("扫描的图像位于：\n内部储存/Android/data/com.tianzhu.purlaw/files/Pictures/")),
+              );
+            });
+          }, icon: Icon(Icons.photo_album_rounded))
+        ],
+      ),
       body: ProviderWidget<AIDocumentRecViewModel>(
         model: AIDocumentRecViewModel(),
         onReady: (model){},
@@ -60,14 +73,10 @@ class AIDocumentRecognitionBody extends StatelessWidget {
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
-                      GestureDetector(
-                        onLongPress: () async {
-                        },
-                        child: Container(
-                          margin: EdgeInsets.only(top: 12, left: 12, right: 12),
-                          child: (
-                              Image.file(model.image)
-                          ),
+                      Container(
+                        margin: EdgeInsets.only(top: 12, left: 12, right: 12),
+                        child: (
+                            Image.file(model.image)
                         ),
                       ),
                       ( !model.ocrCompleted ? ElevatedButton(
