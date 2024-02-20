@@ -1,9 +1,11 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_fast_forms/flutter_fast_forms.dart';
 import 'package:provider/provider.dart';
 import 'package:purlaw/common/provider/provider_widget.dart';
 import 'package:purlaw/common/utils/log_utils.dart';
 import 'package:purlaw/components/purlaw/appbar.dart';
+import 'package:purlaw/viewmodels/main_viewmodel.dart';
 import 'package:purlaw/viewmodels/utilities/contract_generation_viewmodel.dart';
 import 'package:tdesign_flutter/tdesign_flutter.dart';
 
@@ -38,7 +40,7 @@ class _ContractGenerationPageBodyState extends State<ContractGenerationPageBody>
   @override
   Widget build(BuildContext context) {
     return ProviderWidget<ContractGenerationViewModel>(
-      model: ContractGenerationViewModel(),
+      model: ContractGenerationViewModel(context: context),
       onReady: (v){},
       builder: (context, model, child) => SafeArea(
         minimum: EdgeInsets.symmetric(vertical: 0, horizontal: 12),
@@ -77,28 +79,29 @@ class _ContractGenerationPageBodyState extends State<ContractGenerationPageBody>
                     size: TDButtonSize.large,
                     type: TDButtonType.fill,
                     isBlock: true,
+                    disabled: model.genStart,
                     text: '提交',
                     onTap: (){
-                      if (model.title.isEmpty || model.desc.isEmpty) return;
-                      model.submit();
+                      if (model.title.isEmpty || model.desc.isEmpty || model.aName.isEmpty || model.bName.isEmpty || model.type.isEmpty) {
+                        TDToast.showText('请填写完整项', context: context);
+                        return;
+                      }
+                      model.submit(getCookie(context, listen: false));
                     },
                   )
                 ],
               ),
-              Visibility(
-                visible: model.genComplete,
-                child: Row(
-                  children: [
-                    Expanded(child: Container(
-                      margin: EdgeInsets.only( top: 24, bottom: 48),
-                      child: TextField(
-                        decoration: PurlawChatTextField.chatInputDeco('', getThemeModel(context).colorModel.loginTextFieldColor, 24),
-                        controller: TextEditingController(),
-                        maxLines: null,
-                      ),
-                    ))
-                  ],
-                ),
+              Row(
+                children: [
+                  Expanded(child: Container(
+                    margin: EdgeInsets.only( top: 24, bottom: 48),
+                    child: (model.genComplete ? TextField(
+                      decoration: PurlawChatTextField.chatInputDeco('', getThemeModel(context).colorModel.loginTextFieldColor, 24),
+                      controller: model.controller,
+                      maxLines: null,
+                    ) : Text(model.text, style: TextStyle(fontSize: 16),)),
+                  ))
+                ],
               )
             ],
           ),

@@ -7,6 +7,7 @@ import 'package:purlaw/models/theme_model.dart';
 import 'package:purlaw/viewmodels/ai_chat_page/chat_page_viewmodel.dart';
 import 'package:purlaw/viewmodels/main_viewmodel.dart';
 import 'package:purlaw/viewmodels/theme_viewmodel.dart';
+import 'package:purlaw/views/ai_chat_page/chat_page_voice_recognition.dart';
 import 'package:purlaw/views/utilities/document_scan/ai_document_recognition.dart';
 import 'package:tdesign_flutter/tdesign_flutter.dart';
 
@@ -191,6 +192,9 @@ class _AIChatPageFooterState extends State<AIChatPageFooter> {
                               themeModel.themeData.colorScheme.onBackground,
                           frameColor: Colors.grey[200],
                           frameWidth: 1),
+                      onTap: (){
+                        Navigator.push(context, MaterialPageRoute(builder: (_) => ChatPageVoiceRecognition()));
+                      },
                     ),
                     const SizedBox(
                       width: 0,
