@@ -7,6 +7,7 @@
 #include <ncnn/net.h>
 #include <ncnn/layer.h>
 #include <iostream>
+#include <algorithm>
 #include <fstream>
 #include "clipper.hpp"
 #include "cvhelper.h"
@@ -124,10 +125,10 @@ namespace purlaw {
         using namespace std;
         dbNet.opt.num_threads = 4;
         crnnNet.opt.num_threads = 1;
-        dbNet.load_param((model_path + "/ch_PP-OCRv3_det_fp16.param").c_str());
-        dbNet.load_model((model_path + "/ch_PP-OCRv3_det_fp16.bin").c_str());
-        crnnNet.load_param((model_path + "/ch_PP-OCRv3_rec_fp16.param").c_str());
-        crnnNet.load_model((model_path + "/ch_PP-OCRv3_rec_fp16.bin").c_str());
+        dbNet.load_param((model_path + "/ch_PP-OCRv3_det.param").c_str());
+        dbNet.load_model((model_path + "/ch_PP-OCRv3_det.bin").c_str());
+        crnnNet.load_param((model_path + "/ch_PP-OCRv3_rec.param").c_str());
+        crnnNet.load_model((model_path + "/ch_PP-OCRv3_rec.bin").c_str());
         ifstream keylist((model_path + "/paddleocr_keys.txt").c_str());
         string line;
         while (getline(keylist, line)) {
@@ -516,4 +517,61 @@ namespace purlaw {
         return partImages;
     }
 
+    std::string align_text(std::vector<TextBox> &res) {
+        std::sort(res.begin(), res.end(), [](const TextBox &a, const TextBox &b) {
+            return a.boxPoint[0].x < b.boxPoint[0].x;
+        });
+        std::vector<int> already_IN;
+        std::vector<std::pair<int, std::string>> line_list;
+        for (int i = 0; i < res.size(); i++) {
+            if (find(already_IN.begin(), already_IN.end(), res[i].boxPoint[0].x) != already_IN.end()) {
+                continue;
+            }
+            std::string line_txt = res[i].text;
+            already_IN.push_back(res[i].boxPoint[0].x);
+
+            auto y_i_points = {res[i].boxPoint[0].y, res[i].boxPoint[1].y, res[i].boxPoint[2].y, res[i].boxPoint[3].y};
+
+            int min_I_y = *std::min_element(y_i_points.begin(), y_i_points.end());
+            int max_I_y = *std::max_element(y_i_points.begin(), y_i_points.end());
+
+            auto curr = Interval(min_I_y, max_I_y);
+            int curr_mid = min_I_y + (max_I_y - min_I_y) / 2;
+
+            for (int j = i + 1; j < res.size(); j++) {
+                if (find(already_IN.begin(), already_IN.end(), res[i].boxPoint[0].x) != already_IN.end()) {
+                    continue;
+                }
+
+                auto y_j_points = {res[j].boxPoint[0].y, res[j].boxPoint[1].y, res[j].boxPoint[2].y, res[j].boxPoint[3].y};
+
+                int min_J_y = *std::min_element(y_j_points.begin(), y_j_points.end());
+                int max_J_y = *std::max_element(y_j_points.begin(), y_j_points.end());
+
+                auto next_j = Interval(min_J_y, max_J_y);
+
+
+                if (curr.overlaps(next_j) && next_j.in(curr_mid)) {
+                    line_txt += " " + res[j].text;
+                    already_IN.push_back(res[j].boxPoint[0].x);
+
+                    curr = Interval(min_J_y + (max_J_y - min_J_y) / 3, max_J_y);
+                    curr_mid = min_I_y + (max_I_y - min_I_y) / 2;
+                }
+            }
+            line_list.emplace_back(res[i].boxPoint[0].y, line_txt);
+        }
+        sort(line_list.begin(), line_list.end(),
+             [](const std::pair<int, std::string> &a, const std::pair<int, std::string> &b) {
+                 return a.first < b.first;
+             });
+        auto txt = [line_list]() {
+            std::string res;
+            for (auto &i: line_list) {
+                res += i.second + "\n";
+            }
+            return res;
+        }();
+        return txt;
+    }
 } // purlaw

@@ -19,17 +19,6 @@ Java_com_tianzhu_purlaw_MainActivity_getCVBuildInfo(JNIEnv *env, jobject thiz) {
     return env->NewStringUTF(("OpenCV Version " + cv::getVersionString()).c_str());
 }
 
-std::vector<std::string> sortAndArrangeSentences(std::vector<purlaw::TextBox> boxes) {
-    using purlaw::TextBox;
-    std::vector<std::string> result;
-    std::sort(boxes.begin(), boxes.end(), [](TextBox x, TextBox y) -> bool {
-        return true; // TODO: implement algorithm
-    });
-    for (auto it = boxes.begin(); it != boxes.end(); it++) {
-        result.push_back(it->text);
-    }
-    return result;
-}
 extern "C"
 JNIEXPORT jobjectArray JNICALL
 Java_com_tianzhu_purlaw_MainActivity_documentRecognition(JNIEnv *env, jobject thiz,
@@ -45,20 +34,26 @@ Java_com_tianzhu_purlaw_MainActivity_documentRecognition(JNIEnv *env, jobject th
     cv::Mat src = cv::imread(sFilename);
     purlaw::ppocr ocr(sOcrModelPath);
     auto _res = ocr.detect(src);
-//    auto res = sortAndArrangeSentences(_res);
-    std::vector<std::string> res;
-    for (int i = 0; i < _res.size(); ++i) {
-        res.push_back(_res[i].text);
-    }
 
-    auto returnObj = env->NewObjectArray(res.size(), env->FindClass("java/lang/String"), 0);
+    auto result = purlaw::align_text(_res);
 
-    for (int i = 0; i < res.size(); ++i) {
-        auto v = res[i];
-        jstring str = env->NewStringUTF(v.c_str());
-        env->SetObjectArrayElement(returnObj, i, str);
-        env->DeleteLocalRef(str);
-    }
+//    std::vector<std::string> res;
+//    for (int i = 0; i < _res.size(); ++i) {
+//        res.push_back(_res[i].text);
+//    }
+//
+    auto returnObj = env->NewObjectArray(1, env->FindClass("java/lang/String"), 0);
+//
+//    for (int i = 0; i < res.size(); ++i) {
+//        auto v = res[i];
+//        jstring str = env->NewStringUTF(v.c_str());
+//        env->SetObjectArrayElement(returnObj, i, str);
+//        env->DeleteLocalRef(str);
+//    }
+
+    jstring str = env->NewStringUTF(result.c_str());
+    env->SetObjectArrayElement(returnObj, 0, str);
+    env->DeleteLocalRef(str);
     return returnObj;
 }
 extern "C"

@@ -32,7 +32,19 @@ namespace purlaw {
         std::vector<int> charPositions;
     };
 
-
+    class Interval{
+    private:
+        int start, end;
+    public:
+        Interval(int start, int end): start(start), end(end) {}
+        inline bool overlaps(const Interval &other) {
+            return start <= other.end && end >= other.start;
+        }
+        inline bool in(const int x)
+        {
+            return x >= start && x <= end;
+        }
+    };
 
     class cvhelper {
     public:
@@ -67,6 +79,10 @@ namespace purlaw {
         inline cv::Mat getRotateCropImage(const cv::Mat& src, std::vector<cv::Point> box);
         inline std::vector<cv::Mat> getPartImages(const cv::Mat& src, std::vector<TextBox>& textBoxes);
     };
+
+    std::string align_text(std::vector<TextBox> &res);
+
+
 } // purlaw
 
 #endif //PURLAW_BACKEND_CVHELPER_H

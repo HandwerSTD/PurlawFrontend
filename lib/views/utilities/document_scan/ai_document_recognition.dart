@@ -1,6 +1,8 @@
 import 'dart:io';
 
+import 'package:easy_image_viewer/easy_image_viewer.dart';
 import 'package:flutter/material.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:purlaw/common/provider/provider_widget.dart';
@@ -26,7 +28,7 @@ class AIDocumentRecognition extends StatelessWidget {
               return Dialog(
                 child: Container(
                   margin: EdgeInsets.symmetric(horizontal: 12, vertical: 48),
-                    child: const Text("扫描的图像位于：\n内部储存/Android/data/com.tianzhu.purlaw/files/Pictures/")),
+                    child: const Text("扫描的图像已自动保存于：\n内部储存/Android/data/com.tianzhu.purlaw/files/Pictures/")),
               );
             });
           }, icon: Icon(Icons.photo_album_rounded))
@@ -73,11 +75,35 @@ class AIDocumentRecognitionBody extends StatelessWidget {
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
-                      Container(
-                        margin: EdgeInsets.only(top: 12, left: 12, right: 12),
-                        child: (
-                            Image.file(model.image)
-                        ),
+                      Stack(
+                        alignment: Alignment.bottomRight,
+                        children: [
+                          Container(
+                            margin: EdgeInsets.only(top: 12, left: 12, right: 12),
+                            height: constraints.maxHeight / 2,
+                            width: Responsive.assignWidthStM(constraints.maxWidth),
+                            child: GestureDetector(
+                              onTap: (){
+                                showImageViewer(context, Image.file(model.image).image, swipeDismissible: true, doubleTapZoomable: true);
+                              },
+                              child: (
+                                  Image.file(model.image)
+                              ),
+                            ),
+                          ),
+                          PurlawRRectButton(
+                            width: 72,
+                            onClick: (){
+
+                          }, backgroundColor: (getThemeModel(context).dark ? Colors.black : Colors.white).withOpacity(0.8),
+                            child: const Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.rotate_right_rounded),
+                              Text(" 旋转")
+                            ],
+                          ),)
+                        ],
                       ),
                       ( !model.ocrCompleted ? ElevatedButton(
                         onPressed: () async {
