@@ -104,7 +104,7 @@ class _ProgramEntryState extends State<ProgramEntry> {
       });
 
       // 复制模型文件
-      OCRModelCopyFilesUtils.doCopy();
+      ModelCopyFilesUtils.doCopy();
 
       // 语音 Cache 清理
       CacheUtil.clearRemote();

@@ -64,6 +64,7 @@ dependencies:
   flutter_fast_forms: ^15.0.0
   easy_image_viewer: ^1.4.1
   record: ^5.0.4
+  permission_handler: ^11.3.0
 
 dev_dependencies:
   flutter_test:
@@ -91,6 +92,7 @@ flutter:
   assets:
     - assets/
     - assets/ocrmodel/
+    - assets/sherpa_model/
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 

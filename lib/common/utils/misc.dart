@@ -6,9 +6,6 @@ import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
 
-import 'log_utils.dart';
-
-
 /// 响应式开发断点设置
 class Responsive {
   // 响应式断点
@@ -80,16 +77,17 @@ class TimeUtils {
 
 }
 
-class OCRModelCopyFilesUtils {
+class ModelCopyFilesUtils {
   static late Directory localPath;
 
-  static void _copyFiles(String filename, Directory localPath) async {
-    Log.i("File $filename, localPath: $localPath", tag:"Copy Files");
+  static void _copyFiles(String filename, Directory localPath, {bool ocr = true}) async {
+    // Log.i("File $filename, localPath: $localPath", tag:"Copy Files");
     var file = File("${localPath.path}/$filename");
     if (file.existsSync()) {
-      Log.i("[DEBUG] File exists");
+      // Log.i("[DEBUG] File exists");
+      return;
     }
-    var bytes = await rootBundle.load("assets/ocrmodel/$filename");
+    var bytes = await rootBundle.load("assets/${(ocr ? "ocrmodel" : "sherpa_model")}/$filename");
     await file.writeAsBytes(bytes.buffer.asInt8List(bytes.offsetInBytes, bytes.lengthInBytes));
   }
 
@@ -101,6 +99,14 @@ class OCRModelCopyFilesUtils {
     _copyFiles("ch_PP-OCRv3_rec.bin", localPath);
     _copyFiles("ch_PP-OCRv3_rec.param", localPath);
     _copyFiles("paddleocr_keys.txt", localPath);
+
+    final List<String> filelist = [
+      "decoder_jit_trace-pnnx.ncnn.bin",    "encoder_jit_trace-pnnx.ncnn.bin",    "joiner_jit_trace-pnnx.ncnn.bin",    "tokens.txt",
+      "decoder_jit_trace-pnnx.ncnn.param",  "encoder_jit_trace-pnnx.ncnn.param",  "joiner_jit_trace-pnnx.ncnn.param"
+    ];
+    for (var file in filelist) {
+      _copyFiles(file, localPath, ocr: false);
+    }
   }
 }
 

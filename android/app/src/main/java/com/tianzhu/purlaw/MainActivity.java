@@ -5,12 +5,17 @@ import androidx.annotation.NonNull;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import io.flutter.Log;
 import io.flutter.embedding.android.FlutterActivity;
 import io.flutter.embedding.engine.FlutterEngine;
+import io.flutter.plugin.common.EventChannel;
 import io.flutter.plugin.common.MethodChannel;
 
 public class MainActivity extends FlutterActivity {
     private static final String CHANNEL_NAME = "com.tianzhu.purlaw/channel";
+    private static final String EVENT_CHANNEL_NAME = "com.tianzhu.purlaw/message";
+
+    private EventChannel.EventSink eventSink;
 
     @Override
     public void configureFlutterEngine(@NonNull FlutterEngine flutterEngine) {
@@ -29,6 +34,26 @@ public class MainActivity extends FlutterActivity {
                             res.addAll(Arrays.asList(recResult));
                             result.success(res);
                         }
+                        case "speechToText" -> {
+                            final String filename = call.argument("filename");
+                            final String modelPath = call.argument("modelPath");
+                            final String res = speechToText(filename, modelPath);
+                            result.success(res);
+                        }
+                    }
+                });
+        new EventChannel(flutterEngine.getDartExecutor().getBinaryMessenger(), EVENT_CHANNEL_NAME)
+                .setStreamHandler(new EventChannel.StreamHandler() {
+                    @Override
+                    public void onListen(Object arguments, EventChannel.EventSink events) {
+                        eventSink = events;
+                        Log.d("DebugMainActivity", "eventSink got");
+                        flushUI("666");
+                    }
+
+                    @Override
+                    public void onCancel(Object arguments) {
+
                     }
                 });
     }
@@ -43,4 +68,12 @@ public class MainActivity extends FlutterActivity {
     private native String[] documentRecognition(String filename, String ocrModelPath);
 
     private native void documentRectify(String filename);
+
+    private native String speechToText(String filename, String modelPath);
+
+    public void flushUI(String result) {
+//        if (eventSink == null) return;
+//        eventSink.success(result);
+        Log.d("DebugMainActivity", "flush UI with result: " + result);
+    }
 }

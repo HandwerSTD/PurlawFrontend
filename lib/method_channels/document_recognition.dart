@@ -8,7 +8,7 @@ class DocumentRecognition {
   static Future<List<String>> getResult(XFile file) async {
     final res = await callJavaFunction('documentRecognition', {
       'filename': file.path,
-      'ocrModelPath': OCRModelCopyFilesUtils.localPath.absolute.path
+      'ocrModelPath': ModelCopyFilesUtils.localPath.absolute.path
     });
     List<String> result = [];
     for (var v in res) {

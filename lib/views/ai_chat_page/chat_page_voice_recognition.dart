@@ -32,9 +32,9 @@ class ChatVoiceRecognitionBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ProviderWidget<ChatVoiceRecognitionViewModel>(
-      model: ChatVoiceRecognitionViewModel(),
+      model: ChatVoiceRecognitionViewModel(context: context),
       onReady: (model){
-
+        model.load();
       },
       builder: (context, model, child) {
         return SingleChildScrollView(
