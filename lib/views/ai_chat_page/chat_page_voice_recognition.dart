@@ -55,7 +55,7 @@ class ChatVoiceRecognitionBody extends StatelessWidget {
                 height: 54,
                 radius: 12,
                 child:  Text(
-                  (model.listeningVoice ? "识别中" : "开始识别"),
+                  (model.listeningVoice ? "点击停止" : "开始识别"),
                   style: const TextStyle(
                       color: Colors.white,
                       fontSize: 18,

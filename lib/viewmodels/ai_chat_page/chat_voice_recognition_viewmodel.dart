@@ -25,7 +25,6 @@ class ChatVoiceRecognitionViewModel extends BaseViewModel {
       notifyListeners();
     });
     sttSub = SpeechToTextUtil.getStream().listen((event) {
-      Log.d("Received Message $event");
       Future.delayed(Duration(milliseconds: 500)).then((value) {
         text = event.toString();
         notifyListeners();
@@ -80,10 +79,10 @@ class ChatVoiceRecognitionViewModel extends BaseViewModel {
     Log.i("Record ended. $path");
     listeningVoice = false;
     notifyListeners();
-    // SpeechToTextUtil.getResult(filename: path!);
+    SpeechToTextUtil.getResult(filename: path!);
     // Log.i("STT Result got", tag: "ChatVoice ViewModel");
     // notifyListeners();
-    test();
+    // test();
   }
 
   void test() async {

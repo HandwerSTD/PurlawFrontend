@@ -1,5 +1,8 @@
 package com.tianzhu.purlaw;
 
+import android.os.Handler;
+import android.os.Looper;
+
 import androidx.annotation.NonNull;
 
 import java.util.ArrayList;
@@ -15,7 +18,7 @@ public class MainActivity extends FlutterActivity {
     private static final String CHANNEL_NAME = "com.tianzhu.purlaw/channel";
     private static final String EVENT_CHANNEL_NAME = "com.tianzhu.purlaw/message";
 
-    private EventChannel.EventSink eventSink;
+    private static EventChannel.EventSink eventSink;
 
     @Override
     public void configureFlutterEngine(@NonNull FlutterEngine flutterEngine) {
@@ -37,8 +40,10 @@ public class MainActivity extends FlutterActivity {
                         case "speechToText" -> {
                             final String filename = call.argument("filename");
                             final String modelPath = call.argument("modelPath");
-                            final String res = speechToText(filename, modelPath);
-                            result.success(res);
+//                            final String res = speechToText(filename, modelPath);
+//                            result.success(res);
+                            runSpeechToText(filename, modelPath);
+                            result.success("");
                         }
                     }
                 });
@@ -72,8 +77,18 @@ public class MainActivity extends FlutterActivity {
     private native String speechToText(String filename, String modelPath);
 
     public void flushUI(String result) {
-//        if (eventSink == null) return;
-//        eventSink.success(result);
-        Log.d("DebugMainActivity", "flush UI with result: " + result);
+        new Handler(Looper.getMainLooper()).post(() -> {
+            if (eventSink == null) {
+                Log.d("DebugMainActivity", "eventSink is null");
+                return;
+            }
+            eventSink.success(result);
+
+            Log.d("DebugMainActivity", "flush UI with result: " + result);
+        });
+    }
+
+    public void runSpeechToText(String filename, String modelPath) {
+        new Thread(() -> speechToText(filename, modelPath)).start();
     }
 }
