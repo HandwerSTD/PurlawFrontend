@@ -149,8 +149,9 @@ Java_com_tianzhu_purlaw_MainActivity_speechToText(JNIEnv *env, jobject thiz, jst
 //    env->ReleaseStringUTFChars(resultStr, result.c_str());
     delete[] silence;
     free(buffer);
-
     log += result;
+    jstring endStr = env->NewStringUTF("<EOF>");
+    env->CallVoidMethod(classObject, flushFunId, endStr);
 
     return env->NewStringUTF(log.c_str());
 }

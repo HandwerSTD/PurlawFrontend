@@ -125,10 +125,10 @@ namespace purlaw {
         using namespace std;
         dbNet.opt.num_threads = 4;
         crnnNet.opt.num_threads = 1;
-        dbNet.load_param((model_path + "/ch_PP-OCRv3_det_fp16.param").c_str());
-        dbNet.load_model((model_path + "/ch_PP-OCRv3_det_fp16.bin").c_str());
-        crnnNet.load_param((model_path + "/ch_PP-OCRv3_rec_fp16.param").c_str());
-        crnnNet.load_model((model_path + "/ch_PP-OCRv3_rec_fp16.bin").c_str());
+        dbNet.load_param((model_path + "/ch_PP-OCRv3_det.param").c_str());
+        dbNet.load_model((model_path + "/ch_PP-OCRv3_det.bin").c_str());
+        crnnNet.load_param((model_path + "/ch_PP-OCRv3_rec.param").c_str());
+        crnnNet.load_model((model_path + "/ch_PP-OCRv3_rec.bin").c_str());
         ifstream keylist((model_path + "/paddleocr_keys.txt").c_str());
         string line;
         while (getline(keylist, line)) {

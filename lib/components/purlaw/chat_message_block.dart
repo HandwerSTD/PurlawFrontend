@@ -111,7 +111,8 @@ class PurlawChatMessageBlockViewOnly extends StatelessWidget {
 
 class PurlawChatMessageBlockWithAudio extends StatefulWidget {
   final AIChatMessageModelWithAudio msg;
-  const PurlawChatMessageBlockWithAudio({required this.msg, super.key});
+  final bool overrideRadius;
+  const PurlawChatMessageBlockWithAudio({required this.msg, super.key, this.overrideRadius = false});
 
   @override
   State<PurlawChatMessageBlockWithAudio> createState() => _PurlawChatMessageBlockWithAudioState();
@@ -207,7 +208,7 @@ class _PurlawChatMessageBlockWithAudioState extends State<PurlawChatMessageBlock
                             spreadRadius: 5,
                             offset: const Offset(0, 10))
                       ],
-                      borderRadius: BorderRadius.only(
+                      borderRadius: (widget.overrideRadius ? BorderRadius.circular(20) : BorderRadius.only(
                           bottomLeft: const Radius.circular(20),
                           bottomRight: const Radius.circular(20),
                           topLeft: (msgData.isMine
@@ -215,7 +216,7 @@ class _PurlawChatMessageBlockWithAudioState extends State<PurlawChatMessageBlock
                               : const Radius.circular(0)),
                           topRight: (!msgData.isMine
                               ? const Radius.circular(20)
-                              : const Radius.circular(0)))),
+                              : const Radius.circular(0))))),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [

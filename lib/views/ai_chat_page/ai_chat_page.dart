@@ -82,10 +82,10 @@ class _AIChatPageFooterState extends State<AIChatPageFooter> {
                 RecommendedActionButton(title: '停止对话', onClick: (){
                   model.manuallyBreak();
                 }, show: model.replying,),
-                RecommendedActionButton(title: '清除对话', onClick: (){
+                RecommendedActionButton(title: '清屏', onClick: (){
                   model.clearMessage();
                 }, show: (!model.replying && model.messageModels.messages.length > 1), ),
-                RecommendedActionButton(title: '保存并清除对话', onClick: (){
+                RecommendedActionButton(title: '保存并清屏', onClick: (){
                   model.saveMessage();
                 }, show: (!model.replying && model.messageModels.messages.length > 1), )
               ],),
@@ -113,10 +113,22 @@ class _AIChatPageFooterState extends State<AIChatPageFooter> {
                   children: [
                     IconButton(
                         onPressed: () {
-                          showBottomToolSheet(context, lgBreak, themeModel);
+                          // showBottomToolSheet(context, lgBreak, themeModel);
+                          // Navigator.push(context, PageRouteBuilder(
+                          //     pageBuilder: (_, __, ___) => ChatPageVoiceRecognition(),
+                          //     transitionDuration: const Duration(milliseconds: 400),
+                          //     reverseTransitionDuration: const Duration(milliseconds: 400),
+                          //     transitionsBuilder: (context, anim, secAnim, child) {
+                          //       return SlideTransition(position: anim.drive(Tween(
+                          //           begin: const Offset(0, 1),
+                          //           end: Offset.zero
+                          //       ).chain(CurveTween(curve: Curves.linearToEaseOut))),child: child,);
+                          //     }
+                          // ),);
+                          Navigator.push(context, MaterialPageRoute(builder: (_) => ChatPageVoiceRecognition()));
                         },
                         icon: Icon(
-                          Icons.camera_alt_outlined,
+                          Icons.mic_rounded,
                           color: onPrimaryContainer,
                         )),
                     Expanded(
@@ -155,97 +167,6 @@ class _AIChatPageFooterState extends State<AIChatPageFooter> {
         );
       }),
     );
-  }
-
-  void showBottomToolSheet(
-      BuildContext context, bool lgBreak, ThemeModel themeModel) {
-    Navigator.push(
-        context,
-        TDSlidePopupRoute(
-            slideTransitionFrom: (lgBreak
-                ? SlideTransitionFrom.center
-                : SlideTransitionFrom.bottom),
-            barrierLabel: '选择操作',
-            builder: (context) {
-              Widget child = Container(
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(24),
-                    color: themeModel.themeData.colorScheme.background),
-                height: 200,
-                width: 400,
-                child: Column(
-                  children: [
-                    const SizedBox(
-                      width: 0,
-                      height: 36,
-                    ),
-                    TDButton(
-                      icon: Icons.keyboard_voice,
-                      text: '语音输入',
-                      size: TDButtonSize.large,
-                      type: TDButtonType.fill,
-                      shape: TDButtonShape.filled,
-                      style: TDButtonStyle(
-                          backgroundColor:
-                              themeModel.themeData.colorScheme.background,
-                          textColor:
-                              themeModel.themeData.colorScheme.onBackground,
-                          frameColor: Colors.grey[200],
-                          frameWidth: 1),
-                      onTap: (){
-                        Navigator.push(context, MaterialPageRoute(builder: (_) => ChatPageVoiceRecognition()));
-                      },
-                    ),
-                    const SizedBox(
-                      width: 0,
-                      height: 12,
-                    ),
-                    TDButton(
-                      icon: Icons.document_scanner,
-                      text: '文档扫描',
-                      size: TDButtonSize.large,
-                      type: TDButtonType.outline,
-                      shape: TDButtonShape.filled,
-                      style: TDButtonStyle(
-                          backgroundColor:
-                              themeModel.themeData.colorScheme.background,
-                          textColor:
-                              themeModel.themeData.colorScheme.onBackground,
-                          frameColor: Colors.grey[200],
-                          frameWidth: 1),
-                      onTap: (){
-                        Navigator.push(context, MaterialPageRoute(builder: (_) => AIDocumentRecognition()));
-                      },
-                    )
-                  ],
-                ),
-              );
-
-              if (lgBreak) {
-                return Container(
-                  decoration:
-                      BoxDecoration(borderRadius: BorderRadius.circular(24)),
-                  child: TDPopupCenterPanel(
-                      radius: 24,
-                      backgroundColor:
-                          themeModel.themeData.colorScheme.background,
-                      closeClick: () {
-                        Navigator.pop(context);
-                      },
-                      child: child),
-                );
-              } else {
-                return TDPopupBottomDisplayPanel(
-                    backgroundColor:
-                        themeModel.themeData.colorScheme.background,
-                    titleColor: themeModel.themeData.colorScheme.onBackground,
-                    title: '选择操作',
-                    closeClick: () {
-                      Navigator.pop(context);
-                    },
-                    child: child);
-              }
-            }));
   }
 }
 

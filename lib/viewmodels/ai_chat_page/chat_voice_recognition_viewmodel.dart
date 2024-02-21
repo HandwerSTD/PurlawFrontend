@@ -1,34 +1,50 @@
 import 'dart:async';
+import 'dart:isolate';
 
-import 'package:crypto/crypto.dart';
-import 'package:just_audio/just_audio.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:purlaw/common/utils/log_utils.dart';
 import 'package:purlaw/method_channels/speech_to_text.dart';
+import 'package:purlaw/models/ai_chat/chat_message_model.dart';
 import 'package:purlaw/viewmodels/base_viewmodel.dart';
 import 'package:record/record.dart';
 
+import '../../common/constants/constants.dart';
+import '../../common/network/chat_api.dart';
+import '../../common/network/network_request.dart';
+import '../../common/utils/database/database_util.dart';
+import '../../components/third_party/modified_just_audio.dart';
+
 class ChatVoiceRecognitionViewModel extends BaseViewModel {
   bool listeningVoice = false;
-  String text = "";
+  String text = "点击按钮来说话...";
   final audioRecorder = AudioRecorder();
   late StreamSubscription recordStateSub, sttSub;
+  bool sttFinished = false;
+  bool startGen = false;
+  String cookie = "";
+  AIChatMessageModelWithAudio message = AIChatMessageModelWithAudio();
 
   RecordState recordState = RecordState.stop;
 
   ChatVoiceRecognitionViewModel({required super.context});
 
-  load() {
+  load(String c) {
+    cookie = c;
     recordStateSub = audioRecorder.onStateChanged().listen((event) {
       recordState = event;
       notifyListeners();
     });
     sttSub = SpeechToTextUtil.getStream().listen((event) {
-      Future.delayed(Duration(milliseconds: 500)).then((value) {
-        text = event.toString();
-        notifyListeners();
-      });
+      final result = event.toString();
+      if (result == "<EOF>") {
+        // end
+        sttFinished = true;
+        submit(cookie);
+        return;
+      }
+      text = result;
+      notifyListeners();
     }, onDone: () {
       Log.i("STT Stream done");
     }, onError: (e) {
@@ -54,6 +70,7 @@ class ChatVoiceRecognitionViewModel extends BaseViewModel {
     // }, onDone: (){
     //   Log.i("Record done", tag:"Chat Voice ViewModel");
     // });
+    text = "聆听中...";  sttFinished = false; notifyListeners();
     Log.i("Start record");
     try {
       if (!await Permission.microphone.isGranted) {
@@ -78,18 +95,61 @@ class ChatVoiceRecognitionViewModel extends BaseViewModel {
     final path = await audioRecorder.stop();
     Log.i("Record ended. $path");
     listeningVoice = false;
+    text = "";
     notifyListeners();
     SpeechToTextUtil.getResult(filename: path!);
-    // Log.i("STT Result got", tag: "ChatVoice ViewModel");
-    // notifyListeners();
-    // test();
   }
 
-  void test() async {
-    SpeechToTextUtil.getResult(
-        filename:
-            '/storage/emulated/0/Android/data/com.tianzhu.purlaw/files/0.wav');
-    // Log.i("STT Result got", tag: "ChatVoice ViewModel");
-    // notifyListeners();
+  Future<void> appendMessage(String msg, String cookie) async {
+    var sentences = msg.split('。'); // 按逗号分隔
+    bool endsWithDot = msg.endsWith('。'); // 最后一个是否是完整句子
+    refresh(){
+      notifyListeners();
+    }
+    Future<void> submitAudio(String sentence, int id) async {
+      if (sentence.isEmpty) return;
+      Log.d(HttpGet.getApi(API.chatRequestVoice.api) +
+          sentence, tag: "Chat Audio API SubmitAudio");
+      await message.playlist.add(LockCachingAudioSource(
+          Uri.parse(HttpGet.getApi(API.chatRequestVoice.api) +
+              sentence),
+          headers: HttpGet.jsonHeadersCookie(cookie)));
+      message.player.play();
+    }
+    Log.d(sentences, tag:"Chat Page ViewModel appendMessage");
+    for (int index = 0; index < sentences.length - 1; ++index) {
+      await message.append(sentences[index], true, refresh, submitAudio);
+    }
+    if (sentences.last.isEmpty) return;
+    await message.append(sentences.last, endsWithDot, refresh, submitAudio);
+  }
+
+  Future<void> submit(String cookie) async {
+    message = AIChatMessageModelWithAudio();
+    startGen = true;
+    notifyListeners();
+    final session = DatabaseUtil.getLastAIChatSession();
+    if (session.isEmpty) {
+      makeToast("请先指定一个会话");
+      return;
+    }
+    try {
+      Log.i(text);
+      message.player.setAudioSource(message.playlist);
+      await ChatNetworkRequest.submitNewMessage(session, text, cookie, appendMessage, (){
+        if (message.sentenceCompleted.isNotEmpty && !message.sentenceCompleted.last) {
+          message.playlist.add(LockCachingAudioSource(
+              Uri.parse(HttpGet.getApi(API.chatRequestVoice.api) +
+                  message.sentences.last),
+              headers: HttpGet.jsonHeadersCookie(cookie)));
+        }
+        message.generateCompleted.value = true;
+        notifyListeners();
+      });
+    } on Exception catch (e) {
+      Log.e(tag: "ContractGeneration ViewModel", e);
+      makeToast("生成失败");
+      ChatNetworkRequest.isolate.kill(priority: Isolate.immediate);
+    }
   }
 }

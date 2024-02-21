@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:cunning_document_scanner/cunning_document_scanner.dart';
 import 'package:flutter/cupertino.dart';
@@ -31,7 +32,10 @@ class AIDocumentRecViewModel extends BaseViewModel {
 class AIDocumentRecBodyViewModel extends BaseViewModel {
   TextEditingController controller = TextEditingController();
   final File image;
-  AIDocumentRecBodyViewModel({required this.image});
+  late Uint8List imageBytes;
+  AIDocumentRecBodyViewModel({required this.image}) {
+    imageBytes = image.readAsBytesSync();
+  }
   bool ocrCompleted = false;
   String ocrResult = "";
 

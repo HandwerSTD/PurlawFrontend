@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:purlaw/views/utilities/contract_generation/contract_generation_page.dart';
+import 'package:purlaw/views/utilities/document_scan/ai_document_recognition.dart';
 
 import '../../viewmodels/theme_viewmodel.dart';
 
@@ -24,9 +25,11 @@ class UtilitiesIndexPage extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              UtilityGridBlock(title: '合同审查', iconAsset: const Icon(
+              UtilityGridBlock(title: '文档识别', iconAsset: const Icon(
                 Icons.document_scanner, size: 64, color: Colors.indigo,
-              ), onTap: (){}),
+              ), onTap: (){
+                Navigator.push(context, MaterialPageRoute(builder: (_) => AIDocumentRecognition()));
+              }),
               UtilityGridBlock(title: '律师推荐', iconAsset: const Icon(
                 Icons.folder_shared_outlined, size: 64,color: Colors.indigo,
               ), onTap: (){}),

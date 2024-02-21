@@ -53,7 +53,7 @@ public class MainActivity extends FlutterActivity {
                     public void onListen(Object arguments, EventChannel.EventSink events) {
                         eventSink = events;
                         Log.d("DebugMainActivity", "eventSink got");
-                        flushUI("666");
+//                        flushUI("666");
                     }
 
                     @Override

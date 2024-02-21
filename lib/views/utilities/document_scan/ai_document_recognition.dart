@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:easy_image_viewer/easy_image_viewer.dart';
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
+import 'package:image_editor/image_editor.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:purlaw/common/provider/provider_widget.dart';
@@ -84,17 +85,22 @@ class AIDocumentRecognitionBody extends StatelessWidget {
                             width: Responsive.assignWidthStM(constraints.maxWidth),
                             child: GestureDetector(
                               onTap: (){
-                                showImageViewer(context, Image.file(model.image).image, swipeDismissible: true, doubleTapZoomable: true);
+                                showImageViewer(context, Image.memory(model.imageBytes).image, swipeDismissible: true, doubleTapZoomable: true);
                               },
                               child: (
-                                  Image.file(model.image)
+                                  Image.memory(model.imageBytes)
                               ),
                             ),
                           ),
                           PurlawRRectButton(
                             width: 72,
-                            onClick: (){
-
+                            onClick: () async {
+                              final editorOption = ImageEditorOption();
+                              editorOption.addOption(RotateOption(90));
+                              final result = await ImageEditor.editFileImage(file: model.image, imageEditorOption: editorOption);
+                              model.image.writeAsBytesSync(result!);
+                              model.imageBytes = result;
+                              mm.notify();
                           }, backgroundColor: (getThemeModel(context).dark ? Colors.black : Colors.white).withOpacity(0.8),
                             child: const Row(
                               mainAxisAlignment: MainAxisAlignment.center,
