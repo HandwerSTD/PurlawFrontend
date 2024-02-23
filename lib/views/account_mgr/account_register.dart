@@ -1,8 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:purlaw/common/provider/provider_widget.dart';
 import 'package:purlaw/components/purlaw/purlaw_components.dart';
 import 'package:purlaw/components/third_party/image_loader.dart';
+import 'package:purlaw/main.dart';
 import 'package:purlaw/viewmodels/account_mgr/account_register_viewmodel.dart';
 import 'package:purlaw/viewmodels/theme_viewmodel.dart';
 
@@ -21,8 +24,33 @@ class AccountRegisterPage extends StatelessWidget {
   }
 }
 
-class AccountRegisterPageBody extends StatelessWidget {
+class AccountRegisterPageBody extends StatefulWidget {
   const AccountRegisterPageBody({super.key});
+
+  @override
+  State<AccountRegisterPageBody> createState() => _AccountRegisterPageBodyState();
+}
+
+class _AccountRegisterPageBodyState extends State<AccountRegisterPageBody> {
+
+  late StreamSubscription _;
+
+  @override
+  void initState() {
+    super.initState();
+    _ = eventBus.on<AccountRegisterEventBus>().listen((event) {
+      if (event.needNavigate) {
+        Navigator.pop(context);
+      }
+    });
+    _.resume();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _.cancel();
+  }
 
   @override
   Widget build(BuildContext context) {

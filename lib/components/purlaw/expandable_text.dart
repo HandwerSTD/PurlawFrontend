@@ -67,7 +67,7 @@ class _ExpandableTextState extends State<ExpandableText> {
                 padding: const EdgeInsets.only(top: 2),
                 child: Text(expand ? '收起' : '全文',
                     style: TextStyle(
-                        fontSize: style != null ? style.fontSize : null,
+                        fontSize: style.fontSize,
                         color: Colors.blue)),
               ),
             ),

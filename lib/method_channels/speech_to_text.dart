@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:isolate';
 
 import 'package:flutter/services.dart';
 import 'package:purlaw/common/utils/misc.dart';

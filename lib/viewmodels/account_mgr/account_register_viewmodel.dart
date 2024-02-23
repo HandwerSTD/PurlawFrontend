@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:purlaw/common/network/network_request.dart';
+import 'package:purlaw/main.dart';
 import 'package:purlaw/viewmodels/base_viewmodel.dart';
 import 'package:purlaw/common/utils/log_utils.dart';
 import '../../common/constants/constants.dart';
@@ -29,9 +30,9 @@ class AccountRegisterViewModel extends BaseViewModel {
     if (passwdCtrl.text.length < 6) return (false, "密码不得少于 6 位");
     return (true, "注册中");
   }
-  Future<String> registerNewAccount() async {
+  Future<(bool, String)> registerNewAccount() async {
     (bool, String) verify = verifyRegister();
-    if (!verify.$1) return verify.$2;
+    if (!verify.$1) return verify;
     try {
       var response = jsonDecode(await HttpGet.post(API.userRegister.api, HttpGet.jsonHeaders, {
         "user": nameCtrl.text,
@@ -41,14 +42,14 @@ class AccountRegisterViewModel extends BaseViewModel {
 
       if (!response["status"].startsWith("success")) {
         Log.i(tag: tag,"login failed");
-        return response["message"];
+        return (false, response["message"].toString());
       }
 
     } catch(e) {
       Log.e(tag: tag, e);
-      return "注册失败";
+      return (false, "注册失败");
     }
-    return "注册成功";
+    return (true, "注册成功，请登录");
   }
 
   void register() async {
@@ -56,6 +57,14 @@ class AccountRegisterViewModel extends BaseViewModel {
     var result = await registerNewAccount();
     registering = false; notifyListeners();
     Log.i(tag: tag,result);
-    makeToast(result);
+    makeToast(result.$2);
+    if (result.$1) {
+      eventBus.fire(AccountRegisterEventBus(needNavigate: true));
+    }
   }
+}
+
+class AccountRegisterEventBus {
+  bool needNavigate;
+  AccountRegisterEventBus({required this.needNavigate});
 }

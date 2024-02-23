@@ -54,7 +54,7 @@ class ChatNetworkRequest {
       if (message is SendPort) {
         Log.i("[ChatAPI] sendPort got");
         try {
-          message.send({"cookie": cookie, "session": session});
+          message.send({"cookie": cookie, "session": session, "address": HttpGet.baseUrl});
         } on Exception catch (e) {
           Log.e("Send message failed", error: e, tag: "Chat API");
         }
@@ -69,14 +69,10 @@ class ChatNetworkRequest {
     receivePort.listen((message) async {
       cookie = message["cookie"];
       session = message["session"];
+      HttpGet.switchBaseUrl(message["address"]);
       Log.d("Received message from Main $session", tag: "ChatAPI");
       try {
         while (true) {
-          // var value = await http
-          //     .post(Uri.parse(serverAddress + API.chatFlushSession.api),
-          //     headers: jsonHeadersWithCookie(cookie),
-          //     body: jsonEncode({"session_id": session}));
-          // var chatRes = jsonDecode(Utf8Decoder().convert(value.bodyBytes));
           await Future.delayed(const Duration(milliseconds: 100));
           var chatRes = jsonDecode(await HttpGet.post(API.chatFlushSession.api,
               HttpGet.jsonHeadersCookie(cookie), {"sid": session}));

@@ -1,9 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_fast_forms/flutter_fast_forms.dart';
 import 'package:provider/provider.dart';
 import 'package:purlaw/common/provider/provider_widget.dart';
-import 'package:purlaw/common/utils/log_utils.dart';
 import 'package:purlaw/components/purlaw/appbar.dart';
 import 'package:purlaw/viewmodels/main_viewmodel.dart';
 import 'package:purlaw/viewmodels/utilities/contract_generation_viewmodel.dart';
@@ -43,7 +41,7 @@ class _ContractGenerationPageBodyState extends State<ContractGenerationPageBody>
       model: ContractGenerationViewModel(context: context),
       onReady: (v){},
       builder: (context, model, child) => SafeArea(
-        minimum: EdgeInsets.symmetric(vertical: 0, horizontal: 12),
+        minimum: const EdgeInsets.symmetric(vertical: 0, horizontal: 12),
         child: SingleChildScrollView(
           child: Column(
             children: [
@@ -66,15 +64,15 @@ class _ContractGenerationPageBodyState extends State<ContractGenerationPageBody>
                     ],
                   ),
                   FastTextField(name: 'field_title', decoration: outlineBorderedInputDecoration('合同标题', 12, context, filled: true),),
-                  SizedBox(height: 12,),
+                  const SizedBox(height: 12,),
                   FastTextField(name: 'field_type', decoration: outlineBorderedInputDecoration('合同类型', 12, context, filled: true),),
-                  SizedBox(height: 12,),
+                  const SizedBox(height: 12,),
                   FastTextField(name: 'field_name_a', decoration: outlineBorderedInputDecoration('甲方名称', 12, context, filled: true),),
-                  SizedBox(height: 12,),
+                  const SizedBox(height: 12,),
                   FastTextField(name: 'field_name_b', decoration: outlineBorderedInputDecoration('乙方名称', 12, context, filled: true),),
-                  SizedBox(height: 12,),
+                  const SizedBox(height: 12,),
                   FastTextField(name: 'field_desc', decoration: outlineBorderedInputDecoration('描述', 12, context, filled: true),maxLines: 12, minLines: 6,),
-                  SizedBox(height: 24,),
+                  const SizedBox(height: 24,),
                   TDButton(
                     size: TDButtonSize.large,
                     type: TDButtonType.fill,
@@ -94,12 +92,12 @@ class _ContractGenerationPageBodyState extends State<ContractGenerationPageBody>
               Row(
                 children: [
                   Expanded(child: Container(
-                    margin: EdgeInsets.only( top: 24, bottom: 48),
+                    margin: const EdgeInsets.only( top: 24, bottom: 48),
                     child: (model.genComplete ? TextField(
                       decoration: PurlawChatTextField.chatInputDeco('', getThemeModel(context).colorModel.loginTextFieldColor, 24),
                       controller: model.controller,
                       maxLines: null,
-                    ) : Text(model.text, style: TextStyle(fontSize: 16),)),
+                    ) : Text(model.text, style: const TextStyle(fontSize: 16),)),
                   ))
                 ],
               )

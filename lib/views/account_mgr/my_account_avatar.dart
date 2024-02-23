@@ -66,18 +66,23 @@ class MyAccountAvatar extends StatelessWidget {
                             aspectRatio: const CropAspectRatio(ratioX: 1, ratioY: 1));
                         if (avatarData == null) return;
                         TDToast.showText("上传中", context: context);
-                        var response = await uploadNewAvatar(
-                            avatar: await avatarData.readAsBytes(),
-                            cookie: getCookie(context));
-                        var resp = await response.stream
-                            .transform(utf8.decoder)
-                            .join();
-                        Log.i(tag: tag, "res: $resp");
-                        if (context.mounted) {
-                          TDToast.showText(
-                              context: context, "${jsonDecode(
-                              resp)["message"]}");
-                          Provider.of<MainViewModel>(context, listen: false).refreshCookies();
+                        try {
+                          var response = await uploadNewAvatar(
+                              avatar: await avatarData.readAsBytes(),
+                              cookie: getCookie(context, listen: false));
+                          var resp = await response.stream
+                              .transform(utf8.decoder)
+                              .join();
+                          Log.i(tag: tag, "res: $resp");
+                          if (context.mounted) {
+                            TDToast.showText(
+                                context: context, "${jsonDecode(
+                                resp)["message"]}");
+                            Provider.of<MainViewModel>(context, listen: false).refreshCookies();
+                          }
+                        } on Exception catch (e) {
+                          Log.e(e, tag:"AccountAvatar");
+                          if (context.mounted) TDToast.showText("设置失败", context: context);
                         }
                       }),
                 ),

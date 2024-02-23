@@ -1,4 +1,3 @@
-import 'dart:io';
 
 import 'package:image_picker/image_picker.dart';
 import 'package:purlaw/common/utils/misc.dart';

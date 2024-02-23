@@ -42,8 +42,6 @@ class MyAccountPage extends StatefulWidget {
 }
 
 class _MyAccountPageState extends State<MyAccountPage> {
-  late MyUserInfoModel userInfoModel;
-
   @override
   void initState() {
     super.initState();
@@ -57,17 +55,22 @@ class _MyAccountPageState extends State<MyAccountPage> {
           IconButton(onPressed: (){
             Provider.of<ThemeViewModel>(context, listen: false).switchDarkMode();
           }, icon: const Icon(Icons.sunny)),
-          IconButton(onPressed: (){
+          IconButton(onPressed: () async {
             TDToast.showText("刷新中", context: context);
-            Provider.of<MainViewModel>(context, listen: false).refreshCookies(toast: true);
+            bool result = await Provider.of<MainViewModel>(context, listen: false).refreshCookies(toast: true);
+
           }, icon: const Icon(Icons.refresh)),
           IconButton(onPressed: (){
             Navigator.push(context, CupertinoPageRoute(builder: (_) => const SettingsPage()));
           }, icon: const Icon(Icons.settings))
         ],
       ),
-      body: MyAccountPageBody(
-        userInfo: Provider.of<MainViewModel>(context).myUserInfoModel,
+      body: Consumer<MainViewModel>(
+        builder: (context, model, child) {
+          return MyAccountPageBody(
+            userInfo: model.myUserInfoModel,
+          );
+        }
       ),
     );
   }

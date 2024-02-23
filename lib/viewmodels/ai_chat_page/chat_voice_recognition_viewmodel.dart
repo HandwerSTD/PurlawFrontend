@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:isolate';
 
+import 'package:flutter/animation.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:purlaw/common/utils/log_utils.dart';
@@ -21,6 +22,7 @@ class ChatVoiceRecognitionViewModel extends BaseViewModel {
   final audioRecorder = AudioRecorder();
   late StreamSubscription recordStateSub, sttSub;
   bool sttFinished = false;
+  bool showMineText = false;
   bool startGen = false;
   String cookie = "";
   AIChatMessageModelWithAudio message = AIChatMessageModelWithAudio();
@@ -70,7 +72,7 @@ class ChatVoiceRecognitionViewModel extends BaseViewModel {
     // }, onDone: (){
     //   Log.i("Record done", tag:"Chat Voice ViewModel");
     // });
-    text = "聆听中...";  sttFinished = false; notifyListeners();
+    text = "聆听中...";  sttFinished = false; showMineText = false; notifyListeners();
     Log.i("Start record");
     try {
       if (!await Permission.microphone.isGranted) {
@@ -96,8 +98,12 @@ class ChatVoiceRecognitionViewModel extends BaseViewModel {
     Log.i("Record ended. $path");
     listeningVoice = false;
     text = "";
+    showMineText = true;
     notifyListeners();
-    SpeechToTextUtil.getResult(filename: path!);
+    await SpeechToTextUtil.getResult(filename: path!);
+    await Future.delayed(Duration(seconds: 3));
+    showMineText = false;
+    notifyListeners();
   }
 
   Future<void> appendMessage(String msg, String cookie) async {

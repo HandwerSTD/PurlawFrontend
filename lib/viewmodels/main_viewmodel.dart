@@ -17,6 +17,7 @@ class MainViewModel extends BaseViewModel {
 
   bool autoAudioPlay = false;
 
+
   void logout() async {
     DatabaseUtil.storeUserNamePasswd('', '');
     DatabaseUtil.storeCookie('');
@@ -26,21 +27,23 @@ class MainViewModel extends BaseViewModel {
     SystemNavigator.pop();
   }
 
-  void refreshCookies({bool toast = false}) async {
+  Future<bool> refreshCookies({bool toast = false}) async {
     (String, String) login = DatabaseUtil.getUserNamePasswd();
     try {
       cookies = await NetworkRequest.refreshCookies(login.$1, login.$2);
       Log.i(tag: tag,"cookies refreshed");
       myUserInfoModel =
           await NetworkRequest.getUserInfoWhenLogin(login.$1, cookies);
+      notifyListeners();
       if (toast) {
         eventBus.fire(MainViewModelEventBus(toast: "刷新成功"));
       }
+      return true;
     } catch(e) {
       Log.e(tag: tag, e);
       eventBus.fire(MainViewModelEventBus(toast: "网络错误"));
+      return false;
     }
-    notifyListeners();
   }
 
   /// 登陆者的 Cookies，建议始终使用该项，防止 Cookies 刷新未完成时出现错误
