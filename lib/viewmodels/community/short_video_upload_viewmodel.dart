@@ -4,6 +4,8 @@ import 'dart:typed_data';
 import 'package:flutter/cupertino.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:multipart_request_null_safety/multipart_request_null_safety.dart';
+import 'package:purlaw/common/constants/constants.dart';
+import 'package:purlaw/common/network/network_request.dart';
 import 'package:purlaw/main.dart';
 import 'package:purlaw/viewmodels/base_viewmodel.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
@@ -59,6 +61,7 @@ class ShortVideoUploadViewModel extends BaseViewModel {
       required String cookie})  {
     Log.i(tag: tag, "[ShortVideo] Uploading Video");
     var req = MultipartRequest();
+    req.setUrl(HttpGet.getApi(API.videoUpload.api));
     req.addHeaders({"content-type": "multipart/form-data", "cookie": cookie});
     req.addFields({"title": title, "description": desc, "tags": tags});
     req.addFile('video', videoPath);
@@ -101,10 +104,10 @@ class ShortVideoUploadViewModel extends BaseViewModel {
       };
       response.onComplete = (response) async {
         showToast("上传成功", toastType: ToastType.success);
+        await CacheUtil.clear(); // 清除缓存 不知道有没有用
         Future.delayed(const Duration(seconds: 1)).then((value) {
           eventBus.fire(ShortVideoUploadEventBus(needNavigate: true));
         });
-        await CacheUtil.clear(); // 清除缓存 不知道有没有用
       };
     } on Exception catch (e) {
       Log.e(tag: tag, e);

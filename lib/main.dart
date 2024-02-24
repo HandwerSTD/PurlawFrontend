@@ -111,7 +111,7 @@ class _ProgramEntryState extends State<ProgramEntry> {
       ModelCopyFilesUtils.doCopy();
 
       // 语音 Cache 清理
-      CacheUtil.clearRemote();
+      CacheUtil.clear();
 
       // 获取并刷新 Cookies
       final String cookie = DatabaseUtil.getCookie();

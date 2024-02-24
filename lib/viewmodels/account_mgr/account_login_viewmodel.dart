@@ -68,7 +68,7 @@ class AccountLoginViewModel extends BaseViewModel {
 
       // 获取用户信息
       var userModel = await NetworkRequest.getUserInfoWhenLogin(nameCtrl.text, setCookie);
-      Provider.of<MainViewModel>(context, listen: false) // TODO: 迁移
+      Provider.of<MainViewModel>(context, listen: false)
         ..myUserInfoModel = userModel
         ..cookies = setCookie
         ..notifyListeners(); // 应该不会出事吧。。。

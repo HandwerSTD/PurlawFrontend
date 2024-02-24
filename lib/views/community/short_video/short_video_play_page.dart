@@ -499,7 +499,7 @@ class _VideoPlayBlockState extends State<VideoPlayBlock> {
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         bottomFABSingle(
-          color: (video.meLiked == 1 ? Colors.white : getThemeModel(context).colorModel.generalFillColor).withOpacity(0.7),
+          color: (video.meLiked != 1 ? Colors.white : getThemeModel(context).colorModel.generalFillColor).withOpacity(0.7),
             icon:
                 (Icons.thumb_up_rounded),
             onPressed: () {
@@ -529,10 +529,11 @@ class _VideoPlayBlockState extends State<VideoPlayBlock> {
               });
             }),
         bottomFABSingle(
-            color: (video.meLiked == 1 ? Colors.white : getThemeModel(context).colorModel.generalFillColor).withOpacity(0.7),
-          iconSize: 48,
+          showOverlay: false,
+            color: (!favorite ? Colors.white : getThemeModel(context).colorModel.generalFillColor).withOpacity(0.7),
+          iconSize: 50,
             margin: const EdgeInsets.only(top: 6, bottom: 12, right: 12),
-            icon: (favorite ? Icons.star_rounded : Icons.star_border_rounded),
+            icon: (Icons.star_rounded),
             onPressed: () {
               // if (!model.loaded) return;
               FavoriteDatabaseUtil.storeFavorite(model.nowPlaying, !favorite);
@@ -555,12 +556,15 @@ class _VideoPlayBlockState extends State<VideoPlayBlock> {
   }
 
   Widget bottomFABSingle(
-      {required IconData icon, required Function onPressed, double iconSize = 36, EdgeInsetsGeometry? margin, required Color color}) {
+      {required IconData icon, required Function onPressed, double iconSize = 40, EdgeInsetsGeometry? margin, required Color color, bool showOverlay = true}) {
     return Container(
       height: 52,
       width: 52,
       margin: (margin?? const EdgeInsets.all(12)),
       child: IconButton(
+        style: (showOverlay ? null : const ButtonStyle(
+          overlayColor: MaterialStatePropertyAll(Colors.transparent)
+        )),
         onPressed: () {
           onPressed();
         },
