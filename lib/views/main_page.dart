@@ -81,10 +81,10 @@ class MainPage extends StatelessWidget {
         ChangeNotifierProvider<MainPageViewModel>(
             create: (_) => MainPageViewModel()),
         ChangeNotifierProvider<AIChatMsgListViewModel>(
-          create: (_) => AIChatMsgListViewModel(context: _),
+          create: (_) => AIChatMsgListViewModel(),
         ),
         ChangeNotifierProvider<ShortVideoListViewModel>(
-          create: (_) => ShortVideoListViewModel(context: _),
+          create: (_) => ShortVideoListViewModel(),
         )
       ],
       builder: (context, __) => Scaffold(

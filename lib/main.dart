@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
+import 'package:grock/grock.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:purlaw/common/network/network_loading_state.dart';
@@ -12,12 +13,12 @@ import 'package:purlaw/common/utils/database/kvstore.dart';
 import 'package:purlaw/common/utils/misc.dart';
 import 'package:purlaw/components/multi_state_widget.dart';
 import 'package:purlaw/components/third_party/image_loader.dart';
+import 'package:purlaw/components/third_party/prompt.dart';
 import 'package:purlaw/method_channels/method_channels.dart';
 import 'package:purlaw/viewmodels/main_viewmodel.dart';
 import 'package:purlaw/viewmodels/theme_viewmodel.dart';
 import 'package:purlaw/views/main_page.dart';
 import 'package:purlaw/views/oobe/oobe.dart';
-import 'package:tdesign_flutter/tdesign_flutter.dart';
 import 'package:purlaw/common/utils/log_utils.dart';
 
 void main() {
@@ -41,7 +42,10 @@ class MyApp extends StatelessWidget {
         return MaterialApp(
             title: "紫藤法道",
             theme: Provider.of<ThemeViewModel>(context).themeModel.themeData,
-            home: const ProgramEntry());
+            navigatorKey: Grock.navigationKey, // added line
+            scaffoldMessengerKey: Grock.scaffoldMessengerKey, // added line
+            home: const ProgramEntry()
+        );
       }),
     );
   }
@@ -65,7 +69,7 @@ class _ProgramEntryState extends State<ProgramEntry> {
   void initState() {
     super.initState();
     _sub = eventBus.on<MainViewModelEventBus>().listen((event) {
-      TDToast.showText(event.toast, context: context);
+      showToast(event.toast);
     });
     _sub.resume();
     // 需要异步加载的功能，比如 KVBox，写在 initStateAsync 里

@@ -6,6 +6,7 @@ import 'package:purlaw/models/community/short_video_info_model.dart';
 import 'package:purlaw/viewmodels/base_viewmodel.dart';
 import 'package:purlaw/common/utils/log_utils.dart';
 import '../../common/constants/constants.dart';
+import '../../components/third_party/prompt.dart';
 
 const tag = "ShortVideo Search ViewModel";
 
@@ -17,7 +18,7 @@ class ShortVideoSearchViewModel extends BaseViewModel {
   ScrollController controller = ScrollController();
 
 
-  ShortVideoSearchViewModel({super.context}) {
+  ShortVideoSearchViewModel() {
     super.state = NetworkLoadingState.READY_WAITING;
   }
 
@@ -40,7 +41,7 @@ class ShortVideoSearchViewModel extends BaseViewModel {
       changeState(NetworkLoadingState.CONTENT);
     } catch(e) {
       Log.e(tag: tag, e);
-      makeToast("网络错误");
+      showToast("网络错误", toastType: ToastType.warning);
       changeState(NetworkLoadingState.ERROR);
     }
   }
@@ -61,7 +62,7 @@ class ShortVideoSearchViewModel extends BaseViewModel {
       ++pageNum;
     } catch(e) {
       Log.e(tag: tag, e);
-      makeToast("网络错误");
+      showToast("网络错误", toastType: ToastType.warning);
     }
   }
 }

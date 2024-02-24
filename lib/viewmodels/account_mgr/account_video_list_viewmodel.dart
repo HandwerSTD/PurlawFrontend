@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:purlaw/components/third_party/prompt.dart';
 import 'package:purlaw/models/community/short_video_info_model.dart';
 import 'package:purlaw/viewmodels/base_viewmodel.dart';
 import 'package:purlaw/common/utils/log_utils.dart';
@@ -13,7 +14,7 @@ class AccountVideoListViewModel extends BaseViewModel {
   final String userId;
   VideoList videoList = VideoList(result: []);
 
-  AccountVideoListViewModel({required this.userId, required super.context});
+  AccountVideoListViewModel({required this.userId});
 
   int pageNum = 1;
   int totalCount = 0;
@@ -34,7 +35,7 @@ class AccountVideoListViewModel extends BaseViewModel {
       changeState(NetworkLoadingState.CONTENT);
     } catch(e) {
       Log.e(tag: tag, e);
-      makeToast("网络错误");
+      showToast("网络错误");
       changeState(NetworkLoadingState.ERROR);
     }
   }
@@ -55,7 +56,7 @@ class AccountVideoListViewModel extends BaseViewModel {
       ++pageNum;
     } catch(e) {
       Log.e(tag: tag, e);
-      makeToast("网络错误");
+      showToast("网络错误", toastType: ToastType.warning);
     }
   }
 }

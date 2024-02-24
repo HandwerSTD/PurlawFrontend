@@ -16,10 +16,11 @@ import 'package:purlaw/views/account_mgr/account_visit_page.dart';
 import 'package:purlaw/views/account_mgr/components/account_page_components.dart';
 import 'package:purlaw/views/account_mgr/my_account_page.dart';
 import 'package:purlaw/views/community/short_video/short_video_comment_page.dart';
-import 'package:tdesign_flutter/tdesign_flutter.dart';
 import 'package:video_player/video_player.dart';
 import '../../../common/utils/misc.dart';
 import 'package:purlaw/common/utils/log_utils.dart';
+
+import '../../../components/third_party/prompt.dart';
 
 const tag = "ShortVideo PlayPage";
 class ShortVideoPlayPage extends StatefulWidget {
@@ -172,7 +173,7 @@ class _VideoPlayBlockState extends State<VideoPlayBlock> {
   Widget build(BuildContext context) {
     return ProviderWidget<ShortVideoPlayBlockViewModel>(
       model: ShortVideoPlayBlockViewModel(
-          nowPlaying: widget.nowPlaying, context: context),
+          nowPlaying: widget.nowPlaying),
       onReady: (model) {
         favorite = FavoriteDatabaseUtil.getIsFavorite(model.nowPlaying.uid!);
         model.cookie =
@@ -504,7 +505,7 @@ class _VideoPlayBlockState extends State<VideoPlayBlock> {
             onPressed: () {
               Log.i(tag: tag, "switchVideoLike");
               if (getCookie(context, listen: false).isEmpty) {
-                TDToast.showText('请先登录', context: context);
+                showToast("请先登录", toastType: ToastType.warning);
                 Future.delayed(const Duration(seconds: 1)).then((value) {
                   checkAndLoginIfNot(context);
                 });

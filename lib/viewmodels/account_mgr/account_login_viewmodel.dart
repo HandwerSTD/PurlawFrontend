@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:purlaw/common/constants/constants.dart';
 import 'package:purlaw/common/network/network_request.dart';
 import 'package:purlaw/common/utils/database/database_util.dart';
+import 'package:purlaw/components/third_party/prompt.dart';
 import 'package:purlaw/main.dart';
 import 'package:purlaw/viewmodels/base_viewmodel.dart';
 import 'package:purlaw/viewmodels/main_viewmodel.dart';
@@ -18,7 +19,9 @@ class AccountLoginViewModel extends BaseViewModel {
   FocusNode nameFocus = FocusNode(), passwdFocus = FocusNode();
   bool loggingIn = false;
 
-  AccountLoginViewModel({required super.context});
+  BuildContext context;
+
+  AccountLoginViewModel({required this.context});
 
   bool verifyLogin() {
     return nameCtrl.text.isNotEmpty && passwdCtrl.text.isNotEmpty;
@@ -30,8 +33,9 @@ class AccountLoginViewModel extends BaseViewModel {
     var result = await loginUser();
     Log.i(tag: tag,result);
     if (result != "success") {
-      makeToast(result);
+      showToast(result, toastType: ToastType.warning);
     } else {
+      showToast("登陆成功", toastType: ToastType.success);
       return;
     }
     loggingIn = false;
@@ -64,7 +68,7 @@ class AccountLoginViewModel extends BaseViewModel {
 
       // 获取用户信息
       var userModel = await NetworkRequest.getUserInfoWhenLogin(nameCtrl.text, setCookie);
-      Provider.of<MainViewModel>(super.context!, listen: false)
+      Provider.of<MainViewModel>(context, listen: false) // TODO: 迁移
         ..myUserInfoModel = userModel
         ..cookies = setCookie
         ..notifyListeners(); // 应该不会出事吧。。。

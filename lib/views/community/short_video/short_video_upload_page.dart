@@ -45,7 +45,7 @@ class _ShortVideoUploadState extends State<ShortVideoUpload> {
       ),
       body: ProviderWidget<ShortVideoUploadViewModel>(
         model: ShortVideoUploadViewModel(
-            selectedFile: widget.selectedFile, context: context),
+            selectedFile: widget.selectedFile),
         onReady: (model) {
           model.load();
         },

@@ -98,7 +98,7 @@ class _AccountPageVideoWaterfallState extends State<AccountPageVideoWaterfall> {
   @override
   Widget build(BuildContext context) {
     return ProviderWidget<AccountVideoListViewModel>(
-      model: AccountVideoListViewModel(userId: widget.userId, context: context),
+      model: AccountVideoListViewModel(userId: widget.userId),
       onReady: (model) {
         model.load();
       },

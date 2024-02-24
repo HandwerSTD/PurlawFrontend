@@ -6,11 +6,11 @@ import 'package:purlaw/common/provider/provider_widget.dart';
 import 'package:purlaw/common/utils/misc.dart';
 import 'package:purlaw/components/purlaw/purlaw_components.dart';
 import 'package:purlaw/components/third_party/image_loader.dart';
+import 'package:purlaw/components/third_party/prompt.dart';
 import 'package:purlaw/main.dart';
 import 'package:purlaw/viewmodels/account_mgr/account_login_viewmodel.dart';
 import 'package:purlaw/viewmodels/theme_viewmodel.dart';
 import 'package:purlaw/views/account_mgr/account_register.dart';
-import 'package:tdesign_flutter/tdesign_flutter.dart';
 import '../../models/theme_model.dart';
 import '../settings/settings_page.dart';
 
@@ -48,7 +48,7 @@ class _AccountLoginPageBodyState extends State<AccountLoginPageBody> {
     super.initState();
       _  = eventBus.on<AccountLoginEventBus>().listen((event) {
       if (event.needNavigate) {
-        TDToast.showText("登陆成功", context: context);
+        showToast("登陆成功", toastType: ToastType.success);
         Navigator.pop(context);
       }
     });

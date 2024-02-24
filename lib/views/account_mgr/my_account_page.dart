@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:purlaw/components/purlaw/purlaw_components.dart';
+import 'package:purlaw/components/third_party/prompt.dart';
 import 'package:purlaw/models/account_mgr/user_info_model.dart';
 import 'package:purlaw/viewmodels/main_viewmodel.dart';
 import 'package:purlaw/viewmodels/theme_viewmodel.dart';
@@ -42,6 +43,8 @@ class MyAccountPage extends StatefulWidget {
 }
 
 class _MyAccountPageState extends State<MyAccountPage> {
+  bool tempRefresh = false;
+
   @override
   void initState() {
     super.initState();
@@ -56,22 +59,31 @@ class _MyAccountPageState extends State<MyAccountPage> {
             Provider.of<ThemeViewModel>(context, listen: false).switchDarkMode();
           }, icon: const Icon(Icons.sunny)),
           IconButton(onPressed: () async {
-            TDToast.showText("刷新中", context: context);
+            showToast("刷新中", toastType: ToastType.info);
             bool result = await Provider.of<MainViewModel>(context, listen: false).refreshCookies(toast: true);
-
+            if (mounted) {
+              if (result) {
+                setState(() {
+                  tempRefresh = true;
+                });
+                setState(() {
+                  tempRefresh = false;
+                });
+              }
+            }
           }, icon: const Icon(Icons.refresh)),
           IconButton(onPressed: (){
             Navigator.push(context, CupertinoPageRoute(builder: (_) => const SettingsPage()));
           }, icon: const Icon(Icons.settings))
         ],
       ),
-      body: Consumer<MainViewModel>(
+      body: (tempRefresh ? Container() : Consumer<MainViewModel>(
         builder: (context, model, child) {
           return MyAccountPageBody(
             userInfo: model.myUserInfoModel,
           );
         }
-      ),
+      )),
     );
   }
 }
@@ -153,7 +165,7 @@ class MyAccountVideoListBody extends StatelessWidget {
               onPressed: (){
                 bool refreshed = getMainViewModel(context, listen: false).myUserInfoModel.cookie.isNotEmpty;
                 if (!refreshed) {
-                  TDToast.showText("请先刷新用户信息", context: context);
+                  showToast("请先刷新用户信息", toastType: ToastType.warning);
                   return;
                 }
                 ImagePicker()

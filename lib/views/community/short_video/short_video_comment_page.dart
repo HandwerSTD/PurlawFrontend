@@ -61,7 +61,7 @@ class _ShortVideoCommentListState extends State<ShortVideoCommentList> {
   Widget build(BuildContext context) {
     return ProviderWidget<ShortVideoCommentViewModel>(
       model: ShortVideoCommentViewModel(
-          cid: widget.video.commentsId!, context: context),
+          cid: widget.video.commentsId!),
       onReady: (model) {
         model.load();
         loadMore = model.loadMoreComments;

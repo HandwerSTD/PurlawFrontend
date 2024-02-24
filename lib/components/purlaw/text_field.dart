@@ -83,8 +83,6 @@ class PurlawChatTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme =
-        Provider.of<ThemeViewModel>(context).themeModel.themeData.colorScheme;
     return Container(
       // margin: EdgeInsets.only(right: 2),
       // color: Colors.red,

@@ -6,13 +6,14 @@ import 'package:purlaw/models/account_mgr/user_info_model.dart';
 import 'package:purlaw/viewmodels/base_viewmodel.dart';
 import 'package:purlaw/common/utils/log_utils.dart';
 import '../../common/network/network_request.dart';
+import '../../components/third_party/prompt.dart';
 
 const tag = "Account Visit ViewModel";
 
 class AccountVisitViewModel extends BaseViewModel {
   late UserInfoModel userInfoModel;
   String userId;
-  AccountVisitViewModel({required this.userId, required super.context});
+  AccountVisitViewModel({required this.userId});
 
   load() async {
     try {
@@ -24,7 +25,7 @@ class AccountVisitViewModel extends BaseViewModel {
       changeState(NetworkLoadingState.CONTENT);
     } catch(e) {
       Log.e(tag: tag, e);
-      makeToast("加载失败");
+      showToast("加载错误", toastType: ToastType.warning);
       changeState(NetworkLoadingState.ERROR);
     }
   }

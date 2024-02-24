@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:purlaw/common/network/network_loading_state.dart';
 import 'package:purlaw/common/utils/database/database_util.dart';
 import 'package:purlaw/common/utils/misc.dart';
+import 'package:purlaw/components/third_party/prompt.dart';
 import 'package:purlaw/main.dart';
 import 'package:purlaw/viewmodels/base_viewmodel.dart';
 
@@ -17,7 +18,7 @@ class ChatSessionListViewModel extends BaseViewModel {
 
   bool networkLock = false;
 
-  ChatSessionListViewModel({required super.context});
+  ChatSessionListViewModel();
 
 
   load() async {
@@ -58,7 +59,7 @@ class ChatSessionListViewModel extends BaseViewModel {
       }
     } catch(e) {
       Log.e(e, tag: "Chat Session ViewModel");
-      makeToast("获取失败");
+      showToast("获取失败", toastType: ToastType.error);
       changeState(NetworkLoadingState.ERROR);
     } finally {
       networkLock = false;
@@ -72,16 +73,16 @@ class ChatSessionListViewModel extends BaseViewModel {
   }
   Future<void> deleteEntry(int index, String cookie) async {
     if (sessionList.length == 1) {
-      makeToast("请保留至少一个会话");
+      showToast("请保留至少一个会话", toastType: ToastType.warning);
       return;
     }
     if (sessionList[index].$1 == DatabaseUtil.getLastAIChatSession()) {
-      makeToast("请先切换到其他会话");
+      showToast("请先切换到其他会话", toastType: ToastType.warning);
       return;
     }
     final sid = sessionList[index].$1;
     try {
-      makeToast("删除中");
+      showToast("删除中", toastType: ToastType.info);
       var response = jsonDecode(await HttpGet.post(API.chatDestroySession.api, HttpGet.jsonHeadersCookie(cookie), {
         "sid": sessionList[index].$1
       }));
@@ -95,14 +96,14 @@ class ChatSessionListViewModel extends BaseViewModel {
       SessionListDatabaseUtil.delete(sid);
     } catch(e) {
       Log.e(e, tag: "Chat Session ViewModel");
-      makeToast("删除失败");
+      showToast("删除失败", toastType: ToastType.error);
     }
   }
 
   void createNewSession(String cookie) async {
     if (sessionList.length >= 10) return;
     try {
-      makeToast("新建中");
+      showLoading("新建中");
       var response = jsonDecode(await HttpGet.post(
           API.chatCreateSession.api,
           HttpGet.jsonHeadersCookie(cookie),
@@ -115,17 +116,19 @@ class ChatSessionListViewModel extends BaseViewModel {
       SessionListDatabaseUtil.add(name, session);
       sessionList.add((session, name));
       changeState(NetworkLoadingState.CONTENT);
-      makeToast("新建成功");
+      hideLoading();
+      showToast("新建成功", toastType: ToastType.success);
     } on Exception catch (e) {
       Log.e(e, tag: "Chat Session ViewModel");
-      makeToast("创建新会话失败，可尝试刷新");
+      hideLoading();
+      showToast("创建新会话失败，可尝试刷新", toastType: ToastType.error);
     }
   }
   void useSession(int index) {
     if (networkLock) return;
     chosenRadio = index;
     DatabaseUtil.storeLastAIChatSession(sessionList[index].$1);
-    makeToast("设置成功");
+    showToast("设置成功");
     eventBus.fire(ChatSessionListEventBus(needNavigate: true));
   }
 

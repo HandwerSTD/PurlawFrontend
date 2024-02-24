@@ -7,9 +7,9 @@ import 'package:provider/provider.dart';
 import 'package:purlaw/common/constants/constants.dart';
 import 'package:purlaw/common/network/network_request.dart';
 import 'package:purlaw/components/purlaw/appbar.dart';
+import 'package:purlaw/components/third_party/prompt.dart';
 import 'package:purlaw/viewmodels/main_viewmodel.dart';
 import 'package:purlaw/views/account_mgr/components/account_page_components.dart';
-import 'package:tdesign_flutter/tdesign_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:purlaw/common/utils/log_utils.dart';
 
@@ -53,7 +53,7 @@ class MyAccountAvatar extends StatelessWidget {
                       onPressed: () async {
                         bool refreshed = getMainViewModel(context, listen: false).myUserInfoModel.cookie.isNotEmpty;
                         if (!refreshed) {
-                          TDToast.showText("请先刷新用户信息", context: context);
+                          showToast("请先刷新用户信息", toastType: ToastType.warning);
                           return;
                         }
                         var avatar = await ImagePicker().pickImage(
@@ -65,7 +65,7 @@ class MyAccountAvatar extends StatelessWidget {
                             sourcePath: avatar.path,
                             aspectRatio: const CropAspectRatio(ratioX: 1, ratioY: 1));
                         if (avatarData == null) return;
-                        TDToast.showText("上传中", context: context);
+                        showToast("上传中", toastType: ToastType.info);
                         try {
                           var response = await uploadNewAvatar(
                               avatar: await avatarData.readAsBytes(),
@@ -75,14 +75,14 @@ class MyAccountAvatar extends StatelessWidget {
                               .join();
                           Log.i(tag: tag, "res: $resp");
                           if (context.mounted) {
-                            TDToast.showText(
-                                context: context, "${jsonDecode(
-                                resp)["message"]}");
+                            showToast(
+                                "${jsonDecode(
+                                resp)["message"]}", toastType: ToastType.info);
                             Provider.of<MainViewModel>(context, listen: false).refreshCookies();
                           }
                         } on Exception catch (e) {
                           Log.e(e, tag:"AccountAvatar");
-                          if (context.mounted) TDToast.showText("设置失败", context: context);
+                          if (context.mounted) showToast("设置失败", toastType: ToastType.warning);
                         }
                       }),
                 ),

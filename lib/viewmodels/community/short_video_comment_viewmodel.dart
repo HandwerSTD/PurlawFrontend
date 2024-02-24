@@ -6,6 +6,7 @@ import 'package:purlaw/common/utils/log_utils.dart';
 import '../../common/constants/constants.dart';
 import '../../common/network/network_loading_state.dart';
 import '../../common/network/network_request.dart';
+import '../../components/third_party/prompt.dart';
 import '../../models/community/short_video_comment_model.dart';
 
 const tag = "ShortVideo Comment ViewModel";
@@ -18,7 +19,7 @@ class ShortVideoCommentViewModel extends BaseViewModel {
   TextEditingController controller = TextEditingController();
 
 
-  ShortVideoCommentViewModel({required this.cid, required super.context});
+  ShortVideoCommentViewModel({required this.cid});
 
   load() async {
     loadComments();
@@ -46,7 +47,7 @@ class ShortVideoCommentViewModel extends BaseViewModel {
       }
     } catch(e) {
       Log.e(tag: tag, e);
-      makeToast("网络错误");
+      showToast("网络错误", toastType: ToastType.warning);
       changeState(NetworkLoadingState.ERROR);
     }
   }
@@ -67,14 +68,14 @@ class ShortVideoCommentViewModel extends BaseViewModel {
       ++pageNum;
     } catch(e) {
       Log.e(tag: tag, e);
-      makeToast("网络错误");
+      showToast("网络错误", toastType: ToastType.warning);
     }
   }
   Future<void> submitComment(String cookie) async {
     var text = controller.text;
     if (text.isEmpty) return;
     try {
-      makeToast("评论中");
+      showToast("评论中", toastType: ToastType.info);
       controller.clear();
       focusNode.unfocus();
       var response = jsonDecode(await HttpGet.post(API.commentSubmit.api, HttpGet.jsonHeadersCookie(cookie), {
@@ -82,11 +83,11 @@ class ShortVideoCommentViewModel extends BaseViewModel {
         "comment": text
       }));
       if (response["status"] != "success") throw Exception(response["message"]);
-      makeToast("评论成功");
+      showToast("评论成功", toastType: ToastType.success);
       reload();
     } catch (e) {
       Log.e(tag: tag, e);
-      makeToast("评论失败");
+      showToast("评论失败", toastType: ToastType.error);
     }
   }
 }

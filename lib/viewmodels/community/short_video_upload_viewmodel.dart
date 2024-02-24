@@ -4,14 +4,12 @@ import 'dart:typed_data';
 import 'package:flutter/cupertino.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:multipart_request_null_safety/multipart_request_null_safety.dart';
-import 'package:purlaw/common/constants/constants.dart';
-import 'package:purlaw/common/network/network_request.dart';
 import 'package:purlaw/main.dart';
 import 'package:purlaw/viewmodels/base_viewmodel.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
-import 'package:http/http.dart' as http;
 import 'package:purlaw/common/utils/log_utils.dart';
 import '../../common/utils/cache_utils.dart';
+import '../../components/third_party/prompt.dart';
 
 const tag = "ShortVideo Upload ViewModel";
 
@@ -28,7 +26,7 @@ class ShortVideoUploadViewModel extends BaseViewModel {
   late File tempCoverPath;
 
   ShortVideoUploadViewModel(
-      {required this.selectedFile, required super.context});
+      {required this.selectedFile});
 
   load() {
     VideoThumbnail.thumbnailData(
@@ -73,10 +71,10 @@ class ShortVideoUploadViewModel extends BaseViewModel {
         desc = descController.value.text,
         tags = tagsController.value.text;
     if (title == "" || desc == "" || tags == "") {
-      makeToast("视频信息不能为空");
+      showToast("视频信息不能为空", toastType: ToastType.warning);
       return;
     }
-    makeToast("视频上传中");
+    showToast("视频上传中", toastType: ToastType.info);
     isVideoUploading = true;
     notifyListeners();
     try {
@@ -89,20 +87,20 @@ class ShortVideoUploadViewModel extends BaseViewModel {
         coverPath: tempCoverPath.path,
         cookie: cookie,
       );
-      response.progress.listen((int progress) {
+      response.progress.listen((int progress) { // TODO: Test
         percentage.value = progress;
         Log.i(
             tag: tag,
             "[DEBUG] uploaded = $uploaded, percent = ${percentage.value}");
       });
       response.onError = () async {
-        makeToast("上传失败");
+        showToast("上传失败", toastType: ToastType.error);
         isVideoUploading = false;
         notifyListeners();
         await CacheUtil.clear(); // 清除缓存 不知道有没有用
       };
       response.onComplete = (response) async {
-        makeToast("上传成功");
+        showToast("上传成功", toastType: ToastType.success);
         Future.delayed(const Duration(seconds: 1)).then((value) {
           eventBus.fire(ShortVideoUploadEventBus(needNavigate: true));
         });
@@ -110,7 +108,7 @@ class ShortVideoUploadViewModel extends BaseViewModel {
       };
     } on Exception catch (e) {
       Log.e(tag: tag, e);
-      makeToast("上传失败");
+      showToast("上传失败", toastType: ToastType.error);
     }
   }
 }

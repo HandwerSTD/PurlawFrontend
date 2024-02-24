@@ -57,7 +57,7 @@ class _AccountRegisterPageBodyState extends State<AccountRegisterPageBody> {
     ThemeModel themeModel = Provider.of<ThemeViewModel>(context).themeModel;
     TextTheme textTheme = Theme.of(context).textTheme;
     return ProviderWidget<AccountRegisterViewModel>(
-      model: AccountRegisterViewModel(context: context),
+      model: AccountRegisterViewModel(),
       onReady: (model) {},
       builder: (context, model, child) =>
           LayoutBuilder(builder: (_, constraints) {

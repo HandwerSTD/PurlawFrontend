@@ -85,6 +85,13 @@ class ColorModel {
       required this.generalFillColorBright});
 }
 
+class ToastColors {
+  static const Color info = Color(0xff0A59F7);
+  static const Color warning = Color(0xffed6f21);
+  static const Color success = Color(0xff64bb5c);
+  static const Color error = Color(0xffe84026);
+}
+
 const ColorModel light1 = ColorModel(
     loginTextFieldColor: Color(0xfff2f2f2),
     generalFillColorBright: Color(0xffe4ddfc),

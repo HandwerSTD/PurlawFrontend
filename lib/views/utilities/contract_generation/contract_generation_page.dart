@@ -8,6 +8,7 @@ import 'package:purlaw/viewmodels/utilities/contract_generation_viewmodel.dart';
 import 'package:tdesign_flutter/tdesign_flutter.dart';
 
 import '../../../components/purlaw/text_field.dart';
+import '../../../components/third_party/prompt.dart';
 import '../../../viewmodels/theme_viewmodel.dart';
 
 class ContractGenerationPage extends StatelessWidget {
@@ -38,7 +39,7 @@ class _ContractGenerationPageBodyState extends State<ContractGenerationPageBody>
   @override
   Widget build(BuildContext context) {
     return ProviderWidget<ContractGenerationViewModel>(
-      model: ContractGenerationViewModel(context: context),
+      model: ContractGenerationViewModel(),
       onReady: (v){},
       builder: (context, model, child) => SafeArea(
         minimum: const EdgeInsets.symmetric(vertical: 0, horizontal: 12),
@@ -81,7 +82,8 @@ class _ContractGenerationPageBodyState extends State<ContractGenerationPageBody>
                     text: '提交',
                     onTap: (){
                       if (model.title.isEmpty || model.desc.isEmpty || model.aName.isEmpty || model.bName.isEmpty || model.type.isEmpty) {
-                        TDToast.showText('请填写完整项', context: context);
+
+                        showToast("请填写完整项", toastType: ToastType.warning);
                         return;
                       }
                       model.submit(getCookie(context, listen: false));

@@ -4,11 +4,11 @@ import 'package:babstrap_settings_screen/babstrap_settings_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:purlaw/components/multi_state_widget.dart';
 import 'package:purlaw/components/purlaw/dialogs.dart';
+import 'package:purlaw/components/third_party/prompt.dart';
 import 'package:purlaw/main.dart';
 import 'package:purlaw/viewmodels/ai_chat_page/chat_session_list_viewmodel.dart';
 import 'package:purlaw/viewmodels/main_viewmodel.dart';
 import 'package:purlaw/viewmodels/theme_viewmodel.dart';
-import 'package:tdesign_flutter/tdesign_flutter.dart';
 import 'package:typicons_flutter/typicons_flutter.dart';
 
 import '../../common/provider/provider_widget.dart';
@@ -53,7 +53,7 @@ class _ChatSessionListPageBodyState extends State<ChatSessionListPageBody> {
   @override
   Widget build(BuildContext context) {
     return ProviderWidget<ChatSessionListViewModel>(
-      model: ChatSessionListViewModel(context: context),
+      model: ChatSessionListViewModel(),
       onReady: (model) {
         model.load();
       },
@@ -78,7 +78,7 @@ class _ChatSessionListPageBodyState extends State<ChatSessionListPageBody> {
                               acceptAction: () {
                                 bool refreshed = getMainViewModel(context, listen: false).myUserInfoModel.cookie.isNotEmpty;
                                 if (!refreshed) {
-                                  TDToast.showText("请先刷新用户信息", context: context);
+                                  showToast("请先刷新用户信息", toastType: ToastType.warning);
                                   return;
                                 }
                                 model.fetchSessionsFromNetwork(
@@ -170,7 +170,7 @@ class _ChatSessionListPageBodyState extends State<ChatSessionListPageBody> {
                                                         acceptAction: () {
                                                           bool refreshed = getMainViewModel(context, listen: false).myUserInfoModel.cookie.isNotEmpty;
                                                           if (!refreshed) {
-                                                            TDToast.showText("请先刷新用户信息", context: context);
+                                                            showToast("请先刷新用户信息", toastType: ToastType.warning);
                                                             return;
                                                           }
                                                           model.deleteEntry(index, getCookie(context, listen: false));
@@ -220,7 +220,7 @@ class _ChatSessionListPageBodyState extends State<ChatSessionListPageBody> {
                         onPressed: () {
                           bool refreshed = getMainViewModel(context, listen: false).myUserInfoModel.cookie.isNotEmpty;
                           if (!refreshed) {
-                            TDToast.showText("请先刷新用户信息", context: context);
+                            showToast("请先刷新用户信息", toastType: ToastType.warning);
                             return;
                           }
                           model.createNewSession(

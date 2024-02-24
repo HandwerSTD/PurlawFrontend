@@ -26,7 +26,7 @@ class AccountVisitPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ProviderWidget<AccountVisitViewModel>(
-      model: AccountVisitViewModel(context: context, userId: userId),
+      model: AccountVisitViewModel(userId: userId),
       onReady: (model) {
         model.load();
       },

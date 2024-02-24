@@ -7,6 +7,7 @@ import 'package:purlaw/common/utils/database/database_util.dart';
 import 'package:purlaw/common/utils/database/kvstore.dart';
 import 'package:purlaw/common/utils/log_utils.dart';
 import 'package:purlaw/components/purlaw/appbar.dart';
+import 'package:purlaw/components/third_party/prompt.dart';
 import 'package:purlaw/models/theme_model.dart';
 import 'package:purlaw/viewmodels/main_viewmodel.dart';
 import 'package:purlaw/viewmodels/theme_viewmodel.dart';
@@ -150,7 +151,7 @@ class _SettingsPageBodyState extends State<SettingsPageBody> {
               MySettingsItem(
                   icons: Icons.auto_delete_rounded, title: '清除缓存', onTap: (){
                     CacheUtil.clear();
-                    TDToast.showText('清除成功', context: context);
+                    showToast('清除成功', toastType: ToastType.success);
               })
                   .build(context),
             ],

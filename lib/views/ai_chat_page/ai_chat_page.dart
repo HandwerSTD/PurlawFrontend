@@ -1,14 +1,15 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:purlaw/common/utils/log_utils.dart';
 import 'package:purlaw/common/utils/misc.dart';
 import 'package:purlaw/components/purlaw/purlaw_components.dart';
+import 'package:purlaw/components/third_party/prompt.dart';
 import 'package:purlaw/models/theme_model.dart';
 import 'package:purlaw/viewmodels/ai_chat_page/chat_page_viewmodel.dart';
 import 'package:purlaw/viewmodels/main_viewmodel.dart';
 import 'package:purlaw/viewmodels/theme_viewmodel.dart';
 import 'package:purlaw/views/ai_chat_page/chat_page_voice_recognition.dart';
-import 'package:tdesign_flutter/tdesign_flutter.dart';
 
 /// AI 对话界面的主体
 class AIChatPageBody extends StatelessWidget {
@@ -142,10 +143,12 @@ class _AIChatPageFooterState extends State<AIChatPageFooter> {
                         radius: 10,
                         backgroundColor: themeModel.colorModel.generalFillColor,
                         onClick: () {
+                          // if (model.controller.text.isEmpty) return;
                           if (!model.replying) {
                             bool refreshed = getMainViewModel(context, listen: false).myUserInfoModel.cookie.isNotEmpty;
                             if (!refreshed) {
-                              TDToast.showText("请先刷新用户信息", context: context);
+                              Log.d("User not refreshed", tag: "AI Chat Page");
+                              showToast("请先刷新用户信息", toastType: ToastType.warning);
                               return;
                             }
                             model.submitNewMessage(

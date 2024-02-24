@@ -6,6 +6,7 @@ import 'dart:isolate';
 import 'package:flutter/material.dart';
 import 'package:purlaw/common/network/chat_api.dart';
 import 'package:purlaw/common/utils/database/database_util.dart';
+import 'package:purlaw/components/third_party/prompt.dart';
 import 'package:purlaw/viewmodels/base_viewmodel.dart';
 import 'package:purlaw/common/utils/log_utils.dart';
 import '../../common/constants/constants.dart';
@@ -29,7 +30,7 @@ class AIChatMsgListViewModel extends BaseViewModel {
   bool replying = false;
   bool autoPlay = false;
 
-  AIChatMsgListViewModel({required super.context});
+  AIChatMsgListViewModel();
 
   void switchToSessionMessages() async {
     final sid = DatabaseUtil.getLastAIChatSession();
@@ -56,7 +57,7 @@ class AIChatMsgListViewModel extends BaseViewModel {
           first: true)
     ]);
     notifyListeners();
-    makeToast("保存成功");
+    showToast("保存成功", toastType: ToastType.success);
   }
   void clearMessage() {
     messageModels = ListAIChatMessageModelsWithAudio(messages: [
@@ -99,7 +100,7 @@ class AIChatMsgListViewModel extends BaseViewModel {
   void manuallyBreak() {
     Log.i(tag: tag, "[DEBUG] Manually Break");
     try {
-      ChatNetworkRequest.isolate.kill(priority: Isolate.immediate);
+      ChatNetworkRequest.isolate?.kill(priority: Isolate.immediate);
       messageModels.messages.last.player.stop();
     } on Exception catch (e) {
       Log.e(tag: tag, e);
@@ -139,7 +140,7 @@ class AIChatMsgListViewModel extends BaseViewModel {
     final text = controller.text, session = DatabaseUtil.getLastAIChatSession();
     if (text.isEmpty) return;
     if (session.isEmpty) {
-      makeToast("请先选择会话");
+      showToast("请先在左上角选择会话", toastType: ToastType.warning);
       return;
     }
 
@@ -162,7 +163,7 @@ class AIChatMsgListViewModel extends BaseViewModel {
       });
     } on Exception catch (e) {
       Log.e(tag: tag, e);
-      makeToast("生成失败");
+      showToast("生成失败", toastType: ToastType.error);
       manuallyBreak();
     }
   }

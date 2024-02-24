@@ -6,6 +6,7 @@ import 'package:purlaw/common/utils/log_utils.dart';
 import 'package:purlaw/viewmodels/base_viewmodel.dart';
 
 import '../../common/network/chat_api.dart';
+import '../../components/third_party/prompt.dart';
 
 class ContractGenerationViewModel extends BaseViewModel {
   bool genComplete = false;
@@ -20,7 +21,7 @@ class ContractGenerationViewModel extends BaseViewModel {
 
   var text = "";
 
-  ContractGenerationViewModel({required super.context});
+  ContractGenerationViewModel();
 
   Future<void> appendMessage(String msg, String cookie) async {
     text += msg;
@@ -34,7 +35,7 @@ class ContractGenerationViewModel extends BaseViewModel {
     notifyListeners();
     final session = DatabaseUtil.getLastAIChatSession();
     if (session.isEmpty) {
-      makeToast("请先指定一个会话");
+      showToast("请先指定一个会话", toastType: ToastType.warning);
       return;
     }
     try {
@@ -45,8 +46,8 @@ class ContractGenerationViewModel extends BaseViewModel {
       });
     } on Exception catch (e) {
       Log.e(tag: "ContractGeneration ViewModel", e);
-      makeToast("生成失败");
-      ChatNetworkRequest.isolate.kill(priority: Isolate.immediate);
+      showToast("生成失败", toastType: ToastType.warning);
+      ChatNetworkRequest.isolate?.kill(priority: Isolate.immediate);
     }
   }
 }

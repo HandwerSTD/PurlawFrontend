@@ -9,7 +9,7 @@ import '../constants/constants.dart';
 class ChatNetworkRequest {
 
 
-  static late Isolate isolate;
+  static Isolate? isolate;
 
   static Future<void> submitNewMessage(
       String session, String text, String cookie, Future<void> Function(String dt, String cookie) append, Function callback) async {
@@ -36,12 +36,12 @@ class ChatNetworkRequest {
           message = message.replaceAll("<H_EOF>", "");
           await append(message, cookie);
           Log.i("[ChatAPI] Isolate killed");
-          isolate.kill(priority: Isolate.immediate);
+          isolate?.kill(priority: Isolate.immediate);
           callback();
         } else if (message.startsWith("<H_ERR>")) {
           // 出现错误
           Log.e("[ChatAPI] Isolate killed due to error");
-          isolate.kill(priority: Isolate.immediate);
+          isolate?.kill(priority: Isolate.immediate);
           throw Exception(message.replaceAll("<H_ERR>", ""));
         } else {
           if (start && message.startsWith('\n')) {

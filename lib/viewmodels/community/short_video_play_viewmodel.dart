@@ -11,16 +11,18 @@ import '../../common/constants/constants.dart';
 import '../../common/network/network_request.dart';
 import 'package:flutter/material.dart';
 
+import '../../components/third_party/prompt.dart';
+
 const tag = "ShortVideo Play ViewModel";
 
 class ShortVideoPlayViewModel extends BaseViewModel {
   late VideoList videoList;
   PageController controller = PageController(initialPage: 1);
 
-  ShortVideoPlayViewModel({required super.context});
+  ShortVideoPlayViewModel();
 
   static ShortVideoPlayViewModel fromSingleVideo(VideoInfoModel paramVideo, BuildContext context) {
-    ShortVideoPlayViewModel viewModel = ShortVideoPlayViewModel(context: context);
+    ShortVideoPlayViewModel viewModel = ShortVideoPlayViewModel();
     viewModel.videoList = VideoList(result: [paramVideo]);
     // viewModel.pageList = [ShortVideoRefreshPage(), VideoPlayBlock(nowPlaying: paramVideo)];
 
@@ -39,7 +41,7 @@ class ShortVideoPlayViewModel extends BaseViewModel {
       Log.i(tag: tag,"[New Page Load completed");
     } catch(e) {
       Log.e(tag: tag,e);
-      makeToast("网络错误");
+      showToast("网络错误");
     }
   }
 }
@@ -85,7 +87,7 @@ class ShortVideoPlayBlockViewModel extends BaseViewModel {
   bool loaded = false;
   bool autoPlay = true;
 
-  ShortVideoPlayBlockViewModel({required this.nowPlaying, required super.context});
+  ShortVideoPlayBlockViewModel({required this.nowPlaying});
 
   Future<void> getVideoIsLiked() async {
     try {
@@ -97,7 +99,7 @@ class ShortVideoPlayBlockViewModel extends BaseViewModel {
       nowPlaying.meLiked = response["message"];
     } on Exception catch (e) {
       Log.e(tag: tag,e);
-      makeToast("网络错误");
+      showToast("网络错误");
     }
   }
 
@@ -151,7 +153,7 @@ class ShortVideoPlayBlockViewModel extends BaseViewModel {
       if (response["status"] != "success") throw Exception(response["message"]);
     } catch(e) {
       Log.e(tag: tag,e);
-      makeToast("${(origin == 0 ? "" : "取消")}点赞失败");
+      showToast("${(origin == 0 ? "" : "取消")}点赞失败");
       nowPlaying.meLiked = origin;
       notifyListeners();
     }

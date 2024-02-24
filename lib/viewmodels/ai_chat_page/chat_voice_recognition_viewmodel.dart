@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'dart:isolate';
 
-import 'package:flutter/animation.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:purlaw/common/utils/log_utils.dart';
+import 'package:purlaw/components/third_party/prompt.dart';
 import 'package:purlaw/method_channels/speech_to_text.dart';
 import 'package:purlaw/models/ai_chat/chat_message_model.dart';
 import 'package:purlaw/viewmodels/base_viewmodel.dart';
@@ -29,7 +29,7 @@ class ChatVoiceRecognitionViewModel extends BaseViewModel {
 
   RecordState recordState = RecordState.stop;
 
-  ChatVoiceRecognitionViewModel({required super.context});
+  ChatVoiceRecognitionViewModel();
 
   load(String c) {
     cookie = c;
@@ -78,7 +78,7 @@ class ChatVoiceRecognitionViewModel extends BaseViewModel {
       if (!await Permission.microphone.isGranted) {
         if (!(await Permission.microphone.request().isGranted)) {
           Log.i("Permission not granted", tag: "ChatVoice ViewModel");
-          makeToast("请授予权限");
+          showToast("请授予权限", toastType: ToastType.warning);
           return;
         }
       }
@@ -101,7 +101,7 @@ class ChatVoiceRecognitionViewModel extends BaseViewModel {
     showMineText = true;
     notifyListeners();
     await SpeechToTextUtil.getResult(filename: path!);
-    await Future.delayed(Duration(seconds: 3));
+    await Future.delayed(const Duration(seconds: 3));
     showMineText = false;
     notifyListeners();
   }
@@ -136,7 +136,7 @@ class ChatVoiceRecognitionViewModel extends BaseViewModel {
     notifyListeners();
     final session = DatabaseUtil.getLastAIChatSession();
     if (session.isEmpty) {
-      makeToast("请先指定一个会话");
+      showToast("请先指定一个对话", toastType: ToastType.warning);
       return;
     }
     try {
@@ -154,8 +154,8 @@ class ChatVoiceRecognitionViewModel extends BaseViewModel {
       });
     } on Exception catch (e) {
       Log.e(tag: "ContractGeneration ViewModel", e);
-      makeToast("生成失败");
-      ChatNetworkRequest.isolate.kill(priority: Isolate.immediate);
+      showToast("生成失败", toastType: ToastType.error);
+      ChatNetworkRequest.isolate?.kill(priority: Isolate.immediate);
     }
   }
 }

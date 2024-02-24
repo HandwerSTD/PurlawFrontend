@@ -4,11 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:image_editor/image_editor.dart';
 import 'package:provider/provider.dart';
 import 'package:purlaw/common/provider/provider_widget.dart';
-import 'package:purlaw/common/utils/log_utils.dart';
 import 'package:purlaw/common/utils/misc.dart';
 import 'package:purlaw/components/purlaw/purlaw_components.dart';
 import 'package:purlaw/viewmodels/ai_chat_page/ai_document_recognition_viewmodel.dart';
-import 'package:purlaw/viewmodels/ai_chat_page/chat_page_viewmodel.dart';
 import 'package:purlaw/viewmodels/theme_viewmodel.dart';
 
 
@@ -52,9 +50,9 @@ class AIDocumentRecognition extends StatelessWidget {
                 ),
               ],
             ),
-            Padding(padding: EdgeInsets.only(bottom: 48, right: 24), child: FloatingActionButton.extended(onPressed: () async {
+            Padding(padding: const EdgeInsets.only(bottom: 48, right: 24), child: FloatingActionButton.extended(onPressed: () async {
               model.load();
-            }, label: const Text("添加图像"), icon: Icon(Icons.add_a_photo_rounded),),)
+            }, label: const Text("添加图像"), icon: const Icon(Icons.add_a_photo_rounded),),)
           ],
         ),
       )

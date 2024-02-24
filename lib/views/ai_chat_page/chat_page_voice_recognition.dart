@@ -1,8 +1,5 @@
-import 'dart:async';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:purlaw/common/provider/provider_widget.dart';
@@ -40,7 +37,7 @@ class _ChatVoiceRecognitionBodyState extends State<ChatVoiceRecognitionBody> {
   @override
   Widget build(BuildContext context) {
     return ProviderWidget<ChatVoiceRecognitionViewModel>(
-        model: ChatVoiceRecognitionViewModel(context: context),
+        model: ChatVoiceRecognitionViewModel(),
         onReady: (model) {
           model.load(getCookie(context));
         },
@@ -52,7 +49,7 @@ class _ChatVoiceRecognitionBodyState extends State<ChatVoiceRecognitionBody> {
                 builder: (context) {
                   if (model.listeningVoice) {
                     return Container(
-                      padding: EdgeInsets.only(bottom: 96),
+                      padding: const EdgeInsets.only(bottom: 96),
                       alignment: Alignment.center,
                       child: SpinKitWave(size: 108, color: getThemeModel(context).colorModel.generalFillColor,),
                     );
@@ -71,7 +68,7 @@ class _ChatVoiceRecognitionBodyState extends State<ChatVoiceRecognitionBody> {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                SizedBox(height: 108,),
+                                const SizedBox(height: 108,),
                                 Row(
                                   children: [
                                     const Padding(
@@ -103,12 +100,12 @@ class _ChatVoiceRecognitionBodyState extends State<ChatVoiceRecognitionBody> {
                   }
                   return Container(
                     alignment: Alignment.center,
-                    padding: EdgeInsets.only(bottom: 96),
+                    padding: const EdgeInsets.only(bottom: 96),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         SpinKitPianoWave(color: getThemeModel(context).colorModel.generalFillColor,),
-                        Text("\n点击开始说话")
+                        const Text("\n点击开始说话")
                       ],
                     ),
                   );
@@ -117,7 +114,7 @@ class _ChatVoiceRecognitionBodyState extends State<ChatVoiceRecognitionBody> {
               Builder(builder: (context) {
                 if (model.listeningVoice) {
                   return Container(
-                    margin: EdgeInsets.only(bottom: 108),
+                    margin: const EdgeInsets.only(bottom: 108),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
@@ -125,7 +122,7 @@ class _ChatVoiceRecognitionBodyState extends State<ChatVoiceRecognitionBody> {
                           color: getThemeModel(context).colorModel.generalFillColorLight,
                           repeat: true,
                           child: FloatingActionButton.large(
-                            shape: CircleBorder(),
+                            shape: const CircleBorder(),
                             backgroundColor:
                             getThemeModel(context).colorModel.generalFillColor,
                             onPressed: () async {
@@ -158,7 +155,7 @@ class _ChatVoiceRecognitionBodyState extends State<ChatVoiceRecognitionBody> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             const Padding(
-                              padding: const EdgeInsets.only(left: 36, bottom: 8),
+                              padding: EdgeInsets.only(left: 36, bottom: 8),
                               child: Text("识别结果"),
                             ),
                             Row(
@@ -201,7 +198,7 @@ class _ChatVoiceRecognitionBodyState extends State<ChatVoiceRecognitionBody> {
                             ),
                             label: Text(
                               (model.listeningVoice ? "停止并识别" : "开始说话"),
-                              style: TextStyle(color: Colors.white),
+                              style: const TextStyle(color: Colors.white),
                             ),
                           ),
                         ),

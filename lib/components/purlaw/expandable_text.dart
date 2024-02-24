@@ -32,14 +32,12 @@ class _ExpandableTextState extends State<ExpandableText> {
 
   bool expand;
 
-  _ExpandableTextState(this.text, this.maxLines, this.style, this.expand) {
-    expand ??= false;
-  }
+  _ExpandableTextState(this.text, this.maxLines, this.style, this.expand);
 
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, size) {
-      final span = TextSpan(text: text ?? '', style: style);
+      final span = TextSpan(text: text, style: style);
 
       final tp = TextPainter(
           text: span, maxLines: maxLines, textDirection: TextDirection.ltr);
@@ -51,8 +49,8 @@ class _ExpandableTextState extends State<ExpandableText> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             expand
-                ? Text(text ?? '', style: style)
-                : Text(text ?? '',
+                ? Text(text, style: style)
+                : Text(text,
                 maxLines: maxLines,
                 overflow: TextOverflow.ellipsis,
                 style: style),

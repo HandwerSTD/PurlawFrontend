@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:purlaw/common/network/network_request.dart';
+import 'package:purlaw/components/third_party/prompt.dart';
 import 'package:purlaw/main.dart';
 import 'package:purlaw/viewmodels/base_viewmodel.dart';
 import 'package:purlaw/common/utils/log_utils.dart';
@@ -15,7 +16,7 @@ class AccountRegisterViewModel extends BaseViewModel {
   bool agreeStatement = false;
   bool registering = false;
 
-  AccountRegisterViewModel({required super.context});
+  AccountRegisterViewModel();
 
   void switchAgree() {
     agreeStatement = !agreeStatement;
@@ -57,9 +58,11 @@ class AccountRegisterViewModel extends BaseViewModel {
     var result = await registerNewAccount();
     registering = false; notifyListeners();
     Log.i(tag: tag,result);
-    makeToast(result.$2);
     if (result.$1) {
+      showToast(result.$2, toastType: ToastType.success);
       eventBus.fire(AccountRegisterEventBus(needNavigate: true));
+    } else {
+      showToast(result.$2, toastType: ToastType.error);
     }
   }
 }
