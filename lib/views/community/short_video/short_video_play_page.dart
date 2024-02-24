@@ -247,7 +247,7 @@ class _VideoPlayBlockState extends State<VideoPlayBlock> {
             Icons.play_arrow_rounded,
             color: ((!model.loaded || (model.loaded && value.isPlaying))
                 ? Colors.transparent
-                : Colors.white60),
+                : Colors.white.withOpacity(0.8)),
             shadows: ((!model.loaded || (model.loaded && value.isPlaying))
                 ? []
                 : kElevationToShadow[6]),
@@ -499,7 +499,7 @@ class _VideoPlayBlockState extends State<VideoPlayBlock> {
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         bottomFABSingle(
-          color: (video.meLiked != 1 ? Colors.white : getThemeModel(context).colorModel.generalFillColor).withOpacity(0.7),
+          color: (video.meLiked != 1 ? Colors.white : getThemeModel(context).colorModel.generalFillColorBright),
             icon:
                 (Icons.thumb_up_rounded),
             onPressed: () {
@@ -514,7 +514,7 @@ class _VideoPlayBlockState extends State<VideoPlayBlock> {
               model.switchVideoLike();
             }),
         bottomFABSingle(
-          color: Colors.white.withOpacity(0.7),
+          color: Colors.white.withOpacity(0.9),
             icon: Icons.comment_rounded,
             onPressed: () {
               // if (!model.loaded) return;
@@ -530,7 +530,7 @@ class _VideoPlayBlockState extends State<VideoPlayBlock> {
             }),
         bottomFABSingle(
           showOverlay: false,
-            color: (!favorite ? Colors.white : getThemeModel(context).colorModel.generalFillColor).withOpacity(0.7),
+            color: (!favorite ? Colors.white : getThemeModel(context).colorModel.generalFillColor),
           iconSize: 50,
             margin: const EdgeInsets.only(top: 6, bottom: 12, right: 12),
             icon: (Icons.star_rounded),
@@ -542,7 +542,7 @@ class _VideoPlayBlockState extends State<VideoPlayBlock> {
               });
             }),
         bottomFABSingle(
-          color: Colors.white.withOpacity(0.7),
+          color: Colors.white,
             icon: Icons.share_rounded,
             margin: const EdgeInsets.only(top: 12, bottom: 36, right: 12, left: 12),
             onPressed: () {
@@ -572,7 +572,7 @@ class _VideoPlayBlockState extends State<VideoPlayBlock> {
           icon,
           size: iconSize,
           shadows: [fabBoxShadow],
-          color: color,
+          color: color.withOpacity(0.85),
         ),
       ),
     );
@@ -584,81 +584,3 @@ final BoxShadow fabBoxShadow = BoxShadow(
     offset: Offset.fromDirection(1, 1),
     spreadRadius: 3,
     blurRadius: 5);
-
-// 烂活，已经没用了
-// class ShortVideoRefreshPage extends StatelessWidget {
-//   const ShortVideoRefreshPage({super.key});
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       backgroundColor: Color(0xff212121),
-//       appBar: AppBar(
-//         backgroundColor: Color(0xff212121),
-//         foregroundColor: Colors.white,
-//       ),
-//       body: Container(
-//         alignment: Alignment.center,
-//         child: Container(
-//           margin: EdgeInsets.only(bottom: 48),
-//           height: 180,
-//           child: Column(
-//             mainAxisSize: MainAxisSize.max,
-//             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//             children: [
-//               // Text("视频", style: TextStyle(fontSize: 24),),
-//               PurlawRRectButton(
-//                   backgroundColor: Provider.of<ThemeViewModel>(context)
-//                       .themeModel
-//                       .colorModel
-//                       .generalFillColor,
-//                   width: 144,
-//                   height: 54,
-//                   radius: 12,
-//                   child: const Text(
-//                     "刷新视频",
-//                     style: TextStyle(
-//                         color: Colors.white,
-//                         fontSize: 18,
-//                         fontWeight: FontWeight.bold),
-//                   ),
-//                   onClick: () {
-//                     String cookie =
-//                         Provider.of<MainViewModel>(context, listen: false)
-//                             .cookies;
-//                     var model = Provider.of<ShortVideoPlayViewModel>(context,
-//                         listen: false);
-//                     model.videoList.result!.clear();
-//                     // model.pageList.removeRange(1, model.pageList.length);
-//                     model.loadMoreVideo(cookie).then((value) {
-//                       model.controller.nextPage(
-//                           duration: Duration(milliseconds: 700),
-//                           curve: Curves.ease);
-//                     });
-//                   }),
-//               Row(
-//                 mainAxisAlignment: MainAxisAlignment.center,
-//                 children: [
-//                   Text(
-//                     "或者  ",
-//                     style: TextStyle(fontSize: 18, color: Colors.white),
-//                   ),
-//                   SizedBox(
-//                     width: 300,
-//                     child: SearchAppBar(
-//                         hintLabel: "搜索",
-//                         onSubmitted: (val) {},
-//                         readOnly: true,
-//                         onTap: () {
-//                           JumpToSearchPage(context);
-//                         }),
-//                   ),
-//                 ],
-//               ),
-//             ],
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
