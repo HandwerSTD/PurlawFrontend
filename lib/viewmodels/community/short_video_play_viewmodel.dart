@@ -85,6 +85,7 @@ class ShortVideoPlayBlockViewModel extends BaseViewModel {
   final VideoInfoModel nowPlaying;
   String cookie = "";
   bool loaded = false;
+  bool loadError = false;
   bool autoPlay = true;
 
   ShortVideoPlayBlockViewModel({required this.nowPlaying});
@@ -109,19 +110,25 @@ class ShortVideoPlayBlockViewModel extends BaseViewModel {
       getVideoIsLiked();
     }
     // Log.i(tag: tag,tag: tagHttpGet.getApi(API.videoFile.api) + nowPlaying.sha1!);
-    videoPlayerController = VideoPlayerController.networkUrl(Uri.parse(HttpGet.getApi(API.videoFile.api) + nowPlaying.sha1!));
-    videoPlayerController.initialize().then((_) {
-        videoController = ChewieController(
-            videoPlayerController: videoPlayerController,
-            showControls: false,
-            showOptions: false,
-            autoPlay: autoPlay,
-            looping: true,
-            aspectRatio: videoPlayerController.value.aspectRatio);
-        loaded = true;
-        notifyListeners();
-        if (autoPlay) resumeVideo();
-      });
+    try {
+      videoPlayerController = VideoPlayerController.networkUrl(Uri.parse(HttpGet.getApi(API.videoFile.api) + nowPlaying.sha1!));
+      videoPlayerController.initialize().then((_) {
+          videoController = ChewieController(
+              videoPlayerController: videoPlayerController,
+              showControls: false,
+              showOptions: false,
+              autoPlay: autoPlay,
+              looping: true,
+              aspectRatio: videoPlayerController.value.aspectRatio);
+          loaded = true;
+          notifyListeners();
+          if (autoPlay) resumeVideo();
+        });
+    } on Exception catch (e) {
+      Log.e(e, tag: "Short Video Play ViewModel");
+      showToast("播放异常", toastType: ToastType.error);
+      loadError = true; notifyListeners();
+    }
   }
 
   void pauseVideo() {

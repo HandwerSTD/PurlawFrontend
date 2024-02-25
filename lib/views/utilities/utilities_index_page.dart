@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:purlaw/viewmodels/theme_viewmodel.dart';
 import 'package:purlaw/views/utilities/contract_generation/contract_generation_page.dart';
 import 'package:purlaw/views/utilities/document_scan/ai_document_recognition.dart';
 
@@ -8,6 +9,7 @@ class UtilitiesIndexPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Color getColor = getThemeModel(context).themeColor.withOpacity(0.8);
     return Container(
       padding: const EdgeInsets.only(top: 56),
       decoration: const BoxDecoration(
@@ -23,26 +25,26 @@ class UtilitiesIndexPage extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              UtilityGridBlock(title: '文档识别', iconAsset: const Icon(
-                Icons.document_scanner, size: 64, color: Colors.indigo,
+              UtilityGridBlock(title: '文档识别', iconAsset: Icon(
+                Icons.document_scanner, size: 64, color: getColor,
               ), onTap: (){
                 Navigator.push(context, MaterialPageRoute(builder: (_) => const AIDocumentRecognition()));
               }),
-              UtilityGridBlock(title: '律师推荐', iconAsset: const Icon(
-                Icons.folder_shared_outlined, size: 64,color: Colors.indigo,
+              UtilityGridBlock(title: '律师推荐', iconAsset:  Icon(
+                Icons.folder_shared_outlined, size: 64,color: getColor,
               ), onTap: (){}),
             ],
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              UtilityGridBlock(title: '合同生成', iconAsset: const Icon(
-                Icons.gas_meter , size: 64,color: Colors.indigo,
+              UtilityGridBlock(title: '合同生成', iconAsset: Icon(
+                Icons.gas_meter , size: 64,color: getColor,
               ), onTap: (){
                 Navigator.push(context, MaterialPageRoute(builder: (_) => const ContractGenerationPage()));
               }),
-              UtilityGridBlock(title: '类似案例', iconAsset: const Icon(
-                Icons.mark_email_read_rounded, size: 64,color: Colors.indigo,
+              UtilityGridBlock(title: '类似案例', iconAsset:  Icon(
+                Icons.mark_email_read_rounded, size: 64,color: getColor,
               ), onTap: (){})
             ],
           )
@@ -69,7 +71,7 @@ class UtilityGridBlock extends StatelessWidget {
         margin: const EdgeInsets.only(left: 8, right: 8, top: 16, bottom: 16),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(22),
-          border: Border.all(color: Colors.indigo[400]!, width: 2)
+          border: Border.all(color: getThemeModel(context).themeColor.withOpacity(0.8), width: 2)
         ),
         alignment: Alignment.center,
         child: Column(

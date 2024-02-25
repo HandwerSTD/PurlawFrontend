@@ -4,17 +4,17 @@ import 'package:purlaw/common/utils/log_utils.dart';
 
 import '../../components/third_party/modified_just_audio.dart';
 
-/// 单条对话的信息，适用于 AI 对话
-class ListAIChatMessageModels {
-  List<AIChatMessageModel>? messages;
+/// 单条对话的信息，适用于各种对话
+class ListOfChatMessageModels {
+  List<ChatMessageModel>? messages;
 
-  ListAIChatMessageModels({this.messages});
+  ListOfChatMessageModels({this.messages});
 
-  ListAIChatMessageModels.fromJson(Map<String, dynamic> json) {
+  ListOfChatMessageModels.fromJson(Map<String, dynamic> json) {
     if (json['AIChatMessageModel'] != null) {
-      messages = <AIChatMessageModel>[];
+      messages = <ChatMessageModel>[];
       json['AIChatMessageModel'].forEach((v) {
-        messages!.add(AIChatMessageModel.fromJson(v));
+        messages!.add(ChatMessageModel.fromJson(v));
       });
     }
   }
@@ -29,14 +29,14 @@ class ListAIChatMessageModels {
   }
 }
 
-class AIChatMessageModel {
+class ChatMessageModel {
   String message = "";
   bool isMine = false;
   bool isFirst = false;
 
-  AIChatMessageModel({this.message = "", this.isMine = false, this.isFirst = false});
+  ChatMessageModel({this.message = "", this.isMine = false, this.isFirst = false});
 
-  AIChatMessageModel.fromJson(Map<String, dynamic> json) {
+  ChatMessageModel.fromJson(Map<String, dynamic> json) {
     message = json['message'];
     isMine = json['isMine'];
   }
@@ -58,25 +58,34 @@ class AIChatMessageModel {
   }
 }
 
+class PrivateChatMessageModel {
+  String message = "";
+  int timestamp = 0;
+  bool isMine = false;
+
+  PrivateChatMessageModel({this.message = "", this.timestamp = 0, this.isMine = false});
+}
+
+
 class ListAIChatMessageModelsWithAudio {
   late List<AIChatMessageModelWithAudio> messages;
 
   ListAIChatMessageModelsWithAudio({required this.messages});
 
-  ListAIChatMessageModelsWithAudio.fromDb(ListAIChatMessageModels model) {
+  ListAIChatMessageModelsWithAudio.fromDb(ListOfChatMessageModels model) {
     messages = [];
     messages.addAll(model.messages!.map((e) => AIChatMessageModelWithAudio.fromFull(
       e.message, e.isMine, first: e.isFirst
     )));
   }
-  ListAIChatMessageModels export() {
-    ListAIChatMessageModels result = ListAIChatMessageModels(messages: []);
+  ListOfChatMessageModels export() {
+    ListOfChatMessageModels result = ListOfChatMessageModels(messages: []);
     result.messages!.addAll(messages.map((e) {
       var message = "";
       for (var it in e.sentences) {
         message += it;
       }
-      return AIChatMessageModel(message: message, isFirst: e.isFirst, isMine: e.isMine);
+      return ChatMessageModel(message: message, isFirst: e.isFirst, isMine: e.isMine);
     }));
     return result;
   }

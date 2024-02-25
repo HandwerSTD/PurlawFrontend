@@ -14,7 +14,7 @@ import '../third_party/modified_just_audio.dart';
 const tag = "Chat MessageBlock";
 
 class PurlawChatMessageBlockViewOnly extends StatelessWidget {
-  final AIChatMessageModel msg;
+  final ChatMessageModel msg;
   const PurlawChatMessageBlockViewOnly({required this.msg, super.key});
 
   @override
@@ -22,7 +22,7 @@ class PurlawChatMessageBlockViewOnly extends StatelessWidget {
     return chatMessageBlock(context, msg);
   }
 
-  Widget chatMessageBlock(BuildContext context, AIChatMessageModel msgData) {
+  Widget chatMessageBlock(BuildContext context, ChatMessageModel msgData) {
     final width = MediaQuery.of(context).size.width;
     bool rBreak = (Responsive.checkWidth(width) ==
         Responsive.lg);
@@ -108,6 +108,94 @@ class PurlawChatMessageBlockViewOnly extends StatelessWidget {
   }
 }
 
+
+class PurlawChatMessageBlockForPM extends StatelessWidget {
+  final PrivateChatMessageModel msg;
+  const PurlawChatMessageBlockForPM({required this.msg, super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return chatMessageBlock(context, msg);
+  }
+
+  Widget chatMessageBlock(BuildContext context, PrivateChatMessageModel msgData) {
+    final width = MediaQuery.of(context).size.width;
+    bool rBreak = (Responsive.checkWidth(width) ==
+        Responsive.lg);
+    ThemeModel themeModel = Provider.of<ThemeViewModel>(context).themeModel;
+    Color foreground = (msgData.isMine
+        ? Colors.white
+        : (themeModel.dark ? Colors.white : Colors.black87));
+    Color background = (msgData.isMine
+        ? themeModel.colorModel.generalFillColor
+        : (themeModel.dark ? Colors.black : Colors.white));
+    double leftMargin = 24 + (msgData.isMine ? (rBreak ? width * 0.3 : 24) : 0);
+    double rightMargin = 24 + (msgData.isMine ? 0 : (rBreak ? width * 0.3 : 0));
+    // 总容器
+    return Container(
+      child: Row(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment:
+        (msgData.isMine ? MainAxisAlignment.end : MainAxisAlignment.start),
+        children: [
+          Flexible(
+            // 文字容器
+            child: Container(
+              margin: EdgeInsets.only(
+                  left: leftMargin, right: rightMargin, top: 12, bottom: 12),
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                  border:
+                  Border.all(color: themeModel.colorModel.generalFillColorLight, width: 1),
+                  color: background,
+                  boxShadow: [
+                    const BoxShadow(color: Colors.black12, blurRadius: 5),
+                    BoxShadow(
+                        color: (themeModel.dark
+                            ? Colors.grey[800]!.withOpacity(0.2)
+                            : Colors.lightBlue[50]!.withOpacity(0.5)),
+                        blurRadius: (themeModel.dark ? 20 : 30),
+                        spreadRadius: 5,
+                        offset: const Offset(0, 10)
+                    )
+                  ],
+                  borderRadius: BorderRadius.only(
+                      bottomLeft: const Radius.circular(20),
+                      bottomRight: const Radius.circular(20),
+                      topLeft: (msgData.isMine
+                          ? const Radius.circular(20)
+                          : const Radius.circular(0)),
+                      topRight: (!msgData.isMine
+                          ? const Radius.circular(20)
+                          : const Radius.circular(0)))),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SelectableText(
+                    (msgData.message == "" ? "思考中..." : msgData.message),
+                    // softWrap: true,
+                    style:
+                    TextStyle(color: foreground, height: 1.5, fontSize: 15),
+                  ),
+
+                      Padding(
+                        padding: const EdgeInsets.only(top: 4),
+                        child: Text(TimeUtils.formatDateTime(msgData.timestamp),
+                          style: const TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.grey),
+                        ),
+                      )
+                ],
+              ),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+}
 
 class PurlawChatMessageBlockWithAudio extends StatefulWidget {
   final AIChatMessageModelWithAudio msg;

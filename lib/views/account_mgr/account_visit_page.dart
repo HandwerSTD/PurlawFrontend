@@ -5,6 +5,7 @@ import 'package:purlaw/components/purlaw/purlaw_components.dart';
 import 'package:purlaw/models/account_mgr/user_info_model.dart';
 import 'package:purlaw/viewmodels/account_mgr/account_visit_viewmodel.dart';
 import 'package:purlaw/views/account_mgr/components/account_page_components.dart';
+import 'package:purlaw/views/community/private_message/private_message.dart';
 import 'package:tdesign_flutter/tdesign_flutter.dart';
 
 import '../../common/provider/provider_widget.dart';
@@ -35,7 +36,8 @@ class AccountVisitPage extends StatelessWidget {
           actions: [
             IconButton(onPressed: (){
               // Navigator.push(context, MaterialPageRoute(builder: (_) => SettingsPage()));
-            }, icon: const Icon(Icons.settings))
+              Navigator.push(context, MaterialPageRoute(builder: (_) => PrivateMessagePage(sendUser: model.userInfoModel)));
+            }, icon: const Icon(Icons.message_rounded))
           ],
         ),
         body: MultiStateWidget(

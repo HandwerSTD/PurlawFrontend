@@ -45,7 +45,7 @@ class AIChatMsgListViewModel extends BaseViewModel {
       return;
     }
     messageModels = ListAIChatMessageModelsWithAudio.fromDb(
-      ListAIChatMessageModels.fromJson(jsonDecode(data))
+      ListOfChatMessageModels.fromJson(jsonDecode(data))
     );
     notifyListeners();
   }

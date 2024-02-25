@@ -6,7 +6,6 @@ import 'package:image_editor/image_editor.dart';
 import 'package:provider/provider.dart';
 import 'package:purlaw/common/provider/provider_widget.dart';
 import 'package:purlaw/common/utils/misc.dart';
-import 'package:purlaw/components/multi_state_widget.dart';
 import 'package:purlaw/components/purlaw/purlaw_components.dart';
 import 'package:purlaw/viewmodels/ai_chat_page/ai_document_recognition_viewmodel.dart';
 import 'package:purlaw/viewmodels/main_viewmodel.dart';
@@ -56,14 +55,14 @@ class AIDocumentRecognition extends StatelessWidget {
                     FloatingActionButton.extended(
                       heroTag: null,
                       icon: const Icon(Icons.add_a_photo_rounded),
-                      label: Text('添加图像'),
+                      label: const Text('添加图像'),
                       onPressed: () {
                         model.load();
                       },
                     ),FloatingActionButton.extended(
                       heroTag: null,
                       icon: const Icon(Icons.analytics_outlined),
-                      label: Text('AI 分析'),
+                      label: const Text('AI 分析'),
                       onPressed: () {
                         int page = model.controller.page!.round();
                         if (!model.models[page].ocrCompleted) {
@@ -181,7 +180,7 @@ class AIDocumentRecognitionBody extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Padding(
-                          padding: const EdgeInsets.only(left: 24, top: 36, bottom: 8),
+                          padding: EdgeInsets.only(left: 24, top: 36, bottom: 8),
                           child: Text("识别结果", style: TextStyle(fontSize: 18),),
                         ),
                         Row(
@@ -229,14 +228,14 @@ class AIDocumentAnalyzeDialog extends StatelessWidget {
         builder: (context, model, child) {
           return Container(
             width: Responsive.assignWidthMedium(Grock.width),
-            margin: EdgeInsets.only(left: 12, right: 12, top: 64, bottom: 64),
+            margin: const EdgeInsets.only(left: 12, right: 12, top: 64, bottom: 64),
             decoration: BoxDecoration(
               color: getThemeModel(context).dark ? const Color(0xff333333) : getThemeModel(context).themeData.scaffoldBackgroundColor,
               borderRadius: BorderRadius.circular(24)
             ),
             child: ListView(
               shrinkWrap: true,
-              padding: EdgeInsets.symmetric(horizontal: 12, vertical: 36),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 36),
               children: [
                 Column(
                   mainAxisSize: MainAxisSize.min,

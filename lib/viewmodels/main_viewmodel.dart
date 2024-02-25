@@ -24,6 +24,7 @@ class MainViewModel extends BaseViewModel {
     myUserInfoModel = MyUserInfoModel(avatar: '', uid: '', user: ' ', cookie: '');
     cookies = '';
     await HistoryDatabaseUtil.clearHistory();
+    await SessionListDatabaseUtil.clear();
     SystemNavigator.pop();
   }
 

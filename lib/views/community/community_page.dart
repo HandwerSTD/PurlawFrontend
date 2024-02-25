@@ -53,7 +53,7 @@ class _CommunityPageBodyState extends State<CommunityPageBody> {
     }
     return LayoutBuilder(
       builder: (_, constraints) => Container(
-        margin: EdgeInsets.symmetric(horizontal: 2),
+        margin: const EdgeInsets.symmetric(horizontal: 2),
           alignment: Alignment.center,
           child: Stack(alignment: Alignment.topCenter, children: [
             PurlawWaterfallList(
@@ -120,7 +120,7 @@ class GridVideoBlock extends StatelessWidget {
           child: Container(
             margin: const EdgeInsets.only(top: 2, bottom: 4, left: 3, right: 3),
           decoration: BoxDecoration(
-            // border: Border.all(width: 0.1, color: Colors.grey[400]!),
+            border: (getThemeModel(context).dark ? null : Border.all(width: 0.1, color: Colors.grey[400]!)),
             borderRadius: BorderRadius.circular(4)
           ),
           child: ClipRRect(

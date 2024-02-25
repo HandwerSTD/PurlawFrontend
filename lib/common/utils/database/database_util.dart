@@ -152,6 +152,56 @@ class SessionListDatabaseUtil {
   }
 }
 
+// 暂时用不着
+// /// 数据库结构
+// ///
+// /// privateMessageList = { uid: name }
+// ///
+// /// privateMessageData = { uid: data }
+// class PrivateMessageDatabaseUtil {
+//   static Future<LazyBox> getBox() {
+//     return Hive.openLazyBox(KVBox.privateMessageData);
+//   }
+//   static void addNewPM(String uid, String name) {
+//     KVBox.insert(uid, name, useBox: KVBox.privateMessageList);
+//   }
+//   static void storePMList(List<(String, String)> res) async {
+//     await clear();
+//     for (var item in res) {
+//       Hive.box(KVBox.privateMessageList).put(item.$1, item.$2);
+//     }
+//     Log.i("privateMessageList stored (refresh)", tag: "PrivateMessage DatabaseUtil");
+//   }
+//   static Future<void> storePMByUid(String uid, String val) async {
+//     var box = await getBox();
+//     await box.put(uid, val);
+//     Log.i("UID $uid saved.", tag: "PrivateMessage DatabaseUtil");
+//   }
+//   /// 返回格式：(uid, name)
+//   static Future<List<(String, String)>> getList() async {
+//     var result = <(String, String)>[];
+//     var indexBox = Hive.box(KVBox.privateMessageList);
+//     for (var sid in indexBox.keys) {
+//       result.add((sid, indexBox.get(sid)));
+//     }
+//     return result;
+//   }
+//   /// 返回 json 格式的纯文本
+//   static Future<String> getHistoryByUid(String uid) async {
+//     var box = await getBox();
+//     return await box.get(uid, defaultValue: "");
+//   }
+//   static Future<void> delete(String uid) async {
+//     var box = await getBox();
+//     await box.delete(uid);
+//     await Hive.box(KVBox.privateMessageList).delete(uid);
+//   }
+//   static Future<void> clear() async {
+//     await (await getBox()).clear();
+//     await Hive.box(KVBox.privateMessageList).clear();
+//   }
+// }
+
 class DatabaseConst {
   // Basic consts
   static const String dbTrue = "true";

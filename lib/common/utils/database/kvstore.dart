@@ -7,6 +7,8 @@ class KVBox {
   static const favoriteVideosIndex = "favoriteBoxIndex";
   static const sessionLists = "sessionLists";
   static const sessionListsIndex = "sessionListsIndex";
+  static const privateMessageList = "pmList";
+  static const privateMessageData = "pmData";
 
   static Future setupLocator() async {
     await Hive.initFlutter();

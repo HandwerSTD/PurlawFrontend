@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:purlaw/components/third_party/image_loader.dart';
+import 'package:purlaw/main.dart';
 
 import '../../../common/constants/eula.dart';
 
@@ -16,11 +17,11 @@ class AboutPage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Column(
+            Column(
               children: [
-                AppIconImage(margin: EdgeInsets.only(top: 96, bottom: 24),),
-                Text("紫藤法道", style: TextStyle(fontSize: 20),),
-                Text("版本 Beta v1.7"),
+                const AppIconImage(margin: EdgeInsets.only(top: 96, bottom: 24),),
+                const Text("紫藤法道", style: TextStyle(fontSize: 20),),
+                Text("版本 Beta ${packageInfo.version}"),
               ],
             ),
             Padding(padding: const EdgeInsets.all(24), child: Column(

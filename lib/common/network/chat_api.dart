@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:isolate';
 
+import 'package:grock/grock.dart';
 import 'package:purlaw/common/network/network_request.dart';
 import 'package:purlaw/common/utils/log_utils.dart';
 
@@ -18,6 +19,7 @@ class ChatNetworkRequest {
         HttpGet.jsonHeadersCookie(cookie),
         ({"sid": session, "content": text})).timeout(const Duration(seconds: 10)));
     Log.i(response);
+    await Future.delayed(500.milliseconds); // 等待服务器刷新延迟
     await isolateFlushSession(append,
         session: session, cookie: cookie, callback: callback);
   }
@@ -73,7 +75,7 @@ class ChatNetworkRequest {
       Log.d("Received message from Main $session", tag: "ChatAPI");
       try {
         while (true) {
-          await Future.delayed(const Duration(milliseconds: 100));
+          await Future.delayed(const Duration(milliseconds: 300));
           var chatRes = jsonDecode(await HttpGet.post(API.chatFlushSession.api,
               HttpGet.jsonHeadersCookie(cookie), {"sid": session}));
           Log.i(chatRes);

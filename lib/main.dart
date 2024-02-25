@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
 import 'package:grock/grock.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:purlaw/common/network/network_loading_state.dart';
@@ -26,6 +27,9 @@ void main() {
 }
 
 final EventBus eventBus = EventBus();
+
+late PackageInfo packageInfo;
+
 /// 程序入口
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -63,6 +67,7 @@ class _ProgramEntryState extends State<ProgramEntry> {
   late StreamSubscription _sub;
   Future<void> initStateAsync() async {
     await KVBox.setupLocator();
+    packageInfo = await PackageInfo.fromPlatform();
   }
 
   @override

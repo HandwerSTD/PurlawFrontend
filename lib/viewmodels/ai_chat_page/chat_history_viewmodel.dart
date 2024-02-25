@@ -6,7 +6,7 @@ import 'package:purlaw/models/ai_chat/chat_message_model.dart';
 import 'package:purlaw/viewmodels/base_viewmodel.dart';
 
 class ChatHistoryViewModel extends BaseViewModel {
-  List<(int, ListAIChatMessageModels)> sessionList = [];
+  List<(int, ListOfChatMessageModels)> sessionList = [];
 
   load() async {
     sessionList = [];
@@ -14,7 +14,7 @@ class ChatHistoryViewModel extends BaseViewModel {
     for (var data in list) {
       sessionList.add((
         data.$1,
-        ListAIChatMessageModels.fromJson(jsonDecode(data.$2))
+        ListOfChatMessageModels.fromJson(jsonDecode(data.$2))
       ));
     }
     sessionList = sessionList.reversed.map((e) => e).toList();

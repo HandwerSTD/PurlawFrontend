@@ -10,6 +10,7 @@ import 'package:purlaw/viewmodels/theme_viewmodel.dart';
 import 'package:purlaw/views/account_mgr/account_login.dart';
 import 'package:purlaw/views/account_mgr/components/account_page_components.dart';
 import 'package:purlaw/views/ai_chat_page/chat_history_page.dart';
+import 'package:purlaw/views/community/private_message/private_message_user_list.dart';
 import 'package:purlaw/views/community/short_video/short_video_upload_page.dart';
 import 'package:purlaw/views/settings/settings_page.dart';
 import 'package:tdesign_flutter/tdesign_flutter.dart';
@@ -72,6 +73,9 @@ class _MyAccountPageState extends State<MyAccountPage> {
               }
             }
           }, icon: const Icon(Icons.refresh)),
+          IconButton(onPressed: (){
+            Navigator.push(context, CupertinoPageRoute(builder: (_) => const PrivateMessageUserListPage()));
+          }, icon: const Icon(Icons.message_rounded)),
           IconButton(onPressed: (){
             Navigator.push(context, CupertinoPageRoute(builder: (_) => const SettingsPage()));
           }, icon: const Icon(Icons.settings))

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:purlaw/common/provider/provider_widget.dart';
 import 'package:purlaw/common/utils/database/database_util.dart';
+import 'package:purlaw/components/third_party/modified_video_progress.dart';
 import 'package:purlaw/main.dart';
 import 'package:purlaw/models/community/short_video_info_model.dart';
 import 'package:purlaw/viewmodels/community/short_video_play_viewmodel.dart';
@@ -211,13 +212,23 @@ class _VideoPlayBlockState extends State<VideoPlayBlock> {
                           children: [
                             Container(
                               padding: const EdgeInsets.all(2),
-                              child: model.loaded
-                                  ? Chewie(
-                                      controller: model.videoController,
-                                    )
-                                  : const CircularProgressIndicator(
-                                      color: Colors.white,
-                                    ),
+                              child: Builder(builder: (context) {
+                                if (model.loadError) {
+                                  return Icon(
+                                  Icons.error_outline_rounded,
+                                  color: (Colors.white.withOpacity(0.8)),
+                                  shadows: (kElevationToShadow[6]),
+                                  size: 72,
+                                );
+                                }
+                                return model.loaded
+                                    ? Chewie(
+                                  controller: model.videoController,
+                                )
+                                    : const CircularProgressIndicator(
+                                  color: Colors.white,
+                                );
+                              }),
                             ),
                             bottomWidget(widget.nowPlaying, context),
                           ],
@@ -421,8 +432,11 @@ class _VideoPlayBlockState extends State<VideoPlayBlock> {
               Row(
                 children: [
                   Expanded(
-                    child: VideoProgressIndicator(model.videoPlayerController,
-                        allowScrubbing: true),
+                    child: ModifiedVideoProgressIndicator(model.videoPlayerController,
+                        allowScrubbing: true, colors: VideoProgressColors(
+                        playedColor: getThemeModel(context).colorModel.generalFillColorLight,
+                        bufferedColor: Colors.grey
+                      ),),
                   ),
                   ValueListenableBuilder(
                       valueListenable: model.videoPlayerController,

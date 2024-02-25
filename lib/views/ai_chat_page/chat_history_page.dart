@@ -71,7 +71,7 @@ class ChatHistoryPageBody extends StatelessWidget {
 
 class HistoryChatDetailPage extends StatefulWidget {
   final int ts;
-  final ListAIChatMessageModels list;
+  final ListOfChatMessageModels list;
   const HistoryChatDetailPage({super.key, required this.list, required this.ts});
 
   @override

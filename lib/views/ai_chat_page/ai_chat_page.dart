@@ -1,5 +1,6 @@
-
+import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter/material.dart';
+import 'package:grock/grock.dart';
 import 'package:provider/provider.dart';
 import 'package:purlaw/common/utils/log_utils.dart';
 import 'package:purlaw/common/utils/misc.dart';
@@ -9,6 +10,7 @@ import 'package:purlaw/models/theme_model.dart';
 import 'package:purlaw/viewmodels/ai_chat_page/chat_page_viewmodel.dart';
 import 'package:purlaw/viewmodels/main_viewmodel.dart';
 import 'package:purlaw/viewmodels/theme_viewmodel.dart';
+import 'package:purlaw/views/account_mgr/components/account_page_components.dart';
 import 'package:purlaw/views/ai_chat_page/chat_page_voice_recognition.dart';
 
 /// AI 对话界面的主体
@@ -46,7 +48,9 @@ class AIChatPageMessageList extends StatelessWidget {
             controller: model.scrollController,
             child: Column(
                 children: model.messageModels.messages
-                    .map((e) => PurlawChatMessageBlockWithAudio(msg: e,))
+                    .map((e) => PurlawChatMessageBlockWithAudio(
+                          msg: e,
+                        ))
                     .toList()),
           ),
         ),
@@ -63,14 +67,14 @@ class AIChatPageFooter extends StatefulWidget {
 }
 
 class _AIChatPageFooterState extends State<AIChatPageFooter> {
-
   @override
   Widget build(BuildContext context) {
     return Consumer<AIChatMsgListViewModel>(
       builder: (context, model, _) => LayoutBuilder(builder: (_, constraint) {
         String screenType = Responsive.checkWidth(constraint.maxWidth);
         ThemeModel themeModel = Provider.of<ThemeViewModel>(context).themeModel;
-        Color onPrimaryContainer = themeModel.themeData.colorScheme.onBackground;
+        Color onPrimaryContainer =
+            themeModel.themeData.colorScheme.onBackground;
         Color onPrimary = themeModel.themeData.colorScheme.background;
         bool lgBreak = (screenType == 'lg');
 
@@ -78,22 +82,54 @@ class _AIChatPageFooterState extends State<AIChatPageFooter> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              RecommendedActions(buttons: [
-                RecommendedActionButton(title: '停止对话', onClick: (){
-                  model.manuallyBreak();
-                }, show: model.replying,),
-                RecommendedActionButton(title: '清屏', onClick: (){
-                  model.clearMessage();
-                }, show: (!model.replying && model.messageModels.messages.length > 1), ),
-                RecommendedActionButton(title: '保存并清屏', onClick: (){
-                  model.saveMessage();
-                }, show: (!model.replying && model.messageModels.messages.length > 1), )
-              ],),
+              RecommendedActions(
+                buttons: [
+                  RecommendedActionButton(
+                    title: '停止对话',
+                    onClick: () {
+                      model.manuallyBreak();
+                    },
+                    show: model.replying,
+                  ),
+                  RecommendedActionButton(
+                    title: '清屏',
+                    onClick: () {
+                      model.clearMessage();
+                    },
+                    show: (!model.replying &&
+                        model.messageModels.messages.length > 1),
+                  ),
+                  RecommendedActionButton(
+                    title: '保存并清屏',
+                    onClick: () {
+                      model.saveMessage();
+                    },
+                    show: (!model.replying &&
+                        model.messageModels.messages.length > 1),
+                  ),
+                  RecommendedActionButton(
+                    title: '律师推荐',
+                    onClick: () {
+                      showDialog(
+                          context: context,
+                          builder: (_) => const Dialog(
+                              backgroundColor: Colors.transparent,
+                              surfaceTintColor: Colors.transparent,
+                              alignment: Alignment.topCenter,
+                              insetPadding: EdgeInsets.zero,
+                              child: LawyerRecommendation()));
+                    },
+                    show: (!model.replying &&
+                        model.messageModels.messages.length > 1),
+                  )
+                ],
+              ),
               Container(
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
-                    borderRadius:
-                        (lgBreak ? BorderRadius.circular(12) : BorderRadius.zero),
+                    borderRadius: (lgBreak
+                        ? BorderRadius.circular(12)
+                        : BorderRadius.zero),
                     border: (lgBreak
                         ? Border.all(
                             color: themeModel.colorModel.chatInputDividerColor,
@@ -125,7 +161,11 @@ class _AIChatPageFooterState extends State<AIChatPageFooter> {
                           //       ).chain(CurveTween(curve: Curves.linearToEaseOut))),child: child,);
                           //     }
                           // ),);
-                          Navigator.push(context, MaterialPageRoute(builder: (_) => const ChatPageVoiceRecognition()));
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (_) =>
+                                      const ChatPageVoiceRecognition()));
                         },
                         icon: Icon(
                           Icons.mic_rounded,
@@ -133,9 +173,13 @@ class _AIChatPageFooterState extends State<AIChatPageFooter> {
                         )),
                     Expanded(
                       child: PurlawChatTextField(
-                          hint: (getCookie(context).isEmpty ? '登录后可用' : (model.replying ? '生成中' : '说点什么吧')),
+                          hint: (getCookie(context).isEmpty
+                              ? '登录后可用'
+                              : (model.replying ? '生成中' : '说点什么吧')),
                           focusNode: model.focusNode,
-                          readOnly: (getCookie(context).isEmpty ? true : model.replying),
+                          readOnly: (getCookie(context).isEmpty
+                              ? true
+                              : model.replying),
                           borderRadius: (lgBreak ? 12 : null),
                           controller: model.controller),
                     ),
@@ -143,17 +187,23 @@ class _AIChatPageFooterState extends State<AIChatPageFooter> {
                         radius: 10,
                         backgroundColor: themeModel.colorModel.generalFillColor,
                         onClick: () {
-                          // if (model.controller.text.isEmpty) return;
+                          if (model.controller.text.isEmpty) return;
                           if (!model.replying) {
-                            bool refreshed = getMainViewModel(context, listen: false).myUserInfoModel.cookie.isNotEmpty;
+                            bool refreshed =
+                                getMainViewModel(context, listen: false)
+                                    .myUserInfoModel
+                                    .cookie
+                                    .isNotEmpty;
                             if (!refreshed) {
                               Log.d("User not refreshed", tag: "AI Chat Page");
-                              showToast("请先刷新用户信息", toastType: ToastType.warning);
+                              showToast("请先刷新用户信息",
+                                  toastType: ToastType.warning);
                               return;
                             }
-                            model.submitNewMessage(
-                                Provider.of<MainViewModel>(context, listen: false)
-                                    .cookies);
+                            model.submitNewMessage(Provider.of<MainViewModel>(
+                                    context,
+                                    listen: false)
+                                .cookies);
                           }
                         },
                         child: Icon(
@@ -196,16 +246,91 @@ class RecommendedActionButton extends StatelessWidget {
   final Function onClick;
   final bool show;
   final int isHeadOrTail;
-  const RecommendedActionButton({required this.title, required this.onClick, required this.show, this.isHeadOrTail = 0, super.key});
+  const RecommendedActionButton(
+      {required this.title,
+      required this.onClick,
+      required this.show,
+      this.isHeadOrTail = 0,
+      super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Visibility(visible: show,child: PurlawRRectButton(
-      margin: EdgeInsets.only(left: 8 + (isHeadOrTail == -1 ? 8 : 0), top: 8, bottom: 8, right: 8 + (isHeadOrTail == 1 ? 8 : 0)),
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      backgroundColor: Provider.of<ThemeViewModel>(context).themeModel.colorModel.generalFillColorLight.withOpacity(0.2), width: null, onClick: onClick, radius: 18,
-      child: Text(title),),);
+    return Visibility(
+      visible: show,
+      child: PurlawRRectButton(
+        margin: EdgeInsets.only(
+            left: 8 + (isHeadOrTail == -1 ? 8 : 0),
+            top: 8,
+            bottom: 8,
+            right: 8 + (isHeadOrTail == 1 ? 8 : 0)),
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        backgroundColor: Provider.of<ThemeViewModel>(context)
+            .themeModel
+            .colorModel
+            .generalFillColorLight
+            .withOpacity(0.2),
+        width: null,
+        onClick: onClick,
+        radius: 18,
+        child: Text(title),
+      ),
+    );
   }
 }
 
+class LawyerRecommendation extends StatelessWidget {
+  const LawyerRecommendation({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: Responsive.assignWidthMedium(Grock.width),
+      margin: const EdgeInsets.only(left: 12, right: 12, top: 64, bottom: 64),
+      decoration: BoxDecoration(
+          color: getThemeModel(context).dark
+              ? const Color(0xff333333)
+              : getThemeModel(context).themeData.scaffoldBackgroundColor,
+          borderRadius: BorderRadius.circular(24)),
+      child: ListView(
+        shrinkWrap: true,
+        children: [
+          const Text("\n   律师推荐"),
+          SizedBox(
+            height: 200,
+            child: Swiper(
+              itemCount: 3,
+              loop: false,
+              itemBuilder: (context, index) {
+                return Container(
+                  margin: const EdgeInsets.only(top: 24),
+                  alignment: Alignment.topCenter,
+                    child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        UserAvatarLoader(avatar: getMainViewModel(context).myUserInfoModel.avatar, size: 108, radius: 54),
+                        const SizedBox(width: 24,),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("\n律师 $index", style: const TextStyle(fontSize: 20),),
+                            Text("简介", style: TextStyle(color: (getThemeModel(context).dark ? Colors.grey : Colors.grey[700])),)
+                          ],
+                        ),
+                        const SizedBox(width: 24,)
+                      ],
+                    )
+                  ],
+                ));
+              },
+            ),
+          )
+        ],
+      ),
+    );
+  }
+}
 
