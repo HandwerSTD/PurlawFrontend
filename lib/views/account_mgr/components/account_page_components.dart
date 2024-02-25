@@ -1,15 +1,21 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:grock/grock.dart';
+import 'package:hive/hive.dart';
+import 'package:ionicons/ionicons.dart';
 import 'package:purlaw/common/network/network_loading_state.dart';
 import 'package:purlaw/common/network/network_request.dart';
 import 'package:purlaw/common/provider/provider_widget.dart';
 import 'package:purlaw/common/utils/database/database_util.dart';
+import 'package:purlaw/common/utils/misc.dart';
 import 'package:purlaw/components/purlaw/purlaw_components.dart';
 import 'package:purlaw/components/third_party/image_loader.dart';
 import 'package:purlaw/models/account_mgr/user_info_model.dart';
 import 'package:purlaw/models/community/short_video_info_model.dart';
 import 'package:purlaw/viewmodels/account_mgr/account_video_list_viewmodel.dart';
+import 'package:tdesign_flutter/tdesign_flutter.dart';
+import 'package:typicons_flutter/typicons_flutter.dart';
 
 import '../../../common/constants/constants.dart';
 import '../../community/community_page.dart';
@@ -21,18 +27,51 @@ class AccountPageUserInfoBoard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // final themeModel = Provider.of<ThemeViewModel>(context).themeModel;
+    if (Responsive.checkWidth(Grock.width) == Responsive.lg) {
+      return Container(
+        alignment: Alignment.center,
+        height: 180,
+        width: 300,
+        child: Column(
+          children: [
+            UserAvatarLoader(verified: userInfoModel.verified, avatar: userInfoModel.avatar, size: 108, radius: 54),
+            Padding(
+              padding: const EdgeInsets.only(top: 18, bottom: 18),
+              child: Column(
+                children: [
+                  Text(
+                    userInfoModel.user,
+                    style: const TextStyle(fontSize: 20),
+                  ),
+                  Text(userInfoModel.desc, style: TextStyle(fontSize: 12),)
+                ],
+              ),
+            )
+          ],
+        ),
+      );
+    }
     return Container(
       alignment: Alignment.center,
       height: 180,
       width: 300,
-      child: Column(
+      child: Row(
         children: [
-          UserAvatarLoader(avatar: userInfoModel.avatar, size: 108, radius: 54),
+          UserAvatarLoader(verified: userInfoModel.verified, avatar: userInfoModel.avatar, size: 108, radius: 54),
           Padding(
-            padding: const EdgeInsets.only(top: 18, bottom: 18),
-            child: Text(
-              userInfoModel.user,
-              style: const TextStyle(fontSize: 20),
+            padding: const EdgeInsets.only(left: 18),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  userInfoModel.user,
+                  style: const TextStyle(fontSize: 20),
+                ),
+                SizedBox(
+                  width: 160,
+                    child: Text(userInfoModel.desc, style: TextStyle(fontSize: 12),))
+              ],
             ),
           )
         ],
@@ -46,11 +85,13 @@ class UserAvatarLoader extends StatelessWidget {
   final double size;
   final double radius;
   final EdgeInsetsGeometry? margin;
+  final bool verified;
   const UserAvatarLoader(
       {required this.avatar,
       required this.size,
       required this.radius, this.margin,
-      super.key});
+      super.key, required this.verified});
+
 
   @override
   Widget build(BuildContext context) {
@@ -63,22 +104,65 @@ class UserAvatarLoader extends StatelessWidget {
             color: Colors.grey,
           ));
     }
-    return ImageLoader(
-      url: HttpGet.getApi(API.userAvatar.api) + avatar,
-      width: size,
-      height: size,
-      borderRadius: radius,
-      margin: margin,
-      errorWidget: Icon(
-        Icons.account_circle_rounded,
-        size: size * 0.8,
-        color: Colors.grey,
+    if (!verified) {
+      return ImageLoader(
+        url: HttpGet.getApi(API.userAvatar.api) + avatar,
+        width: size,
+        height: size,
+        borderRadius: radius,
+        margin: margin,
+        errorWidget: Icon(
+          Icons.account_circle_rounded,
+          size: size * 0.8,
+          color: Colors.grey,
+        ),
+        loadingWidget: Icon(
+          Icons.account_circle_rounded,
+          size: size * 0.8,
+          color: Colors.grey,
+        ),
+      );
+    }
+    return Stack(
+      alignment: Alignment.bottomRight,
+      children: [
+        ImageLoader(
+        url: HttpGet.getApi(API.userAvatar.api) + avatar,
+        width: size,
+        height: size,
+        borderRadius: radius,
+        margin: margin,
+        errorWidget: Icon(
+          Icons.account_circle_rounded,
+          size: size * 0.8,
+          color: Colors.grey,
+        ),
+        loadingWidget: Icon(
+          Icons.account_circle_rounded,
+          size: size * 0.8,
+          color: Colors.grey,
+        ),
       ),
-      loadingWidget: Icon(
-        Icons.account_circle_rounded,
-        size: size * 0.8,
-        color: Colors.grey,
-      ),
+        Builder(
+          builder: (context) {
+            double siz = 24, iconSize = 16;
+            if (size <= 36) {
+              siz = 12; iconSize = 8;
+            }
+            return Container(
+              width: siz,
+              height: siz,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.white),
+                color: Colors.green,
+                borderRadius: BorderRadius.circular(siz / 2)
+              ),
+              child: Icon(Icons.done_rounded, color: Colors.white, size: iconSize,),
+            );
+          }
+        )
+      ]
     );
   }
 }

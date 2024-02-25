@@ -20,6 +20,7 @@ enum API {
   userAvatar("/api/avatar/"),
   userUploadAvatar("/api/user/upload_avatar"),
   userListVideo("/api/video/list_video"),
+  userUpdateDesc("/api/user/set_info"),
 
   chatCreateSession("/api/chat/create_session"),
   chatAppendSession("/api/chat/append_session"),

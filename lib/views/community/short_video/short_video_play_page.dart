@@ -348,6 +348,7 @@ class _VideoPlayBlockState extends State<VideoPlayBlock> {
                                             child: Row(
                                               children: [
                                                 UserAvatarLoader(
+                                                  verified: false,
                                                   avatar: video.avatar!,
                                                   size: 40,
                                                   radius: 20,
@@ -358,9 +359,9 @@ class _VideoPlayBlockState extends State<VideoPlayBlock> {
                                                     video.author!,
                                                     maxLines: 1,
                                                     overflow: TextOverflow.ellipsis,
-                                                    style: const TextStyle(
+                                                    style: TextStyle(
                                                         fontSize: 14,
-                                                        color: Colors.black,
+                                                        color: Theme.of(context).colorScheme.onBackground,
                                                         fontWeight: FontWeight.bold),
                                                   ),
                                                 )
@@ -383,10 +384,10 @@ class _VideoPlayBlockState extends State<VideoPlayBlock> {
                                             padding: const EdgeInsets.symmetric(
                                                 horizontal: 24, vertical: 4),
                                             child: Text(
-                                              TimeUtils.formatDateTime(
-                                                  video.timestamp!.toInt()),
-                                              style: const TextStyle(
-                                                  color: Colors.black54),
+                                              "${
+                                                TimeUtils.formatDateTime(
+                                                    video.timestamp!.toInt())
+                                              }\n标签：${video.tags}",
                                             ),
                                           ),
                                           const Padding(
@@ -485,6 +486,7 @@ class _VideoPlayBlockState extends State<VideoPlayBlock> {
         child: Row(
           children: [
             UserAvatarLoader(
+              verified: false,
               avatar: video.avatar!,
               size: 40,
               radius: 20,

@@ -100,6 +100,7 @@ class ListBlock extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(right: 18),
                   child: UserAvatarLoader(
+                    verified: user.verified,
                     avatar: user.avatar,
                     size: 36,
                     radius: 18,

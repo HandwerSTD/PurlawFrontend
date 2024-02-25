@@ -11,6 +11,7 @@ import 'package:purlaw/components/third_party/prompt.dart';
 import 'package:purlaw/models/theme_model.dart';
 import 'package:purlaw/viewmodels/main_viewmodel.dart';
 import 'package:purlaw/viewmodels/theme_viewmodel.dart';
+import 'package:purlaw/views/account_mgr/account_management.dart';
 import 'package:purlaw/views/account_mgr/my_account_avatar.dart';
 import 'package:purlaw/views/settings/about/about_page.dart';
 import 'package:tdesign_flutter/tdesign_flutter.dart';
@@ -50,7 +51,7 @@ class _SettingsPageBodyState extends State<SettingsPageBody> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: ListView(
         children: [
           Visibility(
@@ -70,7 +71,9 @@ class _SettingsPageBodyState extends State<SettingsPageBody> {
                 ).build(context),
                 const MySettingsItem(icons: TypIconData(0xE036), title: '昵称')
                     .build(context),
-                const MySettingsItem(icons: Icons.manage_accounts, title: '帐户管理')
+                MySettingsItem(icons: Icons.manage_accounts, title: '帐户管理', onTap: (){
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => MyAccountManagement(desc: getMainViewModel(context, listen: false).myUserInfoModel.desc)));
+                })
                     .build(context),
                 MySettingsItem(
                   icons: Icons.logout,
@@ -170,6 +173,32 @@ class _SettingsPageBodyState extends State<SettingsPageBody> {
                       });
                 },
               ).build(context),
+              if (getCookie(context).isNotEmpty) SettingsItem(
+                  icons: Icons.verified_rounded,
+                  title: '临时设置本账号为认证账号',
+                  subtitle: '本地临时生效，重启应用失效',
+                  trailing: TDSwitch(
+                    enable: true,
+                    trackOnColor: Provider.of<ThemeViewModel>(context)
+                        .themeModel
+                        .colorModel
+                        .generalFillColor,
+                    isOn: getMainViewModel(context, listen: false).myUserInfoModel.verified,
+                    onChanged: (bool value) {
+                      getMainViewModel(context, listen: false).debugSetVerified();
+                    },
+                  ),
+                  iconStyle: IconStyle(
+                    iconsColor: Provider.of<ThemeViewModel>(context)
+                        .themeModel
+                        .colorModel
+                        .generalFillColor,
+                    backgroundColor: Provider.of<ThemeViewModel>(context)
+                        .themeModel
+                        .colorModel
+                        .generalFillColorBright,
+                  ),
+                  titleStyle: const TextStyle(fontSize: 16)),
               MySettingsItem(icons: Icons.build_circle_outlined, title: '调试信息', onTap: (){
                 Navigator.push(context, MaterialPageRoute(builder: (_) => const LoggerPage()));
               })

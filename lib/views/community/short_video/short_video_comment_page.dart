@@ -160,6 +160,7 @@ class CommentBlock extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(right: 18, top: 12, bottom: 24),
                 child: UserAvatarLoader(
+                  verified: comment.verified ?? false,
                   avatar: comment.avatar!,
                   size: 36,
                   radius: 18,

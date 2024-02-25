@@ -311,7 +311,7 @@ class LawyerRecommendation extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        UserAvatarLoader(avatar: getMainViewModel(context).myUserInfoModel.avatar, size: 108, radius: 54),
+                        UserAvatarLoader(verified: getMainViewModel(context).myUserInfoModel.verified, avatar: getMainViewModel(context).myUserInfoModel.avatar, size: 108, radius: 54),
                         const SizedBox(width: 24,),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,

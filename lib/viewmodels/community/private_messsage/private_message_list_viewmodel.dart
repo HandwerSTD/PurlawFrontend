@@ -25,7 +25,7 @@ class PrivateMessageListViewModel extends BaseViewModel {
         return (UserInfoModel(
             avatar: result[index]["avatar"],
             uid: result[index]["uid"],
-            user: result[index]["user"]), 0);
+            user: result[index]["user"], desc: '', verified: (result[index]["user_info"]) == 1), 0);
       });
 
       response = jsonDecode(
@@ -47,7 +47,6 @@ class PrivateMessageListViewModel extends BaseViewModel {
       userList.removeWhere((element) {
         return element.$2 == -1;
       });
-      Log.d(userList);
       userList = unreadUserList + userList;
       unreadUserList.clear();
 

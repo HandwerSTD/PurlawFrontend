@@ -171,6 +171,7 @@ class GridVideoBlock extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
                               UserAvatarLoader(
+                                verified: false,
                                   avatar: video.avatar!, size: 18, radius: 9),
                               Padding(
                                 padding: const EdgeInsets.only(left: 6, right: 1),
@@ -262,6 +263,7 @@ class GridVideoBlock extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           UserAvatarLoader(
+                            verified: false,
                               avatar: video.avatar!, size: 18, radius: 9),
                           Padding(
                             padding: const EdgeInsets.only(left: 6, right: 1),

@@ -40,6 +40,7 @@ class MyAccountAvatar extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             UserAvatarLoader(
+              verified: false,
               margin: const EdgeInsets.all(47),
                 avatar:
                     Provider.of<MainViewModel>(context).myUserInfoModel.avatar,

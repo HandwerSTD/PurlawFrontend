@@ -13,15 +13,24 @@ const tag = "Main ViewModel";
 /// 程序运行的全局配置存储区
 class MainViewModel extends BaseViewModel {
   /// 登录者的用户信息模型，应当在重新刷新 Cookies 后再使用
-  MyUserInfoModel myUserInfoModel = MyUserInfoModel(avatar: '', uid: '', user: ' ', cookie: '');
+  MyUserInfoModel myUserInfoModel = MyUserInfoModel(avatar: '', uid: '', user: ' ', cookie: '', desc: '', verified: false);
 
   bool autoAudioPlay = false;
 
 
+  void debugSetVerified() {
+    myUserInfoModel.verified = !myUserInfoModel.verified;
+    notifyListeners();
+  }
+  void changeDesc(String desc) {
+    myUserInfoModel.desc = desc;
+    notifyListeners();
+  }
+
   void logout() async {
     DatabaseUtil.storeUserNamePasswd('', '');
     DatabaseUtil.storeCookie('');
-    myUserInfoModel = MyUserInfoModel(avatar: '', uid: '', user: ' ', cookie: '');
+    myUserInfoModel = MyUserInfoModel(avatar: '', uid: '', user: ' ', cookie: '', desc: '', verified: false);
     cookies = '';
     await HistoryDatabaseUtil.clearHistory();
     await SessionListDatabaseUtil.clear();

@@ -60,23 +60,6 @@ class ShortVideoPlayByListViewModel extends BaseViewModel {
     });
     controller = PageController(initialPage: pageIndex);
   }
-
-  // Future<void> loadMoreVideo(String cookie) async {
-  //   try {
-  //     var response = jsonDecode(await HttpGet.post(API.videoRecommended.api, HttpGet.jsonHeadersCookie(cookie), {
-  //       "page_size": Constants.videosPerPage
-  //     }));
-  //     if (response["status"] != "success") throw Exception(response["message"]??"未知错误");
-  //     var list = VideoList.fromJson(response);
-  //     videoList.result?.addAll(list.result!.map((e) => e));
-  //     pageList.addAll(list.result!.map((e) => VideoPlayBlock(nowPlaying: e)));
-  //     notifyListeners();
-  //     Log.i(tag: tag,tag: tag"[DEBUG] New Page Load completed");
-  //   } catch(e) {
-  //     Log.e(tag: tag,e);
-  //     makeToast("网络错误");
-  //   }
-  // }
 }
 
 class ShortVideoPlayBlockViewModel extends BaseViewModel {

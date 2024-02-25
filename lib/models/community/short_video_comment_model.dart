@@ -30,9 +30,10 @@ class VideoCommentInfoModel {
   String? authorId;
   double? timestamp;
   String? avatar;
+  bool? verified;
 
   VideoCommentInfoModel(
-      {this.content, this.author, this.authorId, this.timestamp, this.avatar});
+      {this.content, this.author, this.authorId, this.timestamp, this.avatar, this.verified});
 
   VideoCommentInfoModel.fromJson(Map<String, dynamic> json) {
     content = json['content'];
@@ -40,6 +41,7 @@ class VideoCommentInfoModel {
     authorId = json['author_id'];
     timestamp = json['timestamp'];
     avatar = json['avatar'];
+    verified = json['user_type'] == 1;
   }
 
   Map<String, dynamic> toJson() {
@@ -49,6 +51,7 @@ class VideoCommentInfoModel {
     data['author_id'] = authorId;
     data['timestamp'] = timestamp;
     data['avatar'] = avatar;
+    data['user_type'] = verified == true ? 1 : 0;
     return data;
   }
 }
