@@ -1,7 +1,10 @@
 
+import 'dart:isolate';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:purlaw/common/network/chat_api.dart';
 import 'package:purlaw/common/provider/provider_widget.dart';
 import 'package:purlaw/components/purlaw/appbar.dart';
 import 'package:purlaw/viewmodels/ai_chat_page/chat_voice_recognition_viewmodel.dart';
@@ -17,9 +20,14 @@ class ChatPageVoiceRecognition extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: PurlawAppTitleBar(title: "语音对话", showBack: true).build(context),
-      body: const ChatVoiceRecognitionBody(),
+    return PopScope(
+      onPopInvoked: (val){
+        ChatNetworkRequest.isolate?.kill(priority: Isolate.immediate);
+      },
+      child: Scaffold(
+        appBar: PurlawAppTitleBar(title: "语音对话", showBack: true).build(context),
+        body: const ChatVoiceRecognitionBody(),
+      ),
     );
   }
 }

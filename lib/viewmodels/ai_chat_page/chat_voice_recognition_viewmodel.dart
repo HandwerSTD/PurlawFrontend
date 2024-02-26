@@ -64,14 +64,6 @@ class ChatVoiceRecognitionViewModel extends BaseViewModel {
   }
 
   void startRecord() async {
-    // audioSub = (await audioRecorder.startStream(const RecordConfig(
-    //   encoder: AudioEncoder.pcm16bits,
-    //   sampleRate: 16000
-    // ))).listen((event) {
-    //   // print("Audio Data: ${sha1.convert(event)}");
-    // }, onDone: (){
-    //   Log.i("Record done", tag:"Chat Voice ViewModel");
-    // });
     text = "聆听中...";  sttFinished = false; showMineText = false; notifyListeners();
     Log.i("Start record");
     try {
