@@ -125,8 +125,12 @@ class _ProgramEntryState extends State<ProgramEntry> {
         ("[DEBUG] cookie detected, refreshing");
         Provider.of<MainViewModel>(context, listen: false).refreshCookies();
       }
-      getMainViewModel(context, listen: false).autoAudioPlay = DatabaseUtil.getAutoAudioPlay;
 
+      // 加载设置
+      getMainViewModel(context, listen: false).autoAudioPlay = DatabaseUtil.getAutoAudioPlay;
+      getMainViewModel(context, listen: false).aiChatFloatingButtonEnabled = DatabaseUtil.getAIChatFloatingButtonEnabled;
+
+      // 完成加载
       Provider.of<MainViewModel>(context, listen: false)
           .changeState(NetworkLoadingState.CONTENT);
     });

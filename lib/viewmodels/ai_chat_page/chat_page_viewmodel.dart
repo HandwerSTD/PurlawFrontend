@@ -30,7 +30,12 @@ class AIChatMsgListViewModel extends BaseViewModel {
   bool replying = false;
   bool autoPlay = false;
 
-  AIChatMsgListViewModel();
+  final String? firstMessage;
+  AIChatMsgListViewModel({this.firstMessage}) {
+    if (firstMessage != null) {
+      messageModels = ListAIChatMessageModelsWithAudio(messages: [AIChatMessageModelWithAudio.fromFull(firstMessage!, false, first: true)]);
+    }
+  }
 
   void switchToSessionMessages() async {
     final sid = DatabaseUtil.getLastAIChatSession();

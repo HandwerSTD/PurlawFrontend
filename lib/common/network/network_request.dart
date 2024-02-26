@@ -11,7 +11,7 @@ import '../utils/database/database_util.dart';
 
 /// 对 HTTP 网络请求的二次封装
 class HttpGet {
-  static String baseUrl = "http://100.86.9.47:5000";
+  static String baseUrl = "http://10.17.206.179:5000";
   static int HTTP_OK = 200;
 
   static switchBaseUrl(String newUrl) {

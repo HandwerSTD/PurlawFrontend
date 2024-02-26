@@ -8,6 +8,7 @@ import 'package:purlaw/viewmodels/main_viewmodel.dart';
 import 'package:purlaw/viewmodels/theme_viewmodel.dart';
 import 'package:purlaw/views/account_mgr/components/account_page_components.dart';
 import 'package:purlaw/common/utils/log_utils.dart';
+import 'package:purlaw/views/ai_chat_page/ai_chat_page.dart';
 import '../../../common/provider/provider_widget.dart';
 import '../../../common/utils/misc.dart';
 import '../../../components/purlaw/button.dart';
@@ -77,15 +78,18 @@ class _ShortVideoCommentListState extends State<ShortVideoCommentList> {
               Expanded(
                   child: MultiStateWidget(
                     state: model.state,
-                    builder: (context) => ListView(
-                                  controller: controller,
-                                  children: List.generate(
-                      model.videoCommentList.result!.length,
-                      (index) => Container(
-                            // padding: const EdgeInsets.only(left: 24, right: 24, top: 0),
-                            child: CommentBlock(
-                                comment: model.videoCommentList.result![index]),
-                          )),
+                    builder: (context) => Stack(
+                      alignment: Alignment.centerRight,
+                      children: [
+                        ListView(
+                                      controller: controller,
+                                      children: List.generate(
+                          model.videoCommentList.result!.length,
+                          (index) => CommentBlock(
+                              comment: model.videoCommentList.result![index])),
+                        ),
+                        const OpenAIChatFloatingDialogButton()
+                      ],
                     ),
                     emptyWidget: const Center(child: Text("空空如也")),
                   )),

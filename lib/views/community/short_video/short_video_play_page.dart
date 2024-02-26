@@ -16,6 +16,7 @@ import 'package:purlaw/views/account_mgr/account_login.dart';
 import 'package:purlaw/views/account_mgr/account_visit_page.dart';
 import 'package:purlaw/views/account_mgr/components/account_page_components.dart';
 import 'package:purlaw/views/account_mgr/my_account_page.dart';
+import 'package:purlaw/views/ai_chat_page/ai_chat_page.dart';
 import 'package:purlaw/views/community/short_video/short_video_comment_page.dart';
 import 'package:video_player/video_player.dart';
 import '../../../common/utils/misc.dart';
@@ -67,19 +68,25 @@ class _ShortVideoPlayPageState extends State<ShortVideoPlayPage> {
           backgroundColor: Colors.black,
           foregroundColor: Colors.white,
         ),
-        body: PageView.builder(
-          controller: model.controller,
-          scrollDirection: Axis.vertical,
-          onPageChanged: (index) {
-            if (index == model.videoList.result!.length - 1) {
-              Log.d(tag: tag, "[ShortVideoPlay] Scrolled to end");
-              model.loadMoreVideo(cookie);
-            }
-          },
-          itemCount: model.videoList.result!.length,
-          itemBuilder: (BuildContext context, int index) {
-            return VideoPlayBlock(nowPlaying: model.videoList.result![index]);
-          },
+        body: Stack(
+          alignment: Alignment.centerRight,
+          children: [
+            PageView.builder(
+              controller: model.controller,
+              scrollDirection: Axis.vertical,
+              onPageChanged: (index) {
+                if (index == model.videoList.result!.length - 1) {
+                  Log.d(tag: tag, "[ShortVideoPlay] Scrolled to end");
+                  model.loadMoreVideo(cookie);
+                }
+              },
+              itemCount: model.videoList.result!.length,
+              itemBuilder: (BuildContext context, int index) {
+                return VideoPlayBlock(nowPlaying: model.videoList.result![index]);
+              },
+            ),
+            const OpenAIChatFloatingDialogButton()
+          ],
         ),
       ),
     );
@@ -140,19 +147,22 @@ class _ShortVideoPlayByListState extends State<ShortVideoPlayByList> {
           backgroundColor: Colors.black,
           foregroundColor: Colors.white,
         ),
-        body: Container(
-          // padding: EdgeInsets.only(top: 24),
-          child: PageView(
-            controller: model.controller,
-            scrollDirection: Axis.vertical,
-            onPageChanged: (index) async {
-              if (index == model.videoList.result!.length - 1) {
-                Log.i(tag: tag, "[ShortVideoPlay] Scrolled to end");
-                model.loadMoreVideo(cookie);
-              }
-            },
-            children: model.pageList,
-          ),
+        body: Stack(
+          alignment: Alignment.centerRight,
+          children: [
+            PageView(
+              controller: model.controller,
+              scrollDirection: Axis.vertical,
+              onPageChanged: (index) async {
+                if (index == model.videoList.result!.length - 1) {
+                  Log.i(tag: tag, "[ShortVideoPlay] Scrolled to end");
+                  model.loadMoreVideo(cookie);
+                }
+              },
+              children: model.pageList,
+            ),
+            OpenAIChatFloatingDialogButton()
+          ],
         ),
       ),
     );

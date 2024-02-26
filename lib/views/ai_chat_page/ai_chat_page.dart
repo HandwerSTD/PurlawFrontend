@@ -1,4 +1,5 @@
 import 'package:card_swiper/card_swiper.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:grock/grock.dart';
 import 'package:provider/provider.dart';
@@ -16,7 +17,8 @@ import 'package:purlaw/views/ai_chat_page/chat_page_voice_recognition.dart';
 
 /// AI 对话界面的主体
 class AIChatPageBody extends StatelessWidget {
-  const AIChatPageBody({super.key});
+  final bool showVoice;
+  const AIChatPageBody({super.key, this.showVoice = true});
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +31,7 @@ class AIChatPageBody extends StatelessWidget {
           Expanded(
             child: const AIChatPageMessageList().build(context),
           ),
-          const Flexible(flex: 0, child: AIChatPageFooter())
+          Flexible(flex: 0, child: AIChatPageFooter(showVoice: showVoice,))
         ],
       ),
     );
@@ -61,7 +63,8 @@ class AIChatPageMessageList extends StatelessWidget {
 }
 
 class AIChatPageFooter extends StatefulWidget {
-  const AIChatPageFooter({super.key});
+  final bool showVoice;
+  const AIChatPageFooter({super.key, required this.showVoice});
 
   @override
   State<AIChatPageFooter> createState() => _AIChatPageFooterState();
@@ -148,30 +151,21 @@ class _AIChatPageFooterState extends State<AIChatPageFooter> {
                   mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    IconButton(
-                        onPressed: () {
-                          // showBottomToolSheet(context, lgBreak, themeModel);
-                          // Navigator.push(context, PageRouteBuilder(
-                          //     pageBuilder: (_, __, ___) => ChatPageVoiceRecognition(),
-                          //     transitionDuration: const Duration(milliseconds: 400),
-                          //     reverseTransitionDuration: const Duration(milliseconds: 400),
-                          //     transitionsBuilder: (context, anim, secAnim, child) {
-                          //       return SlideTransition(position: anim.drive(Tween(
-                          //           begin: const Offset(0, 1),
-                          //           end: Offset.zero
-                          //       ).chain(CurveTween(curve: Curves.linearToEaseOut))),child: child,);
-                          //     }
-                          // ),);
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (_) =>
-                                      const ChatPageVoiceRecognition()));
-                        },
-                        icon: Icon(
-                          Icons.mic_rounded,
-                          color: onPrimaryContainer,
-                        )),
+                    Visibility(
+                      visible: widget.showVoice,
+                      child: IconButton(
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (_) =>
+                                        const ChatPageVoiceRecognition()));
+                          },
+                          icon: Icon(
+                            Icons.mic_rounded,
+                            color: onPrimaryContainer,
+                          )),
+                    ),
                     Expanded(
                       child: PurlawChatTextField(
                           hint: (getCookie(context).isEmpty
@@ -337,7 +331,8 @@ class LawyerRecommendation extends StatelessWidget {
 
 class OpenAIChatFloatingDialogButton extends StatelessWidget {
   final EdgeInsetsGeometry margin;
-  const OpenAIChatFloatingDialogButton({super.key, this.margin = const EdgeInsets.only(bottom: 48, right: 8)});
+  final Future<void> Function()? onLoad;
+  const OpenAIChatFloatingDialogButton({super.key, this.margin = const EdgeInsets.only(bottom: 48), this.onLoad});
 
   @override
   Widget build(BuildContext context) {
@@ -349,9 +344,11 @@ class OpenAIChatFloatingDialogButton extends StatelessWidget {
       child: Padding(
         padding: margin,
         child: FloatingActionButton.small(
+          heroTag: null,
           child: const Icon(Icons.question_answer_rounded),
-            onPressed: (){
-          openAIChatFloatingDialog(context);
+            onPressed: () async {
+            if (onLoad != null) await onLoad!();
+          if (context.mounted) openAIChatFloatingDialog(context);
         }),
       ),
     );
@@ -368,17 +365,17 @@ void openAIChatFloatingDialog(BuildContext context) {
       insetPadding: EdgeInsets.zero,
       child: Container(
         width: Responsive.assignWidthMedium(Grock.width),
-        height: Grock.height / 2,
-        margin: const EdgeInsets.only(left: 12, right: 12, top: 64, bottom: 64),
+        height: Grock.height / 2 - 48,
+        margin: const EdgeInsets.only(left: 12, right: 12, top: 48, bottom: 64),
         decoration: BoxDecoration(
             color: getThemeModel(context).dark ? const Color(0xff333333) : getThemeModel(context).themeData.scaffoldBackgroundColor,
             borderRadius: BorderRadius.circular(24)
         ),
         child: ProviderWidget<AIChatMsgListViewModel>(
-          model: AIChatMsgListViewModel(),
+          model: AIChatMsgListViewModel(firstMessage: "您好，我是您的专属 AI 律师紫小藤。有什么问题想问的？"),
           onReady: (model){},
           builder: (context, model, child) {
-            return AIChatPageBody();
+            return const AIChatPageBody(showVoice: false,);
           }
         ),
       )

@@ -9,16 +9,9 @@ class UtilitiesIndexPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Color getColor = getThemeModel(context).themeColor.withOpacity(0.8);
+    Color getColor = getThemeModel(context).themeData.colorScheme.primary;
     return Container(
       padding: const EdgeInsets.only(top: 56),
-      decoration: const BoxDecoration(
-        // gradient: LinearGradient(
-        //   colors: [Colors.white, Colors.blue[100]!, Colors.blue[100]!, Colors.white],
-        //   begin: Alignment(0, -1),
-        //   end: Alignment(0, 0.5)
-        // )
-      ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [

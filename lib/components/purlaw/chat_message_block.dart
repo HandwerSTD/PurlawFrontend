@@ -301,10 +301,10 @@ class _PurlawChatMessageBlockWithAudioState extends State<PurlawChatMessageBlock
                           bottomRight: const Radius.circular(20),
                           topLeft: (msgData.isMine
                               ? const Radius.circular(20)
-                              : const Radius.circular(0)),
+                              : const Radius.circular(6)),
                           topRight: (!msgData.isMine
                               ? const Radius.circular(20)
-                              : const Radius.circular(0))))),
+                              : const Radius.circular(6))))),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [

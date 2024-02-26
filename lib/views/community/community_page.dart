@@ -52,39 +52,33 @@ class _CommunityPageBodyState extends State<CommunityPageBody> {
         model.state = NetworkLoadingState.CONTENT;
       }
     }
-    return Stack(
-      alignment: Alignment.centerRight,
-      children: [
-        LayoutBuilder(
-          builder: (_, constraints) => Container(
-            margin: const EdgeInsets.symmetric(horizontal: 2),
-              alignment: Alignment.center,
-              child: Stack(alignment: Alignment.topCenter, children: [
-                PurlawWaterfallList(
-                  refresherOffset: 40,
-                  controller: controller,
-                  list: List.generate((model.videoList.result?.length) ?? 0, (index) {
-                    return GridVideoBlock(video: model.videoList.result![index]);
-                  }), onPullRefresh: () async {
-                    await model.fetchVideoList(getCookie(context, listen: false));
-                }, loadingState: model.state,
-                ),
-                Visibility(
-                  visible: (Responsive.checkWidth(constraints.maxWidth) !=
-                      Responsive.lg),
-                  child: SearchAppBar(
-                    hintLabel: '搜索',
-                    onSubmitted: (val) {},
-                    readOnly: true,
-                    onTap: () {
-                      JumpToSearchPage(context);
-                    },
-                  ),
-                ),
-              ])),
-        ),
-        const OpenAIChatFloatingDialogButton()
-      ],
+    return LayoutBuilder(
+      builder: (_, constraints) => Container(
+        margin: const EdgeInsets.symmetric(horizontal: 2),
+          alignment: Alignment.center,
+          child: Stack(alignment: Alignment.topCenter, children: [
+            PurlawWaterfallList(
+              refresherOffset: 40,
+              controller: controller,
+              list: List.generate((model.videoList.result?.length) ?? 0, (index) {
+                return GridVideoBlock(video: model.videoList.result![index]);
+              }), onPullRefresh: () async {
+                await model.fetchVideoList(getCookie(context, listen: false));
+            }, loadingState: model.state,
+            ),
+            Visibility(
+              visible: (Responsive.checkWidth(constraints.maxWidth) !=
+                  Responsive.lg),
+              child: SearchAppBar(
+                hintLabel: '搜索',
+                onSubmitted: (val) {},
+                readOnly: true,
+                onTap: () {
+                  JumpToSearchPage(context);
+                },
+              ),
+            ),
+          ])),
     );
   }
 }
