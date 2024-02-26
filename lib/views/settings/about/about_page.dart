@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:purlaw/components/third_party/image_loader.dart';
 import 'package:purlaw/main.dart';
+import 'package:purlaw/views/settings/about/oss_license_page.dart';
 
 import '../../../common/constants/eula.dart';
 
@@ -40,7 +41,7 @@ class AboutPage extends StatelessWidget {
                     InkWell(
                       child: const Text("开放源代码许可", style: TextStyle(color: Colors.blueAccent),),
                       onTap: () {
-                        // launchUrl(Uri.parse(privacyStatementAddress), mode: LaunchMode.externalApplication);
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => const OSSLicensePage()));
                       },
                     ),
                   ],

@@ -41,11 +41,13 @@ class _SettingsPageBodyState extends State<SettingsPageBody> {
       TextEditingController(text: HttpGet.baseUrl);
 
   bool autoPlayAudio = false;
+  bool aiChatFloatingButtonEnabled = false;
 
   @override
   void initState() {
     super.initState();
     autoPlayAudio = (KVBox.query(DatabaseConst.autoAudioPlay) == DatabaseConst.dbTrue);
+    aiChatFloatingButtonEnabled = DatabaseUtil.getAIChatFloatingButtonEnabled;
   }
 
   @override
@@ -138,6 +140,35 @@ class _SettingsPageBodyState extends State<SettingsPageBody> {
                     isOn: autoPlayAudio,
                     onChanged: (bool value) {
                       KVBox.insert(DatabaseConst.autoAudioPlay, (autoPlayAudio ? DatabaseConst.dbFalse : DatabaseConst.dbTrue));
+                    },
+                  ),
+                  iconStyle: IconStyle(
+                    iconsColor: Provider.of<ThemeViewModel>(context)
+                        .themeModel
+                        .colorModel
+                        .generalFillColor,
+                    backgroundColor: Provider.of<ThemeViewModel>(context)
+                        .themeModel
+                        .colorModel
+                        .generalFillColorBright,
+                  ),
+                  titleStyle: const TextStyle(fontSize: 16)),
+              SettingsItem(
+                  icons: Icons.question_answer_rounded,
+                  title: '开启AI对话悬浮窗',
+                  subtitle: '开启后可以在部分界面快速调出AI对话窗口进行询问',
+                  trailing: TDSwitch(
+                    enable: true,
+                    trackOnColor: Provider.of<ThemeViewModel>(context)
+                        .themeModel
+                        .colorModel
+                        .generalFillColor,
+                    isOn: aiChatFloatingButtonEnabled,
+                    onChanged: (bool value) {
+                      getMainViewModel(context, listen: false).setChatFloatingButtonEnabled(value);
+                      setState(() {
+                        aiChatFloatingButtonEnabled = value;
+                      });
                     },
                   ),
                   iconStyle: IconStyle(

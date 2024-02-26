@@ -13,6 +13,7 @@ import 'package:purlaw/viewmodels/community/short_video_list_viewmodel.dart';
 import 'package:purlaw/viewmodels/main_viewmodel.dart';
 import 'package:purlaw/viewmodels/theme_viewmodel.dart';
 import 'package:purlaw/views/account_mgr/components/account_page_components.dart';
+import 'package:purlaw/views/ai_chat_page/ai_chat_page.dart';
 import 'package:purlaw/views/community/community_search_page.dart';
 import 'package:purlaw/views/community/short_video/short_video_play_page.dart';
 import 'package:tdesign_flutter/tdesign_flutter.dart';
@@ -51,33 +52,39 @@ class _CommunityPageBodyState extends State<CommunityPageBody> {
         model.state = NetworkLoadingState.CONTENT;
       }
     }
-    return LayoutBuilder(
-      builder: (_, constraints) => Container(
-        margin: const EdgeInsets.symmetric(horizontal: 2),
-          alignment: Alignment.center,
-          child: Stack(alignment: Alignment.topCenter, children: [
-            PurlawWaterfallList(
-              refresherOffset: 40,
-              controller: controller,
-              list: List.generate((model.videoList.result?.length) ?? 0, (index) {
-                return GridVideoBlock(video: model.videoList.result![index]);
-              }), onPullRefresh: () async {
-                await model.fetchVideoList(getCookie(context, listen: false));
-            }, loadingState: model.state,
-            ),
-            Visibility(
-              visible: (Responsive.checkWidth(constraints.maxWidth) !=
-                  Responsive.lg),
-              child: SearchAppBar(
-                hintLabel: '搜索',
-                onSubmitted: (val) {},
-                readOnly: true,
-                onTap: () {
-                  JumpToSearchPage(context);
-                },
-              ),
-            ),
-          ])),
+    return Stack(
+      alignment: Alignment.centerRight,
+      children: [
+        LayoutBuilder(
+          builder: (_, constraints) => Container(
+            margin: const EdgeInsets.symmetric(horizontal: 2),
+              alignment: Alignment.center,
+              child: Stack(alignment: Alignment.topCenter, children: [
+                PurlawWaterfallList(
+                  refresherOffset: 40,
+                  controller: controller,
+                  list: List.generate((model.videoList.result?.length) ?? 0, (index) {
+                    return GridVideoBlock(video: model.videoList.result![index]);
+                  }), onPullRefresh: () async {
+                    await model.fetchVideoList(getCookie(context, listen: false));
+                }, loadingState: model.state,
+                ),
+                Visibility(
+                  visible: (Responsive.checkWidth(constraints.maxWidth) !=
+                      Responsive.lg),
+                  child: SearchAppBar(
+                    hintLabel: '搜索',
+                    onSubmitted: (val) {},
+                    readOnly: true,
+                    onTap: () {
+                      JumpToSearchPage(context);
+                    },
+                  ),
+                ),
+              ])),
+        ),
+        const OpenAIChatFloatingDialogButton()
+      ],
     );
   }
 }

@@ -2,6 +2,7 @@ import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter/material.dart';
 import 'package:grock/grock.dart';
 import 'package:provider/provider.dart';
+import 'package:purlaw/common/provider/provider_widget.dart';
 import 'package:purlaw/common/utils/log_utils.dart';
 import 'package:purlaw/common/utils/misc.dart';
 import 'package:purlaw/components/purlaw/purlaw_components.dart';
@@ -332,5 +333,56 @@ class LawyerRecommendation extends StatelessWidget {
       ),
     );
   }
+}
+
+class OpenAIChatFloatingDialogButton extends StatelessWidget {
+  final EdgeInsetsGeometry margin;
+  const OpenAIChatFloatingDialogButton({super.key, this.margin = const EdgeInsets.only(bottom: 48, right: 8)});
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<MainViewModel>(
+      builder: (context, model, child) {
+        if (model.aiChatFloatingButtonEnabled) return child!;
+        return Container();
+      },
+      child: Padding(
+        padding: margin,
+        child: FloatingActionButton.small(
+          child: const Icon(Icons.question_answer_rounded),
+            onPressed: (){
+          openAIChatFloatingDialog(context);
+        }),
+      ),
+    );
+  }
+}
+
+
+void openAIChatFloatingDialog(BuildContext context) {
+  showDialog(context: context, builder: (_) {
+    return Dialog(
+      backgroundColor: Colors.transparent,
+      surfaceTintColor: Colors.transparent,
+      alignment: Alignment.topCenter,
+      insetPadding: EdgeInsets.zero,
+      child: Container(
+        width: Responsive.assignWidthMedium(Grock.width),
+        height: Grock.height / 2,
+        margin: const EdgeInsets.only(left: 12, right: 12, top: 64, bottom: 64),
+        decoration: BoxDecoration(
+            color: getThemeModel(context).dark ? const Color(0xff333333) : getThemeModel(context).themeData.scaffoldBackgroundColor,
+            borderRadius: BorderRadius.circular(24)
+        ),
+        child: ProviderWidget<AIChatMsgListViewModel>(
+          model: AIChatMsgListViewModel(),
+          onReady: (model){},
+          builder: (context, model, child) {
+            return AIChatPageBody();
+          }
+        ),
+      )
+    );
+  });
 }
 

@@ -43,6 +43,7 @@ class DatabaseUtil {
     KVBox.insert(DatabaseConst.serverAddress, server);
   }
   static bool get getAutoAudioPlay => KVBox.query(DatabaseConst.autoAudioPlay) == DatabaseConst.dbTrue;
+  static bool get getAIChatFloatingButtonEnabled => KVBox.query(DatabaseConst.aiChatFloatingButtonEnabled) == DatabaseConst.dbTrue;
 }
 
 /// 数据库结构：{ timestamp: data }
@@ -211,6 +212,7 @@ class DatabaseConst {
   static const String firstOpen = "IS_FIRST_OPEN";
   static const String themeColor = "THEME_COLOR";
   static const String autoAudioPlay = "AUTO_AUDIO_PLAY";
+  static const String aiChatFloatingButtonEnabled = "AI_CHAT_FLOATING_BUTTON_ENABLED";
 
   // User login info
   static const String userCookie = "USER_COOKIE";

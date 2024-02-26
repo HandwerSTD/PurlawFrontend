@@ -8,6 +8,8 @@ import 'package:purlaw/models/account_mgr/user_info_model.dart';
 import 'package:purlaw/viewmodels/base_viewmodel.dart';
 import 'package:purlaw/common/utils/log_utils.dart';
 
+import '../common/utils/database/kvstore.dart';
+
 const tag = "Main ViewModel";
 
 /// 程序运行的全局配置存储区
@@ -16,6 +18,13 @@ class MainViewModel extends BaseViewModel {
   MyUserInfoModel myUserInfoModel = MyUserInfoModel(avatar: '', uid: '', user: ' ', cookie: '', desc: '', verified: false);
 
   bool autoAudioPlay = false;
+  bool aiChatFloatingButtonEnabled = false;
+
+  void setChatFloatingButtonEnabled(bool value) {
+    KVBox.insert(DatabaseConst.aiChatFloatingButtonEnabled, value ? DatabaseConst.dbTrue : DatabaseConst.dbFalse);
+    aiChatFloatingButtonEnabled = value;
+    notifyListeners();
+  }
 
 
   void debugSetVerified() {
