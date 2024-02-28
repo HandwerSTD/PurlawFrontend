@@ -15,6 +15,7 @@ class AccountRegisterViewModel extends BaseViewModel {
   TextEditingController nameCtrl = TextEditingController(), passwdCtrl = TextEditingController(), mailCtrl = TextEditingController();
   bool agreeStatement = false;
   bool registering = false;
+  FocusNode focusNodeName = FocusNode(), focusNodePasswd = FocusNode(), focusNodeMail = FocusNode();
 
   AccountRegisterViewModel();
 

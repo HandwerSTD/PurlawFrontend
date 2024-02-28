@@ -88,18 +88,21 @@ class _AccountRegisterPageBodyState extends State<AccountRegisterPageBody> {
                       Column(
                         children: [
                           PurlawLoginTextField(
+                            focusNode: model.focusNodeMail,
                             hint: '邮箱',
                             controller: model.mailCtrl,
                             margin:
                             const EdgeInsets.only(left: 32, right: 32, top: 24, bottom: 6),
                           ),
                           PurlawLoginTextField(
+                            focusNode: model.focusNodeName,
                             hint: '用户名',
                             controller: model.nameCtrl,
                             margin:
                             const EdgeInsets.only(left: 32, right: 32, top: 6, bottom: 6),
                           ),
                           PurlawLoginTextField(
+                            focusNode: model.focusNodePasswd,
                             hint: '密码',
                             controller: model.passwdCtrl,
                             margin:

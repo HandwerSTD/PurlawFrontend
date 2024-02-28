@@ -1,6 +1,7 @@
 /// Purlaw 项目的通用输入框封装
 
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:provider/provider.dart';
 import 'package:purlaw/viewmodels/theme_viewmodel.dart';
 
@@ -39,6 +40,13 @@ class PurlawLoginTextField extends StatelessWidget {
         margin: margin,
         width: Responsive.assignWidthSmall(constraints.maxWidth),
         child: TextField(
+          onTap: () {
+            if (!(focusNode?.hasFocus ?? false)) {
+              Future.delayed(150.milliseconds, () {
+                focusNode!.requestFocus();
+              });
+            }
+          },
           focusNode: focusNode,
           autocorrect: false,
           controller: controller,
@@ -47,7 +55,7 @@ class PurlawLoginTextField extends StatelessWidget {
           style: const TextStyle(fontSize: 14),
           onSubmitted: onSubmitted,
           enableIMEPersonalizedLearning: false,
-          enableSuggestions: false,
+          // enableSuggestions: false,
         ),
       );
     });
