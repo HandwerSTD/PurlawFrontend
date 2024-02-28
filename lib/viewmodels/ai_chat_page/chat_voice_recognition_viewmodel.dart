@@ -146,6 +146,9 @@ class ChatVoiceRecognitionViewModel extends BaseViewModel {
       });
     } on Exception catch (e) {
       Log.e(tag: "ContractGeneration ViewModel", e);
+      if (e.toString().contains('session')) {
+        showToast("生成失败，请尝试刷新会话列表", toastType: ToastType.error);
+      }
       showToast("生成失败", toastType: ToastType.error);
       ChatNetworkRequest.isolate?.kill(priority: Isolate.immediate);
     }

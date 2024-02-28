@@ -19,6 +19,12 @@ class ChatNetworkRequest {
         HttpGet.jsonHeadersCookie(cookie),
         ({"sid": session, "content": text})).timeout(const Duration(seconds: 10)));
     Log.i(response);
+    if (response["status"] != "success") {
+      if (response["message"].toString().contains('sid')) {
+        throw Exception("session error");
+      }
+      throw Exception(response["message"]);
+    }
     await Future.delayed(500.milliseconds); // 等待服务器刷新延迟
     await isolateFlushSession(append,
         session: session, cookie: cookie, callback: callback);

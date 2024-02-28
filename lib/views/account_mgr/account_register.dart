@@ -61,7 +61,7 @@ class _AccountRegisterPageBodyState extends State<AccountRegisterPageBody> {
       onReady: (model) {},
       builder: (context, model, child) =>
           LayoutBuilder(builder: (_, constraints) {
-            bool rBreak = (Responsive.checkWidth(constraints.maxWidth) == Responsive.lg);
+            bool rBreak = (Responsive.checkWidth(constraints.maxWidth) == Responsive.md);
             return Container(
               alignment: Alignment.center,
               // padding: EdgeInsets.only(top: 48),

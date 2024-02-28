@@ -142,28 +142,56 @@ class AIDocumentRecognitionBody extends StatelessWidget {
                         child: (Image.memory(model.imageBytes)),
                       ),
                     ),
-                    PurlawRRectButton(
-                      width: 72,
-                      onClick: () async {
-                        final editorOption = ImageEditorOption();
-                        editorOption.addOption(const RotateOption(90));
-                        final result = await ImageEditor.editFileImage(
-                            file: model.image, imageEditorOption: editorOption);
-                        model.image.writeAsBytesSync(result!);
-                        model.imageBytes = result;
-                        mm.notify();
-                      },
-                      backgroundColor: (getThemeModel(context).dark
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        PurlawRRectButton(
+                          width: 72,
+                          onClick: () async {
+                            final editorOption = ImageEditorOption();
+                            editorOption.addOption(const FlipOption(horizontal: true, vertical: false));
+                            final result = await ImageEditor.editFileImage(
+                                file: model.image, imageEditorOption: editorOption);
+                            model.image.writeAsBytesSync(result!);
+                            model.imageBytes = result;
+                            mm.notify();
+                          },
+                          backgroundColor: (getThemeModel(context).dark
+                                  ? Colors.black
+                                  : Colors.grey[300]!)
+                              .withOpacity(0.8),
+                          child: const Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.flip_rounded),
+                              Text(" 翻转")
+                            ],
+                          ),
+                        ),
+                        PurlawRRectButton(
+                          width: 72,
+                          onClick: () async {
+                            final editorOption = ImageEditorOption();
+                            editorOption.addOption(const RotateOption(90));
+                            final result = await ImageEditor.editFileImage(
+                                file: model.image, imageEditorOption: editorOption);
+                            model.image.writeAsBytesSync(result!);
+                            model.imageBytes = result;
+                            mm.notify();
+                          },
+                          backgroundColor: (getThemeModel(context).dark
                               ? Colors.black
                               : Colors.grey[300]!)
-                          .withOpacity(0.8),
-                      child: const Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.rotate_right_rounded),
-                          Text(" 旋转")
-                        ],
-                      ),
+                              .withOpacity(0.8),
+                          child: const Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.rotate_right_rounded),
+                              Text(" 旋转")
+                            ],
+                          ),
+                        ),
+                      ],
                     )
                   ],
                 ),

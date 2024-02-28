@@ -30,9 +30,9 @@ class AccountPageUserInfoBoard extends StatelessWidget {
     if (Responsive.checkWidth(Grock.width) == Responsive.lg) {
       return Container(
         alignment: Alignment.center,
-        height: 180,
         width: 300,
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
             UserAvatarLoader(verified: userInfoModel.verified, avatar: userInfoModel.avatar, size: 108, radius: 54),
             Padding(

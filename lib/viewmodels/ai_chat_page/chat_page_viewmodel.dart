@@ -166,8 +166,11 @@ class AIChatMsgListViewModel extends BaseViewModel {
         reEnableAfterReceive(cookie, session);
         notifyListeners();
       });
-    } on Exception catch (e) {
+    } catch (e) {
       Log.e(tag: tag, e);
+      if (e.toString().contains('session')) {
+        showToast("生成失败，请尝试刷新会话列表", toastType: ToastType.error);
+      }
       showToast("生成失败", toastType: ToastType.error);
       manuallyBreak();
     }
