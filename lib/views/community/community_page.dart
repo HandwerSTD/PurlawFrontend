@@ -1,3 +1,4 @@
+import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -190,7 +191,7 @@ class GridVideoBlock extends StatelessWidget {
                             children: [
                               const Icon(
                                 size: 16,
-                                TypIconData(0xE087),
+                                EvaIcons.heartOutline,
                                 // color: Color(0xbb000000),
                               ),
                               Text(" ${video.like!}")
@@ -281,8 +282,8 @@ class GridVideoBlock extends StatelessWidget {
                         // crossAxisAlignment: en,
                         children: [
                           const Icon(
+                            EvaIcons.heartOutline,
                             size: 16,
-                            TypIconData(0xE087),
                             // color: Color(0xbb000000),
                           ),
                           Text(" ${video.like!}")

@@ -15,6 +15,8 @@ import 'package:purlaw/viewmodels/theme_viewmodel.dart';
 import 'package:purlaw/views/account_mgr/components/account_page_components.dart';
 import 'package:purlaw/views/ai_chat_page/chat_page_voice_recognition.dart';
 
+import '../../models/account_mgr/user_info_model.dart';
+
 /// AI 对话界面的主体
 class AIChatPageBody extends StatelessWidget {
   final bool showVoice;
@@ -116,12 +118,12 @@ class _AIChatPageFooterState extends State<AIChatPageFooter> {
                     onClick: () {
                       showDialog(
                           context: context,
-                          builder: (_) => const Dialog(
+                          builder: (_) => Dialog(
                               backgroundColor: Colors.transparent,
                               surfaceTintColor: Colors.transparent,
                               alignment: Alignment.topCenter,
                               insetPadding: EdgeInsets.zero,
-                              child: LawyerRecommendation()));
+                              child: LawyerRecommendation(lawyers: model.recommendLawyers,)));
                     },
                     show: (!model.replying &&
                         model.messageModels.messages.length > 1),
@@ -192,7 +194,7 @@ class _AIChatPageFooterState extends State<AIChatPageFooter> {
                             if (!refreshed) {
                               Log.d("User not refreshed", tag: "AI Chat Page");
                               showToast("请先刷新用户信息",
-                                  toastType: ToastType.warning);
+                                  toastType: ToastType.warning, alignment: Alignment.center);
                               return;
                             }
                             model.submitNewMessage(Provider.of<MainViewModel>(
@@ -274,7 +276,8 @@ class RecommendedActionButton extends StatelessWidget {
 }
 
 class LawyerRecommendation extends StatelessWidget {
-  const LawyerRecommendation({super.key});
+  final List<UserInfoModel> lawyers;
+  const LawyerRecommendation({super.key, required this.lawyers});
 
   @override
   Widget build(BuildContext context) {
@@ -293,7 +296,7 @@ class LawyerRecommendation extends StatelessWidget {
           SizedBox(
             height: 200,
             child: Swiper(
-              itemCount: 3,
+              itemCount: lawyers.length,
               loop: false,
               itemBuilder: (context, index) {
                 return Container(
@@ -306,13 +309,13 @@ class LawyerRecommendation extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        UserAvatarLoader(verified: getMainViewModel(context).myUserInfoModel.verified, avatar: getMainViewModel(context).myUserInfoModel.avatar, size: 108, radius: 54),
+                        UserAvatarLoader(verified: true, avatar: lawyers[index].avatar, size: 108, radius: 54),
                         const SizedBox(width: 24,),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text("\n律师 $index", style: const TextStyle(fontSize: 20),),
-                            Text("简介", style: TextStyle(color: (getThemeModel(context).dark ? Colors.grey : Colors.grey[700])),)
+                            Text("\n${lawyers[index].user}", style: const TextStyle(fontSize: 20),),
+                            Text(lawyers[index].desc, style: TextStyle(color: (getThemeModel(context).dark ? Colors.grey : Colors.grey[700])),)
                           ],
                         ),
                         const SizedBox(width: 24,)

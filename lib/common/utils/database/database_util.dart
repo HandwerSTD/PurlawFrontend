@@ -15,7 +15,7 @@ class DatabaseUtil {
     KVBox.insert(DatabaseConst.firstOpen, DatabaseConst.dbTrue);
     KVBox.insert(DatabaseConst.themeColor, "0");
     KVBox.insert(DatabaseConst.autoAudioPlay, DatabaseConst.dbFalse);
-    storeServerAddress("http://100.86.9.47:5000");
+    storeServerAddress("http://10.17.206.179:5000");
   }
 
   static void updateThemeIndex(int color) {

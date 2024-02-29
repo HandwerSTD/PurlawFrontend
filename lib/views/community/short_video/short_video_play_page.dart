@@ -1,8 +1,13 @@
 import 'dart:async';
 
 import 'package:chewie/chewie.dart';
+import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_boxicons/flutter_boxicons.dart';
+import 'package:grock/grock.dart';
 import 'package:provider/provider.dart';
 import 'package:purlaw/common/provider/provider_widget.dart';
 import 'package:purlaw/common/utils/database/database_util.dart';
@@ -439,25 +444,27 @@ class _VideoPlayBlockState extends State<VideoPlayBlock> {
                   bottomFAB(context, video)
                 ],
               ),
-              // LinearProgressIndicator()
-              Row(
-                children: [
-                  Expanded(
-                    child: ModifiedVideoProgressIndicator(model.videoPlayerController,
-                        allowScrubbing: true, colors: VideoProgressColors(
-                        playedColor: getThemeModel(context).colorModel.generalFillColorLight,
-                        bufferedColor: Colors.grey
-                      ),),
-                  ),
-                  ValueListenableBuilder(
-                      valueListenable: model.videoPlayerController,
-                      builder: (context, value, child) {
-                        return Text(
-                          "  ${TimeUtils.getDurationTimeString(value.position, value.duration)}",
-                          style: const TextStyle(color: Colors.white),
-                        );
-                      })
-                ],
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: ModifiedVideoProgressIndicator(model.videoPlayerController,
+                          allowScrubbing: true, colors: VideoProgressColors(
+                          playedColor: getThemeModel(context).colorModel.generalFillColorLight,
+                          bufferedColor: Colors.grey
+                        ),),
+                    ),
+                    ValueListenableBuilder(
+                        valueListenable: model.videoPlayerController,
+                        builder: (context, value, child) {
+                          return Text(
+                            "  ${TimeUtils.getDurationTimeString(value.position, value.duration)}",
+                            style: const TextStyle(color: Colors.white),
+                          );
+                        })
+                  ],
+                ),
               )
             ],
           ),
@@ -521,13 +528,16 @@ class _VideoPlayBlockState extends State<VideoPlayBlock> {
 
   Widget bottomFAB(BuildContext context, VideoInfoModel video) {
     var model = Provider.of<ShortVideoPlayBlockViewModel>(context);
+    double pad = 16;
+    if (Grock.height <= 400) pad = 5;
     return Column(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         bottomFABSingle(
-          color: (video.meLiked != 1 ? Colors.white : getThemeModel(context).colorModel.generalFillColorBright),
+          margin: EdgeInsets.only(bottom: pad),
+          color: (video.meLiked != 1 ? Colors.white : getThemeModel(context).colorModel.generalFillColor),
             icon:
-                (Icons.thumb_up_rounded),
+                (Boxicons.bxs_like),
             onPressed: () {
               Log.i(tag: tag, "switchVideoLike");
               if (getCookie(context, listen: false).isEmpty) {
@@ -541,7 +551,8 @@ class _VideoPlayBlockState extends State<VideoPlayBlock> {
             }),
         bottomFABSingle(
           color: Colors.white.withOpacity(0.9),
-            icon: Icons.comment_rounded,
+            margin: EdgeInsets.only(bottom: pad),
+            icon: EvaIcons.messageCircle,
             onPressed: () {
               // if (!model.loaded) return;
               // model.pauseVideo();
@@ -558,7 +569,7 @@ class _VideoPlayBlockState extends State<VideoPlayBlock> {
           showOverlay: false,
             color: (!favorite ? Colors.white : getThemeModel(context).colorModel.generalFillColor),
           iconSize: 50,
-            margin: const EdgeInsets.only(top: 6, bottom: 12, right: 12),
+            margin: EdgeInsets.only(bottom: pad * 2, right: 12),
             icon: (Icons.star_rounded),
             onPressed: () {
               // if (!model.loaded) return;
@@ -569,11 +580,12 @@ class _VideoPlayBlockState extends State<VideoPlayBlock> {
             }),
         bottomFABSingle(
           color: Colors.white,
-            icon: Icons.share_rounded,
-            margin: const EdgeInsets.only(top: 12, bottom: 36, right: 12, left: 12),
+            icon: Boxicons.bx_link_external,
+            margin: EdgeInsets.only(bottom: pad * 2, right: 12, left: 12),
             onPressed: () {
+            Clipboard.setData(ClipboardData(text: "【紫藤法道 - ${model.nowPlaying.title??""}】"));
               ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                content: Text("暂未开放"),
+                content: Text("已复制到剪贴板"),
                 duration: Duration(milliseconds: 1000),
               ));
             }),
@@ -586,7 +598,7 @@ class _VideoPlayBlockState extends State<VideoPlayBlock> {
     return Container(
       height: 52,
       width: 52,
-      margin: (margin?? const EdgeInsets.all(12)),
+      margin: (margin),
       child: IconButton(
         style: (showOverlay ? null : const ButtonStyle(
           overlayColor: MaterialStatePropertyAll(Colors.transparent)
@@ -597,16 +609,11 @@ class _VideoPlayBlockState extends State<VideoPlayBlock> {
         icon: Icon(
           icon,
           size: iconSize,
-          shadows: [fabBoxShadow],
-          color: color.withOpacity(0.85),
+          shadows: kElevationToShadow[6],
+          color: color.withOpacity(0.88),
         ),
       ),
     );
   }
 }
 
-final BoxShadow fabBoxShadow = BoxShadow(
-    color: Colors.black,
-    offset: Offset.fromDirection(1, 1),
-    spreadRadius: 3,
-    blurRadius: 5);

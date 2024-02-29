@@ -1,12 +1,15 @@
 /// AI 对话界面的 ViewModel
 
 import 'dart:convert';
+import 'dart:io';
 import 'dart:isolate';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:purlaw/common/network/chat_api.dart';
 import 'package:purlaw/common/utils/database/database_util.dart';
 import 'package:purlaw/components/third_party/prompt.dart';
+import 'package:purlaw/models/account_mgr/user_info_model.dart';
 import 'package:purlaw/viewmodels/base_viewmodel.dart';
 import 'package:purlaw/common/utils/log_utils.dart';
 import '../../common/constants/constants.dart';
@@ -27,6 +30,8 @@ class AIChatMsgListViewModel extends BaseViewModel {
         first: true)
   ]);
 
+  List<UserInfoModel> recommendLawyers = [];
+
   bool replying = false;
   bool autoPlay = false;
 
@@ -34,6 +39,27 @@ class AIChatMsgListViewModel extends BaseViewModel {
   AIChatMsgListViewModel({this.firstMessage}) {
     if (firstMessage != null) {
       messageModels = ListAIChatMessageModelsWithAudio(messages: [AIChatMessageModelWithAudio.fromFull(firstMessage!, false, first: true)]);
+    }
+  }
+
+  void getRecommendLawyer(String cookie, String text) async {
+    try {
+      Log.d(text);
+      var response = jsonDecode((await HttpGet.post(API.userRecommendLawyer.api, HttpGet.jsonHeadersCookie(cookie), {
+        'content': "火烧山东大学怎么判"
+      })));
+      if (response["status"] != "success") throw HttpException(response["message"]);
+      List result = response["result"];
+      Log.d(result);
+      recommendLawyers.clear();
+      for (var v in result) {
+        recommendLawyers.add(UserInfoModel.fromJson(v));
+        recommendLawyers.last.verified = true;
+      }
+      notifyListeners();
+    } catch(e) {
+      Log.e(e, tag: tag);
+      showToast("网络异常");
     }
   }
 
@@ -76,7 +102,6 @@ class AIChatMsgListViewModel extends BaseViewModel {
     scrollController.animateTo(scrollController.position.maxScrollExtent,
         duration: const Duration(milliseconds: 500), curve: Curves.ease);
   }
-
   void setDisableWhenSubmit() {
     focusNode.unfocus();
     controller.clear();
@@ -84,7 +109,6 @@ class AIChatMsgListViewModel extends BaseViewModel {
     replying = true;
     notifyListeners();
   }
-
   void reEnableAfterReceive(String cookie, String sid) {
     if (messageModels.messages.last.sentenceCompleted.isNotEmpty && !messageModels.messages.last.sentenceCompleted.last) {
       messageModels.messages.last.playlist.add(LockCachingAudioSource(
@@ -101,7 +125,6 @@ class AIChatMsgListViewModel extends BaseViewModel {
     SessionListDatabaseUtil.storeHistoryBySid(sid, jsonEncode(messageModels.export().toJson()));
     notifyListeners();
   }
-
   void manuallyBreak() {
     Log.i(tag: tag, "[DEBUG] Manually Break");
     try {
@@ -115,7 +138,6 @@ class AIChatMsgListViewModel extends BaseViewModel {
     notifyListeners();
     }
   }
-
   Future<void> appendMessage(String msg, String cookie) async {
     scrollToBottom();
     var sentences = msg.split('。'); // 按逗号分隔
@@ -140,7 +162,6 @@ class AIChatMsgListViewModel extends BaseViewModel {
     if (sentences.last.isEmpty) return;
     await messageModels.messages.last.append(sentences.last, endsWithDot, refresh, submitAudio);
   }
-
   void submitNewMessage(String cookie) async {
     final text = controller.text, session = DatabaseUtil.getLastAIChatSession();
     if (text.isEmpty) return;
@@ -148,6 +169,8 @@ class AIChatMsgListViewModel extends BaseViewModel {
       showToast("请先在左上角选择会话", toastType: ToastType.warning);
       return;
     }
+
+    getRecommendLawyer(cookie, text);
 
     setDisableWhenSubmit();
     notifyListeners();

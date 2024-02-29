@@ -21,6 +21,7 @@ enum API {
   userUploadAvatar("/api/user/upload_avatar"),
   userListVideo("/api/video/list_video"),
   userUpdateDesc("/api/user/set_info"),
+  userRecommendLawyer("/api/user/suggest_lawyer"),
 
   chatCreateSession("/api/chat/create_session"),
   chatAppendSession("/api/chat/append_session"),

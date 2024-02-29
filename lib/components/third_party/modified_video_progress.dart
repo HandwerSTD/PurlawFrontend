@@ -94,17 +94,13 @@ class _ModifiedVideoProgressIndicatorState extends State<ModifiedVideoProgressIn
             valueColor: AlwaysStoppedAnimation<Color>(colors.bufferedColor),
             backgroundColor: colors.backgroundColor,
           ),
-          // LinearProgressIndicator(
-          //   value: position / duration,
-          //   valueColor: AlwaysStoppedAnimation<Color>(colors.playedColor),
-          //   backgroundColor: Colors.transparent,
-          // ),
           Progresso(
             progressStrokeWidth: 4,
             progress: position / duration,
             backgroundColor: Colors.transparent,
             progressColor: colors.playedColor,
             pointColor: colors.playedColor,
+            pointRadius: 6.5,
             points: [position / duration],
           )
         ],

@@ -35,7 +35,7 @@ class ContractGenerationViewModel extends BaseViewModel {
     notifyListeners();
     final session = DatabaseUtil.getLastAIChatSession();
     if (session.isEmpty) {
-      showToast("请先指定一个会话", toastType: ToastType.warning);
+      showToast("请先指定一个会话", toastType: ToastType.warning, alignment: Alignment.center);
       return;
     }
     try {
