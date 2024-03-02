@@ -112,6 +112,7 @@ class AIChatMessageModelWithAudio {
   }
 
   AIChatMessageModelWithAudio.fromFull(String msg, bool mine, {bool first = false}) {
+    showedText = msg;
     sentences.add(msg);
     isMine = mine;
     isFirst = first;
@@ -145,11 +146,11 @@ class AIChatMessageModelWithAudio {
     refresh();
   }
 
-  String getString() {
-    var result = "";
-    for (var str in sentences) {
-      result += str;
-    }
-    return result;
-  }
+  // String getString() {
+  //   var result = "";
+  //   for (var str in sentences) {
+  //     result += str;
+  //   }
+  //   return result;
+  // }
 }

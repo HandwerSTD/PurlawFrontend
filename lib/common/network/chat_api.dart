@@ -81,7 +81,7 @@ class ChatNetworkRequest {
       Log.d("Received message from Main $session", tag: "ChatAPI");
       try {
         while (true) {
-          await Future.delayed(const Duration(milliseconds: 300));
+          await Future.delayed(1000.milliseconds);
           var chatRes = jsonDecode(await HttpGet.post(API.chatFlushSession.api,
               HttpGet.jsonHeadersCookie(cookie), {"sid": session}));
           Log.i(chatRes);

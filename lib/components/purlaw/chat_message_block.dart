@@ -309,7 +309,8 @@ class _PurlawChatMessageBlockWithAudioState extends State<PurlawChatMessageBlock
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       SelectableText(
-                        (msgData.sentences.isEmpty ? "思考中..." : msgData.getString()),
+                        // (msgData.sentences.isEmpty ? "思考中..." : msgData.getString()),
+                        (msgData.showedText.isEmpty ? "思考中..." : msgData.showedText),
                         // softWrap: true,
                         style: TextStyle(
                             color: foreground, height: 1.5, fontSize: 15),

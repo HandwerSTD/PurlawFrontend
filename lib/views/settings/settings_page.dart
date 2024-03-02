@@ -404,6 +404,12 @@ class _SettingsChangeThemePageState extends State<SettingsChangeThemePage> {
                 withBackground: true,
                 backgroundColor: Colors.transparent,
                 iconsColor: ThemeModel.presetThemes[index]),
+            onTap: (){
+              setState(() {
+                value = index;
+              });
+              Provider.of<ThemeViewModel>(context, listen: false).setThemeColor(index);
+            },
             trailing: Radio<int>(value: index, groupValue: value, onChanged: (_) {
               setState(() {
                 value = index;

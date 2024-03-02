@@ -10,6 +10,7 @@ import 'package:purlaw/components/purlaw/appbar.dart';
 import 'package:purlaw/components/purlaw/purlaw_components.dart';
 import 'package:purlaw/components/third_party/prompt.dart';
 import 'package:purlaw/viewmodels/main_viewmodel.dart';
+import 'package:purlaw/viewmodels/theme_viewmodel.dart';
 import 'package:purlaw/views/account_mgr/components/account_page_components.dart';
 import 'package:http/http.dart' as http;
 import 'package:purlaw/common/utils/log_utils.dart';
@@ -26,11 +27,13 @@ class MyAccountManagement extends StatefulWidget {
 class _MyAccountManagementState extends State<MyAccountManagement> {
   TextEditingController controller = TextEditingController();
   FocusNode focusNode = FocusNode();
+  int count = 0;
   
   @override
   void initState() {
     super.initState();
     controller = TextEditingController(text: widget.desc);
+    count = widget.desc.length;
   }
   
   @override
@@ -42,9 +45,17 @@ class _MyAccountManagementState extends State<MyAccountManagement> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            PurlawChatTextField(
-              controller: controller, hint: '个人简介', focusNode: focusNode, readOnly: false,
+            TextField(
+              controller: controller, focusNode: focusNode, readOnly: false,
+              maxLines: null,
+              decoration: PurlawChatTextField.chatInputDeco('个人简介', getThemeModel(context).colorModel.loginTextFieldColor, 24),
+              onChanged: (val){
+                setState(() {
+                  count = val.length;
+                });
+              },
             ),
+            Text("$count / 50", style: TextStyle(color: (count > 50 ? Colors.red : null)),),
             Row(
               children: [
                 Expanded(

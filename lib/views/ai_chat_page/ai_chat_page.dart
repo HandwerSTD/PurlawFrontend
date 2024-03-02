@@ -299,30 +299,34 @@ class LawyerRecommendation extends StatelessWidget {
               itemCount: lawyers.length,
               loop: false,
               itemBuilder: (context, index) {
+                var userInfoModel = lawyers[index];
                 return Container(
-                  margin: const EdgeInsets.only(top: 24),
-                  alignment: Alignment.topCenter,
-                    child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        UserAvatarLoader(verified: true, avatar: lawyers[index].avatar, size: 108, radius: 54),
-                        const SizedBox(width: 24,),
-                        Column(
+                  alignment: Alignment.center,
+                  height: 180,
+                  width: 300,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      UserAvatarLoader(verified: userInfoModel.verified, avatar: userInfoModel.avatar, size: 108, radius: 54),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 18),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text("\n${lawyers[index].user}", style: const TextStyle(fontSize: 20),),
-                            Text(lawyers[index].desc, style: TextStyle(color: (getThemeModel(context).dark ? Colors.grey : Colors.grey[700])),)
+                            Text(
+                              userInfoModel.user,
+                              style: const TextStyle(fontSize: 20),
+                            ),
+                            SizedBox(
+                                width: 160,
+                                child: Text(userInfoModel.desc, style: TextStyle(fontSize: 12),))
                           ],
                         ),
-                        const SizedBox(width: 24,)
-                      ],
-                    )
-                  ],
-                ));
+                      )
+                    ],
+                  ),
+                );
               },
             ),
           )

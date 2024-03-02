@@ -147,20 +147,21 @@ class AIChatMsgListViewModel extends BaseViewModel {
     }
     Future<void> submitAudio(String sentence, int id) async {
       if (sentence.isEmpty) return;
-      Log.d(HttpGet.getApi(API.chatRequestVoice.api) +
-          sentence, tag: "Chat Audio API SubmitAudio");
+      // Log.d(HttpGet.getApi(API.chatRequestVoice.api) +
+      //     sentence, tag: "Chat Audio API SubmitAudio");
       await messageModels.messages.last.playlist.add(LockCachingAudioSource(
           Uri.parse(HttpGet.getApi(API.chatRequestVoice.api) +
               sentence),
           headers: HttpGet.jsonHeadersCookie(cookie)));
       if (autoPlay) messageModels.messages.last.player.play();
     }
-    Log.d(sentences, tag:"Chat Page ViewModel appendMessage");
+    messageModels.messages.last.animatedAdd(msg, refresh); // TODO: NEED TEST
+    // Log.d(sentences, tag:"Chat Page ViewModel appendMessage");
     for (int index = 0; index < sentences.length - 1; ++index) {
-      await messageModels.messages.last.append(sentences[index], true, refresh, submitAudio);
+      await messageModels.messages.last.append(sentences[index], true, (){}, submitAudio);
     }
     if (sentences.last.isEmpty) return;
-    await messageModels.messages.last.append(sentences.last, endsWithDot, refresh, submitAudio);
+    await messageModels.messages.last.append(sentences.last, endsWithDot, (){}, submitAudio);
   }
   void submitNewMessage(String cookie) async {
     final text = controller.text, session = DatabaseUtil.getLastAIChatSession();

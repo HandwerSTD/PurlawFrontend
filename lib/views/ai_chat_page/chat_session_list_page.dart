@@ -187,7 +187,9 @@ class _ChatSessionListPageBodyState extends State<ChatSessionListPageBody> {
                                     : Radio(
                                         value: index,
                                         groupValue: model.chosenRadio,
-                                        onChanged: (val) {},
+                                        onChanged: (val) {
+                                          model.useSession(index);
+                                        },
                                       ));
 
                                 return SettingsItem(
