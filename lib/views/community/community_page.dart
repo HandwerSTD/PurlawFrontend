@@ -14,8 +14,10 @@ import 'package:purlaw/viewmodels/community/short_video_list_viewmodel.dart';
 import 'package:purlaw/viewmodels/main_viewmodel.dart';
 import 'package:purlaw/viewmodels/theme_viewmodel.dart';
 import 'package:purlaw/views/account_mgr/components/account_page_components.dart';
+import 'package:purlaw/views/account_mgr/my_account_page.dart';
 import 'package:purlaw/views/ai_chat_page/ai_chat_page.dart';
 import 'package:purlaw/views/community/community_search_page.dart';
+import 'package:purlaw/views/community/private_message/private_message_user_list.dart';
 import 'package:purlaw/views/community/short_video/short_video_play_page.dart';
 import 'package:tdesign_flutter/tdesign_flutter.dart';
 import 'package:typicons_flutter/typicons_flutter.dart';
@@ -70,16 +72,39 @@ class _CommunityPageBodyState extends State<CommunityPageBody> {
             Visibility(
               visible: (Responsive.checkWidth(constraints.maxWidth) !=
                   Responsive.lg),
-              child: SearchAppBar(
-                hintLabel: '搜索',
-                onSubmitted: (val) {},
-                readOnly: true,
-                onTap: () {
-                  JumpToSearchPage(context);
-                },
+              child: Row(
+                children: [
+                  Expanded(
+                    child: SearchAppBar(
+                      height: 48,
+                      hintLabel: '搜索',
+                      onSubmitted: (val) {},
+                      readOnly: true,
+                      onTap: () {
+                        JumpToSearchPage(context);
+                      },
+                    ),
+                  ),
+                  fabShell(IconButton(onPressed: (){
+                    if (checkAndLoginIfNot(context)) {
+                      Navigator.push(context, MaterialPageRoute(builder: (_) => PrivateMessageUserListPage()));
+                    }
+                  }, padding: EdgeInsets.only(bottom: 2), icon: Icon(EvaIcons.messageCircleOutline, size: 22, color: Theme.of(context).colorScheme.primary,)))
+                ],
               ),
             ),
           ])),
+    );
+  }
+  Widget fabShell(Widget child) {
+    return Container(
+      margin: EdgeInsets.only(right: 8, top: 8),
+      height: 48,
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(36),
+          boxShadow: (TDTheme.defaultData().shadowsTop),
+          color: (Theme.of(context).scaffoldBackgroundColor)),
+      child: child,
     );
   }
 }

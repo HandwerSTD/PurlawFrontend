@@ -1,3 +1,4 @@
+import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:purlaw/common/utils/misc.dart';
 import 'package:purlaw/components/multi_state_widget.dart';
@@ -37,7 +38,7 @@ class AccountVisitPage extends StatelessWidget {
             IconButton(onPressed: (){
               // Navigator.push(context, MaterialPageRoute(builder: (_) => SettingsPage()));
               Navigator.push(context, MaterialPageRoute(builder: (_) => PrivateMessagePage(sendUser: model.userInfoModel)));
-            }, icon: const Icon(Icons.message_rounded))
+            }, icon: const Icon(EvaIcons.messageCircleOutline))
           ],
         ),
         body: MultiStateWidget(

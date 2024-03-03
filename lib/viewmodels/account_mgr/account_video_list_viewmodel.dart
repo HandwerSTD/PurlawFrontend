@@ -35,7 +35,7 @@ class AccountVideoListViewModel extends BaseViewModel {
       changeState(NetworkLoadingState.CONTENT);
     } catch(e) {
       Log.e(tag: tag, e);
-      showToast("网络错误");
+      showToast("网络错误", toastType: ToastType.error);
       changeState(NetworkLoadingState.ERROR);
     }
   }

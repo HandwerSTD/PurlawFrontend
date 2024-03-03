@@ -59,7 +59,7 @@ class AIChatMsgListViewModel extends BaseViewModel {
       notifyListeners();
     } catch(e) {
       Log.e(e, tag: tag);
-      showToast("网络异常");
+      showToast("网络异常", toastType: ToastType.error);
     }
   }
 

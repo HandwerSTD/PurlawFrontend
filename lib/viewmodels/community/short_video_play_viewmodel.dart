@@ -41,7 +41,7 @@ class ShortVideoPlayViewModel extends BaseViewModel {
       Log.i(tag: tag,"[New Page Load completed");
     } catch(e) {
       Log.e(tag: tag,e);
-      showToast("网络错误");
+      showToast("网络错误", toastType: ToastType.warning);
     }
   }
 }
@@ -83,7 +83,7 @@ class ShortVideoPlayBlockViewModel extends BaseViewModel {
       nowPlaying.meLiked = response["message"];
     } on Exception catch (e) {
       Log.e(tag: tag,e);
-      showToast("网络错误");
+      showToast("网络错误", toastType: ToastType.warning);
     }
   }
 
@@ -143,7 +143,7 @@ class ShortVideoPlayBlockViewModel extends BaseViewModel {
       if (response["status"] != "success") throw Exception(response["message"]);
     } catch(e) {
       Log.e(tag: tag,e);
-      showToast("${(origin == 0 ? "" : "取消")}点赞失败");
+      showToast("${(origin == 0 ? "" : "取消")}点赞失败", toastType: ToastType.error);
       nowPlaying.meLiked = origin;
       notifyListeners();
     }

@@ -128,7 +128,7 @@ class ChatSessionListViewModel extends BaseViewModel {
     if (networkLock) return;
     chosenRadio = index;
     DatabaseUtil.storeLastAIChatSession(sessionList[index].$1);
-    showToast("设置成功");
+    showToast("设置成功", toastType: ToastType.success);
     eventBus.fire(ChatSessionListEventBus(needNavigate: true));
   }
 

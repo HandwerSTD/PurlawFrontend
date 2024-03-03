@@ -39,7 +39,7 @@ class _MyAccountManagementState extends State<MyAccountManagement> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PurlawAppTitleBar(title: '个人简介', showBack: true).build(context),
+      appBar: PurlawAppTitleBar(title: '帐户管理', showBack: true).build(context),
       body: Container(
         padding: const EdgeInsets.all(12),
         child: Column(

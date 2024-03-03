@@ -1,3 +1,4 @@
+import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -27,13 +28,14 @@ Future openMyAccountPage(BuildContext context) {
   return Navigator.push(context,
       MaterialPageRoute(builder: (_) => const AccountLoginPage(showBack: true)));
 }
-void checkAndLoginIfNot(BuildContext context) {
+bool checkAndLoginIfNot(BuildContext context) {
   bool logged =
       Provider.of<MainViewModel>(context, listen: false).cookies.isNotEmpty;
   if (!logged) {
     Navigator.push(context,
         MaterialPageRoute(builder: (_) => const AccountLoginPage(showBack: true)));
   }
+  return logged;
 }
 
 class MyAccountPage extends StatefulWidget {
@@ -75,7 +77,7 @@ class _MyAccountPageState extends State<MyAccountPage> {
           }, icon: const Icon(Icons.refresh)),
           IconButton(onPressed: (){
             Navigator.push(context, CupertinoPageRoute(builder: (_) => const PrivateMessageUserListPage()));
-          }, icon: const Icon(Icons.message_rounded)),
+          }, icon: const Icon(EvaIcons.messageCircleOutline)),
           IconButton(onPressed: (){
             Navigator.push(context, CupertinoPageRoute(builder: (_) => const SettingsPage()));
           }, icon: const Icon(Icons.settings))

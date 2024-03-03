@@ -73,10 +73,10 @@ class _ProgramEntryState extends State<ProgramEntry> {
   @override
   void initState() {
     super.initState();
-    _sub = eventBus.on<MainViewModelEventBus>().listen((event) {
-      showToast(event.toast);
-    });
-    _sub.resume();
+    // _sub = eventBus.on<MainViewModelEventBus>().listen((event) {
+    //   showToast(event.toast);
+    // });
+    // _sub.resume();
     // 需要异步加载的功能，比如 KVBox，写在 initStateAsync 里
     initStateAsync().then((_) {
       // 首次使用应用引导

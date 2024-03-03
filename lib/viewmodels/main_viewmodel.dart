@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:purlaw/common/network/network_request.dart';
 import 'package:purlaw/common/utils/database/database_util.dart';
+import 'package:purlaw/components/third_party/prompt.dart';
 import 'package:purlaw/main.dart';
 import 'package:purlaw/models/account_mgr/user_info_model.dart';
 import 'package:purlaw/viewmodels/base_viewmodel.dart';
@@ -55,23 +56,18 @@ class MainViewModel extends BaseViewModel {
           await NetworkRequest.getUserInfoWhenLogin(login.$1, cookies);
       notifyListeners();
       if (toast) {
-        eventBus.fire(MainViewModelEventBus(toast: "刷新成功"));
+        showToast("刷新成功", toastType: ToastType.success);
       }
       return true;
     } catch(e) {
       Log.e(tag: tag, e);
-      eventBus.fire(MainViewModelEventBus(toast: "网络错误"));
+      showToast("网络错误", toastType: ToastType.error);
       return false;
     }
   }
 
   /// 登陆者的 Cookies，建议始终使用该项，防止 Cookies 刷新未完成时出现错误
   String cookies = "";
-}
-
-class MainViewModelEventBus {
-  String toast;
-  MainViewModelEventBus({required this.toast});
 }
 
 String getCookie(context, {bool listen = true}) => Provider.of<MainViewModel>(context, listen: listen).cookies;
