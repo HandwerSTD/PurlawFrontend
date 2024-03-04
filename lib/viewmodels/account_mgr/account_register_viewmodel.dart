@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:crypto/crypto.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:grock/grock.dart';
 import 'package:purlaw/common/network/network_request.dart';
 import 'package:purlaw/components/third_party/prompt.dart';
 import 'package:purlaw/main.dart';
@@ -17,8 +18,6 @@ class AccountRegisterViewModel extends BaseViewModel {
   bool registering = false;
   FocusNode focusNodeName = FocusNode(), focusNodePasswd = FocusNode(), focusNodeMail = FocusNode();
 
-  AccountRegisterViewModel();
-
   void switchAgree() {
     agreeStatement = !agreeStatement;
     notifyListeners();
@@ -27,8 +26,7 @@ class AccountRegisterViewModel extends BaseViewModel {
   (bool, String) verifyRegister() {
     if (nameCtrl.text.isEmpty || mailCtrl.text.isEmpty || passwdCtrl.text.isEmpty) return (false, "填写信息不完整");
     if (!agreeStatement) return (false, "请阅读并同意《用户协议》与《隐私协议》");
-    var atPos = mailCtrl.text.indexOf("@");
-    if (atPos == 0 || atPos == -1 || atPos == mailCtrl.text.length - 1) return (false, "邮箱格式不正确");
+    if (!mailCtrl.text.isEmail) return (false, "邮箱格式不正确");
     if (passwdCtrl.text.length < 6) return (false, "密码不得少于 6 位");
     return (true, "注册中");
   }
@@ -43,7 +41,7 @@ class AccountRegisterViewModel extends BaseViewModel {
       Log.i(tag: tag,response);
 
       if (!response["status"].startsWith("success")) {
-        Log.i(tag: tag,"login failed");
+        Log.i(tag: tag,"register failed");
         return (false, response["message"].toString());
       }
 

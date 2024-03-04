@@ -12,6 +12,8 @@ import 'package:purlaw/viewmodels/base_viewmodel.dart';
 import 'package:purlaw/viewmodels/main_viewmodel.dart';
 import 'package:purlaw/common/utils/log_utils.dart';
 
+import '../../models/account_mgr/user_info_model.dart';
+
 const tag = "Account Login ViewModel";
 
 class AccountLoginViewModel extends BaseViewModel {
@@ -19,9 +21,6 @@ class AccountLoginViewModel extends BaseViewModel {
   FocusNode nameFocus = FocusNode(), passwdFocus = FocusNode();
   bool loggingIn = false;
 
-  BuildContext context;
-
-  AccountLoginViewModel({required this.context});
 
   bool verifyLogin() {
     return nameCtrl.text.isNotEmpty && passwdCtrl.text.isNotEmpty;
@@ -68,10 +67,7 @@ class AccountLoginViewModel extends BaseViewModel {
 
       // 获取用户信息
       var userModel = await NetworkRequest.getUserInfoWhenLogin(nameCtrl.text, setCookie);
-      Provider.of<MainViewModel>(context, listen: false)
-        ..myUserInfoModel = userModel
-        ..cookies = setCookie
-        ..notifyListeners(); // 应该不会出事吧。。。
+      eventBus.fire(AccountLoginEventBus(needNavigate: false, model: userModel, setCookie: setCookie));
 
     } catch(e) {
       Log.e(tag: tag, e);
@@ -84,5 +80,7 @@ class AccountLoginViewModel extends BaseViewModel {
 
 class AccountLoginEventBus {
   bool needNavigate;
-  AccountLoginEventBus({required this.needNavigate});
+  MyUserInfoModel? model;
+  String? setCookie;
+  AccountLoginEventBus({required this.needNavigate, this.model, this.setCookie});
 }

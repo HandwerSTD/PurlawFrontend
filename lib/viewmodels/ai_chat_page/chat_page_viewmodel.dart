@@ -139,11 +139,12 @@ class AIChatMsgListViewModel extends BaseViewModel {
     }
   }
   Future<void> appendMessage(String msg, String cookie) async {
-    scrollToBottom();
     var sentences = msg.split('。'); // 按逗号分隔
     bool endsWithDot = msg.endsWith('。'); // 最后一个是否是完整句子
+
     refresh(){
       notifyListeners();
+      scrollToBottom();
     }
     Future<void> submitAudio(String sentence, int id) async {
       if (sentence.isEmpty) return;
@@ -155,6 +156,7 @@ class AIChatMsgListViewModel extends BaseViewModel {
           headers: HttpGet.jsonHeadersCookie(cookie)));
       if (autoPlay) messageModels.messages.last.player.play();
     }
+
     messageModels.messages.last.animatedAdd(msg, refresh); // TODO: NEED TEST
     // Log.d(sentences, tag:"Chat Page ViewModel appendMessage");
     for (int index = 0; index < sentences.length - 1; ++index) {
@@ -163,7 +165,7 @@ class AIChatMsgListViewModel extends BaseViewModel {
     if (sentences.last.isEmpty) return;
     await messageModels.messages.last.append(sentences.last, endsWithDot, (){}, submitAudio);
   }
-  void submitNewMessage(String cookie) async {
+  Future<void> submitNewMessage(String cookie, {Function? callback}) async {
     final text = controller.text, session = DatabaseUtil.getLastAIChatSession();
     if (text.isEmpty) return;
     if (session.isEmpty) {
@@ -181,14 +183,15 @@ class AIChatMsgListViewModel extends BaseViewModel {
     notifyListeners();
 
     messageModels.messages.add(AIChatMessageModelWithAudio());
+    notifyListeners();
     try {
       autoPlay = DatabaseUtil.getAutoAudioPlay;
       Log.d("autoPlay = $autoPlay", tag: "Chat Page ViewModel");
       messageModels.messages.last.player.setAudioSource(messageModels.messages.last.playlist);
-      // await appendMessage("response for 测试第一个句子。 $text", cookie);
       await ChatNetworkRequest.submitNewMessage(session, text, cookie, appendMessage, (){
         reEnableAfterReceive(cookie, session);
         notifyListeners();
+        if (callback != null) callback();
       });
     } catch (e) {
       Log.e(tag: tag, e);

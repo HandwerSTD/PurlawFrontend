@@ -27,6 +27,9 @@ class MainViewModel extends BaseViewModel {
     notifyListeners();
   }
 
+  void notify() {
+    notifyListeners();
+  }
 
   void debugSetVerified() {
     myUserInfoModel.verified = !myUserInfoModel.verified;

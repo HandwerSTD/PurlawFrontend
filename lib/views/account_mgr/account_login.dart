@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:grock/grock.dart';
 import 'package:provider/provider.dart';
 import 'package:purlaw/common/provider/provider_widget.dart';
 import 'package:purlaw/common/utils/misc.dart';
@@ -12,6 +13,7 @@ import 'package:purlaw/viewmodels/account_mgr/account_login_viewmodel.dart';
 import 'package:purlaw/viewmodels/theme_viewmodel.dart';
 import 'package:purlaw/views/account_mgr/account_register.dart';
 import '../../models/theme_model.dart';
+import '../../viewmodels/main_viewmodel.dart';
 import '../settings/settings_page.dart';
 
 class AccountLoginPage extends StatelessWidget {
@@ -51,6 +53,12 @@ class _AccountLoginPageBodyState extends State<AccountLoginPageBody> {
         showToast("登陆成功", toastType: ToastType.success);
         Navigator.pop(context);
       }
+      if (event.model.isNotNull) {
+        Provider.of<MainViewModel>(context, listen: false)
+          ..myUserInfoModel = event.model!
+          ..cookies = event.setCookie!
+          ..notify(); // 应该不会出事吧。。。
+      }
     });
      _.resume();
   }
@@ -66,7 +74,7 @@ class _AccountLoginPageBodyState extends State<AccountLoginPageBody> {
     ThemeModel themeModel = Provider.of<ThemeViewModel>(context).themeModel;
     TextTheme textTheme = Theme.of(context).textTheme;
     return ProviderWidget<AccountLoginViewModel>(
-      model: AccountLoginViewModel(context: context),
+      model: AccountLoginViewModel(),
       onReady: (model) {},
       builder: (context, model, child) =>
           LayoutBuilder(builder: (_, constraints) {
