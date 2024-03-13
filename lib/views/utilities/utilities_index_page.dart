@@ -25,7 +25,12 @@ class UtilitiesIndexPage extends StatelessWidget {
               }),
               UtilityGridBlock(title: '律师推荐', iconAsset:  Icon(
                 Icons.folder_shared_outlined, size: 64,color: getColor,
-              ), onTap: (){}),
+              ), onTap: (){
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                  content: Text("暂未开放"),
+                  duration: Duration(milliseconds: 1000),
+                ));
+              }),
             ],
           ),
           Row(
@@ -38,7 +43,12 @@ class UtilitiesIndexPage extends StatelessWidget {
               }),
               UtilityGridBlock(title: '类似案例', iconAsset:  Icon(
                 Icons.mark_email_read_rounded, size: 64,color: getColor,
-              ), onTap: (){})
+              ), onTap: (){
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                  content: Text("暂未开放"),
+                  duration: Duration(milliseconds: 1000),
+                ));
+              })
             ],
           )
         ],

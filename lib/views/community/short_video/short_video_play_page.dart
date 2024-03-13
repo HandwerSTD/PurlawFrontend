@@ -44,15 +44,6 @@ class _ShortVideoPlayPageState extends State<ShortVideoPlayPage> {
   @override
   void initState() {
     super.initState();
-    var _ = eventBus.on<ShortVideoPlayBlockEventBus>().listen((event) {
-      if (event.needNavigate) {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (_) => const AccountLoginPage(showBack: true)));
-      }
-    });
-    _.resume();
   }
 
   @override
@@ -118,15 +109,6 @@ class _ShortVideoPlayByListState extends State<ShortVideoPlayByList> {
   @override
   void initState() {
     super.initState();
-    _ = eventBus.on<ShortVideoPlayBlockEventBus>().listen((event) {
-      if (event.needNavigate) {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (_) => const AccountLoginPage(showBack: true)));
-      }
-    });
-    _.resume();
   }
   @override
   void dispose() {
@@ -166,7 +148,7 @@ class _ShortVideoPlayByListState extends State<ShortVideoPlayByList> {
               },
               children: model.pageList,
             ),
-            OpenAIChatFloatingDialogButton()
+            const OpenAIChatFloatingDialogButton()
           ],
         ),
       ),
@@ -192,9 +174,7 @@ class _VideoPlayBlockState extends State<VideoPlayBlock> {
           nowPlaying: widget.nowPlaying),
       onReady: (model) {
         favorite = FavoriteDatabaseUtil.getIsFavorite(model.nowPlaying.uid!);
-        model.cookie =
-            Provider.of<MainViewModel>(context, listen: false).cookies;
-        model.load();
+        model.load(getCookie(context, listen: false));
       },
       builder: (context, model, _) => Stack(
         alignment: Alignment.topLeft,
@@ -213,7 +193,19 @@ class _VideoPlayBlockState extends State<VideoPlayBlock> {
                 },
                 onDoubleTap: () {
                   if (!model.loaded) return;
-                  model.switchVideoLike();
+                  if (getCookie(context, listen: false).isEmpty) {
+                    model.pauseVideo();
+                    showToast("请先登录", toastType: ToastType.warning);
+                    Future.delayed(200.milliseconds).then((value) {
+                      checkAndLoginIfNot(context, callback: (result) {
+                        if (result == true) {
+                          model.getVideoIsLiked(getCookie(context, listen: false));
+                        }
+                      });
+                    });
+                    return;
+                  }
+                  model.switchVideoLike(getCookie(context, listen: false));
                 },
                 child: Stack(
                   alignment: Alignment.center,
@@ -541,13 +533,18 @@ class _VideoPlayBlockState extends State<VideoPlayBlock> {
             onPressed: () {
               Log.i(tag: tag, "switchVideoLike");
               if (getCookie(context, listen: false).isEmpty) {
+                model.pauseVideo();
                 showToast("请先登录", toastType: ToastType.warning);
-                Future.delayed(const Duration(seconds: 1)).then((value) {
-                  checkAndLoginIfNot(context);
+                Future.delayed(200.milliseconds).then((value) {
+                  checkAndLoginIfNot(context, callback: (result) {
+                    if (result == true) {
+                      model.getVideoIsLiked(getCookie(context, listen: false));
+                    }
+                  });
                 });
                 return;
               }
-              model.switchVideoLike();
+              model.switchVideoLike(getCookie(context, listen: false));
             }),
         bottomFABSingle(
           color: Colors.white.withOpacity(0.9),

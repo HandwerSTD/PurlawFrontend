@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:hive/hive.dart';
+import 'package:purlaw/common/network/network_request.dart';
 import 'package:purlaw/common/utils/database/kvstore.dart';
 import 'package:purlaw/common/utils/log_utils.dart';
 import 'package:purlaw/common/utils/misc.dart';
@@ -15,7 +16,7 @@ class DatabaseUtil {
     KVBox.insert(DatabaseConst.firstOpen, DatabaseConst.dbTrue);
     KVBox.insert(DatabaseConst.themeColor, "0");
     KVBox.insert(DatabaseConst.autoAudioPlay, DatabaseConst.dbFalse);
-    storeServerAddress("http://10.17.206.179:5000");
+    storeServerAddress(HttpGet.baseUrl);
   }
 
   static void updateThemeIndex(int color) {
@@ -121,6 +122,7 @@ class SessionListDatabaseUtil {
     for (var item in res) {
       Hive.box(KVBox.sessionListsIndex).put(item.$1, item.$2);
     }
+    if (res.isNotEmpty) DatabaseUtil.storeLastAIChatSession(res[0].$1);
     Log.i("sessionList stored", tag: "SessionList DatabaseUtil");
   }
   static Future<void> storeHistoryBySid(String sid, String val) async {
@@ -150,6 +152,7 @@ class SessionListDatabaseUtil {
   static Future<void> clear() async {
     await (await getBox()).clear();
     await Hive.box(KVBox.sessionListsIndex).clear();
+    DatabaseUtil.storeLastAIChatSession("");
   }
 }
 

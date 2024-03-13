@@ -51,7 +51,7 @@ class _AccountLoginPageBodyState extends State<AccountLoginPageBody> {
       _  = eventBus.on<AccountLoginEventBus>().listen((event) {
       if (event.needNavigate) {
         showToast("登陆成功", toastType: ToastType.success);
-        Navigator.pop(context);
+        Navigator.pop(context, true);
       }
       if (event.model.isNotNull) {
         Provider.of<MainViewModel>(context, listen: false)

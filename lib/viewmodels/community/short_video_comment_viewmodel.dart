@@ -40,7 +40,7 @@ class ShortVideoCommentViewModel extends BaseViewModel {
       }));
       if (response["status"] != "success") throw Exception(response["message"]??"未知错误");
       videoCommentList = VideoCommentList.fromJson(response);
-      Log.d(response);
+      // Log.d(response);
       if (videoCommentList.total! == 0) {
         changeState(NetworkLoadingState.EMPTY);
       } else {

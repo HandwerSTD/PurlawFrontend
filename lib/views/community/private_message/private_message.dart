@@ -9,6 +9,7 @@ import 'package:purlaw/models/theme_model.dart';
 import 'package:purlaw/viewmodels/community/private_messsage/private_message_viewmodel.dart';
 import 'package:purlaw/viewmodels/main_viewmodel.dart';
 import 'package:purlaw/viewmodels/theme_viewmodel.dart';
+import 'package:purlaw/views/account_mgr/components/account_page_components.dart';
 
 import '../../../common/provider/provider_widget.dart';
 
@@ -22,10 +23,15 @@ class PrivateMessagePage extends StatelessWidget {
       model: PrivateMessageViewModel(sendUser: sendUser),
       builder: (context, model, child) {
         return Scaffold(
-          appBar: PurlawAppTitleBar(
-              title: sendUser.user,
-              showBack: true
-          ).build(context),
+          appBar: AppBar(
+            titleSpacing: 8,
+              title: Row(
+                children: [
+                  UserAvatarLoader(avatar: sendUser.avatar, size: 40, radius: 20, verified: sendUser.verified, margin: EdgeInsets.only(right: 12),),
+                  Text(sendUser.user, style: TextStyle(fontSize: 18),)
+                ],
+              ),
+          ),
           body: const PrivateMessagePageBody(),
         );
       },

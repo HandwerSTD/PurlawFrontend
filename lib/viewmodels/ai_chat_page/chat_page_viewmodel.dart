@@ -6,6 +6,7 @@ import 'dart:isolate';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:grock/grock.dart';
 import 'package:purlaw/common/network/chat_api.dart';
 import 'package:purlaw/common/utils/database/database_util.dart';
 import 'package:purlaw/components/third_party/prompt.dart';
@@ -114,7 +115,11 @@ class AIChatMsgListViewModel extends BaseViewModel {
       messageModels.messages.last.playlist.add(LockCachingAudioSource(
           Uri.parse(HttpGet.getApi(API.chatRequestVoice.api) +
               messageModels.messages.last.sentences.last),
-          headers: HttpGet.jsonHeadersCookie(cookie)));
+          headers: HttpGet.jsonHeadersCookie(cookie))).then((value) {
+            if (autoPlay) {
+              messageModels.messages.last.player.play();
+            }
+      });
     }
     Log.i("Message completed, re-enabling", tag:"Chat Page ViewModel");
 
@@ -134,8 +139,9 @@ class AIChatMsgListViewModel extends BaseViewModel {
       Log.e(tag: tag, e);
     } finally {
       messageModels.messages.last.generateCompleted.value = true;
-    replying = false;
-    notifyListeners();
+      replying = false;
+      notifyListeners();
+      // showToast("打断成功，建议稍等或切换会话使用", toastType: ToastType.info, duration: 5.seconds);
     }
   }
   Future<void> appendMessage(String msg, String cookie) async {
@@ -157,7 +163,7 @@ class AIChatMsgListViewModel extends BaseViewModel {
       if (autoPlay) messageModels.messages.last.player.play();
     }
 
-    messageModels.messages.last.animatedAdd(msg, refresh); // TODO: NEED TEST
+    messageModels.messages.last.animatedAdd(msg, refresh);
     // Log.d(sentences, tag:"Chat Page ViewModel appendMessage");
     for (int index = 0; index < sentences.length - 1; ++index) {
       await messageModels.messages.last.append(sentences[index], true, (){}, submitAudio);

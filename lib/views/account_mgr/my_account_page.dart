@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:purlaw/common/utils/log_utils.dart';
 import 'package:purlaw/components/purlaw/purlaw_components.dart';
 import 'package:purlaw/components/third_party/prompt.dart';
 import 'package:purlaw/models/account_mgr/user_info_model.dart';
@@ -28,12 +29,14 @@ Future openMyAccountPage(BuildContext context) {
   return Navigator.push(context,
       MaterialPageRoute(builder: (_) => const AccountLoginPage(showBack: true)));
 }
-bool checkAndLoginIfNot(BuildContext context) {
+bool checkAndLoginIfNot(BuildContext context, {Function(Object? result)? callback}) {
   bool logged =
       Provider.of<MainViewModel>(context, listen: false).cookies.isNotEmpty;
   if (!logged) {
     Navigator.push(context,
-        MaterialPageRoute(builder: (_) => const AccountLoginPage(showBack: true)));
+        MaterialPageRoute(builder: (_) => const AccountLoginPage(showBack: true))).then((value) {
+          if (callback != null) callback(value);
+    });
   }
   return logged;
 }

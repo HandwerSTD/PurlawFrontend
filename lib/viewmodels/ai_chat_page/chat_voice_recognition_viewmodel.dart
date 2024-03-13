@@ -63,6 +63,20 @@ class ChatVoiceRecognitionViewModel extends BaseViewModel {
     audioRecorder.dispose();
   }
 
+  void manuallyBreak() {
+    Log.i(tag: "Chat Voice Recognition ViewModel", "[DEBUG] Manually Break");
+    try {
+      ChatNetworkRequest.isolate?.kill(priority: Isolate.immediate);
+      message.player.stop();
+    } on Exception catch (e) {
+      Log.e(tag: "Chat Voice Recognition ViewModel", e);
+    } finally {
+      message.generateCompleted.value = true;
+      notifyListeners();
+      // showToast("打断成功，建议稍等或切换会话使用", toastType: ToastType.info, duration: 5.seconds);
+    }
+  }
+
   void startRecord() async {
     text = "聆听中...";  sttFinished = false; showMineText = false; notifyListeners();
     Log.i("Start record");
@@ -74,6 +88,8 @@ class ChatVoiceRecognitionViewModel extends BaseViewModel {
           return;
         }
       }
+      ChatNetworkRequest.isolate?.kill(priority: Isolate.immediate);
+      message.player.stop();
       await audioRecorder.start(
           const RecordConfig(
               encoder: AudioEncoder.wav, sampleRate: 16000, numChannels: 1),
@@ -101,27 +117,27 @@ class ChatVoiceRecognitionViewModel extends BaseViewModel {
   Future<void> appendMessage(String msg, String cookie) async {
     var sentences = msg.split('。'); // 按逗号分隔
     bool endsWithDot = msg.endsWith('。'); // 最后一个是否是完整句子
+
     refresh(){
       notifyListeners();
     }
     Future<void> submitAudio(String sentence, int id) async {
       if (sentence.isEmpty) return;
-      Log.d(HttpGet.getApi(API.chatRequestVoice.api) +
-          sentence, tag: "Chat Audio API SubmitAudio");
       await message.playlist.add(LockCachingAudioSource(
           Uri.parse(HttpGet.getApi(API.chatRequestVoice.api) +
               sentence),
           headers: HttpGet.jsonHeadersCookie(cookie)));
       message.player.play();
     }
-    Log.d(sentences, tag:"Chat Page ViewModel appendMessage");
+
+    message.animatedAdd(msg, refresh);
+    // Log.d(sentences, tag:"Chat Page ViewModel appendMessage");
     for (int index = 0; index < sentences.length - 1; ++index) {
-      await message.append(sentences[index], true, refresh, submitAudio);
+      await message.append(sentences[index], true, (){}, submitAudio);
     }
     if (sentences.last.isEmpty) return;
-    await message.append(sentences.last, endsWithDot, refresh, submitAudio);
+    await message.append(sentences.last, endsWithDot, (){}, submitAudio);
   }
-
   Future<void> submit(String cookie) async {
     message = AIChatMessageModelWithAudio();
     startGen = true;

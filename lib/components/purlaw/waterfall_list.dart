@@ -94,3 +94,99 @@ class _PurlawWaterfallListState extends State<PurlawWaterfallList> {
     });
   }
 }
+
+// TODO: 写点新东西
+class CustomPurlawWaterfallList extends StatefulWidget {
+  final List<Widget> list;
+  final ScrollController controller;
+  final bool useTopPadding;
+  final Future<void> Function() onPullRefresh;
+  final NetworkLoadingState loadingState;
+  final Widget? readyWidget;
+  final double refresherOffset;
+  const CustomPurlawWaterfallList(
+      {required this.list,
+        required this.controller,
+        this.useTopPadding = true,
+        super.key,
+        required this.onPullRefresh,
+        required this.loadingState,
+        this.refresherOffset = 0,
+        this.readyWidget});
+
+  @override
+  State<CustomPurlawWaterfallList> createState() => _CustomPurlawWaterfallListState();
+}
+
+class _CustomPurlawWaterfallListState extends State<CustomPurlawWaterfallList> {
+  bool errorRefreshing = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(builder: (_, constraints) {
+      bool break4 =
+      (constraints.maxWidth > 800), break3 = (constraints.maxWidth > 500);
+      bool lgBreak =
+      (Responsive.checkWidth(constraints.maxWidth) == Responsive.lg);
+      var themeModel = Provider.of<ThemeViewModel>(context).themeModel;
+      return RefreshIndicator(
+        edgeOffset: widget.refresherOffset,
+        onRefresh: widget.onPullRefresh,
+        child: MultiStateWidget(
+          state: widget.loadingState,
+          builder: (_) => Container(
+            padding: const EdgeInsets.only(left: 2, right: 2),
+            width: Responsive.assignWidthMedium(constraints.maxWidth),
+            child: CustomScrollView(
+              slivers: [
+                // WaterfallFlow.count(
+                //   padding: (widget.useTopPadding
+                //       ? EdgeInsets.only(top: (lgBreak ? 84 : 68))
+                //       : null),
+                //   crossAxisCount: (break4 ? 4 : (break3 ? 3 : 2)),
+                //   controller: widget.controller,
+                //   children: widget.list,
+                // ),
+                SliverWaterfallFlow(delegate: SliverChildBuilderDelegate((context, index) {
+                  
+                }), gridDelegate: SliverWaterfallFlowDelegateWithFixedCrossAxisCount(crossAxisCount: (break4 ? 4 : (break3 ? 3 : 2))))
+              ],
+            ),
+          ),
+          readyWaitingWidget: widget.readyWidget,
+          errorWidget: Container(
+            alignment: Alignment.center,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text("加载失败\n"),
+                PurlawRRectButton(
+                  height: 54,
+                  width: 144,
+                  radius: 12,
+                  backgroundColor: themeModel.colorModel.generalFillColor,
+                  onClick: () async {
+                    setState(() {
+                      errorRefreshing = true;
+                    });
+                    await widget.onPullRefresh();
+                    setState(() {
+                      errorRefreshing = false;
+                    });
+                  },
+                  disabled: errorRefreshing,
+                  disabledColor: themeModel.colorModel.generalFillColor,
+                  child: Text(
+                    (errorRefreshing ? "加载中" : "重新加载"),
+                    style: const TextStyle(color: Colors.white, fontSize: 18),
+                  ),
+                )
+              ],
+            ),
+          ),
+        ),
+      );
+    });
+  }
+}
+

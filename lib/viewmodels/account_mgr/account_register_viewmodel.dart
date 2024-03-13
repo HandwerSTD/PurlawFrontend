@@ -25,7 +25,7 @@ class AccountRegisterViewModel extends BaseViewModel {
 
   (bool, String) verifyRegister() {
     if (nameCtrl.text.isEmpty || mailCtrl.text.isEmpty || passwdCtrl.text.isEmpty) return (false, "填写信息不完整");
-    if (!agreeStatement) return (false, "请阅读并同意《用户协议》与《隐私协议》");
+    if (!agreeStatement) return (false, "请阅读并同意协议");
     if (!mailCtrl.text.isEmail) return (false, "邮箱格式不正确");
     if (passwdCtrl.text.length < 6) return (false, "密码不得少于 6 位");
     return (true, "注册中");

@@ -67,6 +67,7 @@ class AccountLoginViewModel extends BaseViewModel {
 
       // 获取用户信息
       var userModel = await NetworkRequest.getUserInfoWhenLogin(nameCtrl.text, setCookie);
+      await fetchUserSessionList(setCookie);
       eventBus.fire(AccountLoginEventBus(needNavigate: false, model: userModel, setCookie: setCookie));
 
     } catch(e) {
@@ -75,6 +76,23 @@ class AccountLoginViewModel extends BaseViewModel {
     }
     eventBus.fire(AccountLoginEventBus(needNavigate: true));
     return "success";
+  }
+
+  Future<void> fetchUserSessionList(String cookie) async {
+    try {
+      var response = jsonDecode(await HttpGet.get(
+        API.chatListSession.api,
+        HttpGet.jsonHeadersCookie(cookie),).timeout(const Duration(seconds: 10)));
+      if (response["status"] != "success") throw Exception(response["message"]);
+      var list = <(String, String)>[];
+      for (var sid in (response["sid"])) {
+        list.add((sid, "获取的会话信息"));
+      }
+      SessionListDatabaseUtil.storeSessionList(list);
+    } catch(e) {
+      Log.e(e, tag: "Chat Session ViewModel");
+      showToast("获取失败", toastType: ToastType.error);
+    }
   }
 }
 

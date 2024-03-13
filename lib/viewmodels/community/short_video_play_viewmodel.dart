@@ -66,14 +66,13 @@ class ShortVideoPlayBlockViewModel extends BaseViewModel {
   late VideoPlayerController videoPlayerController;
   late ChewieController videoController;
   final VideoInfoModel nowPlaying;
-  String cookie = "";
   bool loaded = false;
   bool loadError = false;
   bool autoPlay = true;
 
   ShortVideoPlayBlockViewModel({required this.nowPlaying});
 
-  Future<void> getVideoIsLiked() async {
+  Future<void> getVideoIsLiked(String cookie) async {
     try {
       var response = jsonDecode(await HttpGet.post(API.videoIsLiked.api, HttpGet.jsonHeadersCookie(cookie), {
         "vid": nowPlaying.uid
@@ -81,18 +80,18 @@ class ShortVideoPlayBlockViewModel extends BaseViewModel {
       if (response["status"] != "success") throw Exception(response["message"]);
       assert(response["message"] == 0 || response["message"] == 1);
       nowPlaying.meLiked = response["message"];
+      notifyListeners();
     } on Exception catch (e) {
       Log.e(tag: tag,e);
       showToast("网络错误", toastType: ToastType.warning);
     }
   }
 
-  load() {
+  load(String cookie) {
     nowPlaying.meLiked = -1;
     if (cookie != "") {
-      getVideoIsLiked();
+      getVideoIsLiked(cookie);
     }
-    // Log.i(tag: tag,tag: tagHttpGet.getApi(API.videoFile.api) + nowPlaying.sha1!);
     try {
       videoPlayerController = VideoPlayerController.networkUrl(Uri.parse(HttpGet.getApi(API.videoFile.api) + nowPlaying.sha1!));
       videoPlayerController.initialize().then((_) {
@@ -124,13 +123,8 @@ class ShortVideoPlayBlockViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  Future<void> switchVideoLike() async {
+  Future<void> switchVideoLike(String cookie) async {
     if (!loaded) {
-      return;
-    }
-    if (nowPlaying.meLiked == -1) {
-      pauseVideo();
-      eventBus.fire(ShortVideoPlayBlockEventBus(needNavigate: true));
       return;
     }
     var origin = nowPlaying.meLiked.toInt();
@@ -155,9 +149,4 @@ class ShortVideoPlayBlockViewModel extends BaseViewModel {
     videoPlayerController.dispose();
     if (loaded) videoController.dispose();
   }
-}
-
-class ShortVideoPlayBlockEventBus {
-  bool needNavigate;
-  ShortVideoPlayBlockEventBus({required this.needNavigate});
 }

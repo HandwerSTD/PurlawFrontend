@@ -1,6 +1,7 @@
 
 import 'dart:isolate';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -188,26 +189,46 @@ class _ChatVoiceRecognitionBodyState extends State<ChatVoiceRecognitionBody> {
                       Visibility(
                         child: Padding(
                           padding: const EdgeInsets.only(bottom: 48),
-                          child: FloatingActionButton.extended(
-                            backgroundColor:
-                            getThemeModel(context).colorModel.generalFillColor,
-                            onPressed: () async {
-                              if (!model.listeningVoice) {
-                                model.startRecord();
-                              } else {
-                                model.stopRecord();
-                              }
-                            },
-                            icon: Icon(
-                              (model.listeningVoice
-                                  ? Icons.mic_rounded
-                                  : Icons.mic_none_rounded),
-                              color: Colors.white,
-                            ),
-                            label: Text(
-                              (model.listeningVoice ? "停止并识别" : "开始说话"),
-                              style: const TextStyle(color: Colors.white),
-                            ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              FloatingActionButton.extended(
+                                backgroundColor:
+                                getThemeModel(context).colorModel.generalFillColor,
+                                onPressed: () async {
+                                  if (!model.listeningVoice) {
+                                    model.startRecord();
+                                  } else {
+                                    model.stopRecord();
+                                  }
+                                },
+                                icon: Icon(
+                                  (model.listeningVoice
+                                      ? Icons.mic_rounded
+                                      : Icons.mic_none_rounded),
+                                  color: Colors.white,
+                                ),
+                                label: Text(
+                                  (model.listeningVoice ? "停止并识别" : "开始说话"),
+                                  style: const TextStyle(color: Colors.white),
+                                ),
+                              ),
+                              ValueListenableBuilder(
+                                valueListenable: model.message.generateCompleted,
+                                builder: (context, value, child) {
+                                  if (value) return Container();
+                                  return Padding(
+                                    padding: const EdgeInsets.only(left: 12),
+                                    child: FloatingActionButton.extended(onPressed: (){
+                                                    model.manuallyBreak();
+                                                    }, label: const Icon(Icons.stop_circle_rounded,
+                                                    color: Colors.white,),
+                                                    backgroundColor:
+                                                    getThemeModel(context).colorModel.generalFillColor,),
+                                  );
+
+                                })
+                            ],
                           ),
                         ),
                       ),

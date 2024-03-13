@@ -140,6 +140,9 @@ class _SettingsPageBodyState extends State<SettingsPageBody> {
                     isOn: autoPlayAudio,
                     onChanged: (bool value) {
                       KVBox.insert(DatabaseConst.autoAudioPlay, (autoPlayAudio ? DatabaseConst.dbFalse : DatabaseConst.dbTrue));
+                      setState(() {
+                        autoPlayAudio = !autoPlayAudio;
+                      });
                     },
                   ),
                   iconStyle: IconStyle(

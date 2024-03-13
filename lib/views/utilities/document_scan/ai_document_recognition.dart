@@ -168,6 +168,7 @@ class AIDocumentRecognitionBody extends StatelessWidget {
                             ],
                           ),
                         ),
+                        SizedBox(height: 4,),
                         PurlawRRectButton(
                           width: 72,
                           onClick: () async {
@@ -254,47 +255,52 @@ class AIDocumentAnalyzeDialog extends StatelessWidget {
           model.load(documentText, getCookie(context, listen: false));
         },
         builder: (context, model, child) {
-          return Container(
-            width: Responsive.assignWidthMedium(Grock.width),
-            margin: const EdgeInsets.only(left: 12, right: 12, top: 64, bottom: 64),
-            decoration: BoxDecoration(
-              color: getThemeModel(context).dark ? const Color(0xff333333) : getThemeModel(context).themeData.scaffoldBackgroundColor,
-              borderRadius: BorderRadius.circular(24)
-            ),
-            child: ListView(
-              shrinkWrap: true,
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 36),
-              children: [
-                Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Padding(
-                          padding: EdgeInsets.only(left: 36),
-                          child: Text("分析  "),
-                        ),
-                        ValueListenableBuilder(
-                            valueListenable:
-                            model.message.generateCompleted,
-                            builder: (context, val, child) {
-                              if (val) return Container();
-                              return const TDLoading(
-                                size: TDLoadingSize.small,
-                                icon: TDLoadingIcon.circle,
-                              );
-                            })
-                      ],
-                    ),
-                    PurlawChatMessageBlockWithAudio(
-                      msg: model.message,
-                      overrideRadius: true,
-                    )
-                  ],
-                )
-              ],
+          return PopScope(
+            onPopInvoked: (val){
+              model.manuallyBreak();
+            },
+            child: Container(
+              width: Responsive.assignWidthMedium(Grock.width),
+              margin: const EdgeInsets.only(left: 12, right: 12, top: 64, bottom: 64),
+              decoration: BoxDecoration(
+                color: getThemeModel(context).dark ? const Color(0xff333333) : getThemeModel(context).themeData.scaffoldBackgroundColor,
+                borderRadius: BorderRadius.circular(24)
+              ),
+              child: ListView(
+                shrinkWrap: true,
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 36),
+                children: [
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Padding(
+                            padding: EdgeInsets.only(left: 36),
+                            child: Text("分析  "),
+                          ),
+                          ValueListenableBuilder(
+                              valueListenable:
+                              model.message.generateCompleted,
+                              builder: (context, val, child) {
+                                if (val) return Container();
+                                return const TDLoading(
+                                  size: TDLoadingSize.small,
+                                  icon: TDLoadingIcon.circle,
+                                );
+                              })
+                        ],
+                      ),
+                      PurlawChatMessageBlockWithAudio(
+                        msg: model.message,
+                        overrideRadius: true,
+                      )
+                    ],
+                  )
+                ],
+              ),
             ),
           );
         },

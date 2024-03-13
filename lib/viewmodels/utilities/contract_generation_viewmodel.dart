@@ -39,6 +39,7 @@ class ContractGenerationViewModel extends BaseViewModel {
       return;
     }
     try {
+      ChatNetworkRequest.isolate?.kill(priority: Isolate.immediate);
       await ChatNetworkRequest.submitNewMessage(session, "按以下信息生成一份合同：合同标题为《$title》，甲方为 $aName，乙方为 $bName，合同类型为 $type。合同描述：$text", cookie, appendMessage, (){
         genStart = false; genComplete = true;
         controller = TextEditingController(text: text);
