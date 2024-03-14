@@ -431,10 +431,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_fast_forms
-      sha256: "55e708fb6905bcb7cc6c4d763e47e9d9a5b7731702d862d5060ffd227e74c2fc"
+      sha256: "969d9660c966005924896d3b93c486c548f157a5211834b4a085dcd84a751c6f"
       url: "https://pub.dev"
     source: hosted
-    version: "15.0.0"
+    version: "13.0.0"
   flutter_image_compress:
     dependency: "direct main"
     description:
@@ -483,6 +483,11 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.3"
+  flutter_localizations:
+    dependency: "direct main"
+    description: flutter
+    source: sdk
+    version: "0.0.0"
   flutter_oss_licenses:
     dependency: "direct main"
     description:
@@ -731,10 +736,10 @@ packages:
     dependency: transitive
     description:
       name: intl
-      sha256: d6f56758b7d3014a48af9701c085700aac781a92a87a62b1333b46d8879661cf
+      sha256: "3bc132a9dbce73a7e4a21a17d06e1878839ffbf975568bc875c60537824b0c4d"
       url: "https://pub.dev"
     source: hosted
-    version: "0.19.0"
+    version: "0.18.1"
   ionicons:
     dependency: "direct main"
     description:

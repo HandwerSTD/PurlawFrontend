@@ -104,11 +104,13 @@ class AIChatMessageModelWithAudio {
   AIChatMessageModelWithAudio();
 
   Future<void> animatedAdd(String msg, Function refresh) async {
-    for (var ch in msg.split('')) {
-      await Future.delayed(const Duration(milliseconds: 50));
-      showedText += ch;
-      refresh();
-    }
+    // for (var ch in msg.split('')) {
+    //   await Future.delayed(const Duration(milliseconds: 50));
+    //   showedText += ch;
+    //   refresh();
+    // }
+    showedText += msg;
+    refresh();
   }
 
   AIChatMessageModelWithAudio.fromFull(String msg, bool mine, {bool first = false}) {

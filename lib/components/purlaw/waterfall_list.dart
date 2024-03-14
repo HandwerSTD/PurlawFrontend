@@ -95,9 +95,9 @@ class _PurlawWaterfallListState extends State<PurlawWaterfallList> {
   }
 }
 
-// TODO: 写点新东西
 class CustomPurlawWaterfallList extends StatefulWidget {
   final List<Widget> list;
+  final Widget? leading;
   final ScrollController controller;
   final bool useTopPadding;
   final Future<void> Function() onPullRefresh;
@@ -112,7 +112,7 @@ class CustomPurlawWaterfallList extends StatefulWidget {
         required this.onPullRefresh,
         required this.loadingState,
         this.refresherOffset = 0,
-        this.readyWidget});
+        this.readyWidget, this.leading});
 
   @override
   State<CustomPurlawWaterfallList> createState() => _CustomPurlawWaterfallListState();
@@ -138,18 +138,15 @@ class _CustomPurlawWaterfallListState extends State<CustomPurlawWaterfallList> {
             padding: const EdgeInsets.only(left: 2, right: 2),
             width: Responsive.assignWidthMedium(constraints.maxWidth),
             child: CustomScrollView(
+              controller: widget.controller,
               slivers: [
-                // WaterfallFlow.count(
-                //   padding: (widget.useTopPadding
-                //       ? EdgeInsets.only(top: (lgBreak ? 84 : 68))
-                //       : null),
-                //   crossAxisCount: (break4 ? 4 : (break3 ? 3 : 2)),
-                //   controller: widget.controller,
-                //   children: widget.list,
-                // ),
+                SliverList(delegate: SliverChildListDelegate([
+                  SizedBox(height: widget.useTopPadding ? (lgBreak ? 84 : 68) : 0,),
+                  widget.leading ?? Container()
+                ])),
                 SliverWaterfallFlow(delegate: SliverChildBuilderDelegate((context, index) {
-                  
-                }), gridDelegate: SliverWaterfallFlowDelegateWithFixedCrossAxisCount(crossAxisCount: (break4 ? 4 : (break3 ? 3 : 2))))
+                  return widget.list[index];
+                }, childCount: widget.list.length), gridDelegate: SliverWaterfallFlowDelegateWithFixedCrossAxisCount(crossAxisCount: (break4 ? 4 : (break3 ? 3 : 2)), crossAxisSpacing: 1))
               ],
             ),
           ),

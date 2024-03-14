@@ -50,7 +50,7 @@ class _SearchAppBarState extends State<SearchAppBar> {
       height: widget.height,
       // 设置padding
       padding: const EdgeInsets.only(left: 20, top: 0),
-      margin: (widget.readOnly ? EdgeInsets.only(left: 12, right: 12, top: (rBreak ? 84 : 8)) : const EdgeInsets.only(top: 6)),
+      margin: (widget.readOnly ? EdgeInsets.only(left: 8, right: 12, top: (rBreak ? 84 : 8)) : const EdgeInsets.only(top: 6)),
       // 设置子级位置
       alignment: Alignment.centerLeft,
       // 设置修饰

@@ -148,7 +148,7 @@ class _AIChatPageFooterState extends State<AIChatPageFooter> {
                 width: Responsive.assignWidthMedium(constraint.maxWidth),
                 padding: EdgeInsets.only(
                     left: 12, right: 18, top: 2 + (lgBreak ? 2 : 0), bottom: 4),
-                margin: (lgBreak ? const EdgeInsets.only(bottom: 4) : null),
+                margin: (lgBreak ? const EdgeInsets.only(bottom: 12) : null),
                 child: Row(
                   mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.spaceAround,

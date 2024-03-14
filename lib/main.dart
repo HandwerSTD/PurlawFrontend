@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:grock/grock.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
@@ -45,6 +46,16 @@ class MyApp extends StatelessWidget {
       child: Builder(builder: (context) {
         return MaterialApp(
             title: "紫藤法道",
+            localizationsDelegates: [
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            supportedLocales: [
+              const Locale('zh','CN'),
+              const Locale('en','US'),
+            ],
+
             theme: Provider.of<ThemeViewModel>(context).themeModel.themeData,
             navigatorKey: Grock.navigationKey, // added line
             scaffoldMessengerKey: Grock.scaffoldMessengerKey, // added line

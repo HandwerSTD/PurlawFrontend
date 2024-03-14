@@ -8,6 +8,7 @@ import 'package:purlaw/common/network/network_request.dart';
 import 'package:purlaw/common/utils/misc.dart';
 import 'package:purlaw/components/purlaw/purlaw_components.dart';
 import 'package:purlaw/components/purlaw/search_bar.dart';
+import 'package:purlaw/components/purlaw/waterfall_list.dart';
 import 'package:purlaw/components/third_party/image_loader.dart';
 import 'package:purlaw/models/community/short_video_info_model.dart';
 import 'package:purlaw/viewmodels/community/short_video_list_viewmodel.dart';
@@ -60,7 +61,8 @@ class _CommunityPageBodyState extends State<CommunityPageBody> {
         margin: const EdgeInsets.symmetric(horizontal: 2),
           alignment: Alignment.center,
           child: Stack(alignment: Alignment.topCenter, children: [
-            PurlawWaterfallList(
+            CustomPurlawWaterfallList(
+              leading: const RecommendedCategory(),
               refresherOffset: 40,
               controller: controller,
               list: List.generate((model.videoList.result?.length) ?? 0, (index) {
@@ -98,7 +100,7 @@ class _CommunityPageBodyState extends State<CommunityPageBody> {
   }
   Widget fabShell(Widget child) {
     return Container(
-      margin: EdgeInsets.only(right: 8, top: 8),
+      margin: EdgeInsets.only(right: 6, top: 8),
       height: 48,
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(36),
@@ -326,3 +328,50 @@ class GridVideoBlock extends StatelessWidget {
     );
   }
 }
+
+class RecommendedCategory extends StatelessWidget {
+  const RecommendedCategory({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(height: 12,),
+        Text("   精选分区", style: TextStyle(fontSize: 20),),
+        Container(
+          height: 204,
+          margin: EdgeInsets.only(bottom: 28),
+          child: ListView(
+            padding: EdgeInsets.only(left: 12, top: 12, bottom: 4),
+            shrinkWrap: true,
+            scrollDirection: Axis.horizontal,
+            children: [
+              Card(
+                margin: EdgeInsets.only(left: 4) ,
+                child: Container(
+                  width: 128,
+                  child: Text("666"),
+                ),),
+              Card(
+                margin: EdgeInsets.only(left: 24) ,
+                child: Container(
+                  width: 128,
+                  child: Text("666"),
+                ),),
+              Card(
+                margin: EdgeInsets.only(left: 24) ,
+                child: Container(
+                  width: 128,
+                  child: Text("666"),
+                ),),
+            ],
+          ),
+        ),
+        Text("   热门推荐", style: TextStyle(fontSize: 20),),
+        SizedBox(height: 8,)
+      ],
+    );
+  }
+}
+
