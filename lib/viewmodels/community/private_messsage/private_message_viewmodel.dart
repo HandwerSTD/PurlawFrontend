@@ -41,7 +41,11 @@ class PrivateMessageViewModel extends BaseViewModel {
       notifyListeners();
     } catch(e) {
       Log.e(tag: "PrivateMessage ViewModel", e);
-      showToast("网络错误", toastType: ToastType.error);
+      if (e.toString().contains("cookie")) {
+        showToast("请尝试刷新用户信息", toastType: ToastType.error);
+      } else {
+        showToast("网络错误", toastType: ToastType.error);
+      }
       changeState(NetworkLoadingState.ERROR);
     }
     try {

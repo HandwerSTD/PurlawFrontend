@@ -1,5 +1,6 @@
 /// AI 对话界面的 ViewModel
 
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:isolate';
@@ -146,7 +147,7 @@ class AIChatMsgListViewModel extends BaseViewModel {
   }
   Future<void> appendMessage(String msg, String cookie) async {
     var sentences = msg.split('。'); // 按逗号分隔
-    bool endsWithDot = msg.endsWith('。'); // 最后一个是否是完整句子
+    bool endsWithDot = msg.endsWith('。') || msg.endsWith('？'); // 最后一个是否是完整句子
 
     refresh(){
       notifyListeners();
@@ -175,7 +176,7 @@ class AIChatMsgListViewModel extends BaseViewModel {
     final text = controller.text, session = DatabaseUtil.getLastAIChatSession();
     if (text.isEmpty) return;
     if (session.isEmpty) {
-      showToast("请先在左上角选择会话", toastType: ToastType.warning);
+      showToast("请先在左上角选择会话", toastType: ToastType.warning, alignment: Alignment.center);
       return;
     }
 

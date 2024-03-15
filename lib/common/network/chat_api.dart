@@ -4,6 +4,7 @@ import 'dart:isolate';
 import 'package:grock/grock.dart';
 import 'package:purlaw/common/network/network_request.dart';
 import 'package:purlaw/common/utils/log_utils.dart';
+import 'package:purlaw/components/third_party/prompt.dart';
 
 import '../constants/constants.dart';
 
@@ -11,6 +12,22 @@ class ChatNetworkRequest {
 
 
   static Isolate? isolate;
+
+  static void breakIsolate(String cookie, String session, {bool manually = false}) async {
+    isolate?.kill(priority: Isolate.immediate);
+    try {
+      var response = jsonDecode(await HttpGet.post(API.chatShutTask.api, HttpGet.jsonHeadersCookie(cookie), {
+        "sid": session
+      }));
+      if (response["status"] != "success") throw Exception(response["message"]);
+      if (manually) {
+        showToast("打断成功", toastType: ToastType.info);
+      }
+    } catch(e) {
+      Log.e(e, tag: "Chat Network BreakIsolate");
+      showToast("打断服务器生成失败", toastType: ToastType.error);
+    }
+  }
 
   static Future<void> submitNewMessage(
       String session, String text, String cookie, Future<void> Function(String dt, String cookie) append, Function callback) async {

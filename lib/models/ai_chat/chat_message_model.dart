@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:purlaw/common/utils/log_utils.dart';
+import 'package:synchronized/synchronized.dart';
 
 import '../../components/third_party/modified_just_audio.dart';
 
@@ -100,17 +101,20 @@ class AIChatMessageModelWithAudio {
   ValueNotifier<bool> generateCompleted = ValueNotifier(false);
   AudioPlayer player = AudioPlayer();
   final playlist = ConcatenatingAudioSource(children: []);
+  final lock = Lock();
 
   AIChatMessageModelWithAudio();
 
   Future<void> animatedAdd(String msg, Function refresh) async {
-    // for (var ch in msg.split('')) {
-    //   await Future.delayed(const Duration(milliseconds: 50));
-    //   showedText += ch;
-    //   refresh();
-    // }
-    showedText += msg;
-    refresh();
+    lock.synchronized(() async {
+      for (var ch in msg.split('')) {
+        await Future.delayed(const Duration(milliseconds: 50));
+        showedText += ch;
+        refresh();
+      }
+    });
+    // showedText += msg;
+    // refresh();
   }
 
   AIChatMessageModelWithAudio.fromFull(String msg, bool mine, {bool first = false}) {

@@ -79,7 +79,9 @@ class _MyAccountPageState extends State<MyAccountPage> {
             }
           }, icon: const Icon(Icons.refresh)),
           IconButton(onPressed: (){
-            Navigator.push(context, CupertinoPageRoute(builder: (_) => const PrivateMessageUserListPage()));
+            if (checkAndLoginIfNot(context)) {
+              Navigator.push(context, CupertinoPageRoute(builder: (_) => const PrivateMessageUserListPage()));
+            }
           }, icon: const Icon(EvaIcons.messageCircleOutline)),
           IconButton(onPressed: (){
             Navigator.push(context, CupertinoPageRoute(builder: (_) => const SettingsPage()));

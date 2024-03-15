@@ -57,7 +57,11 @@ class PrivateMessageListViewModel extends BaseViewModel {
       }
     } catch (e) {
       Log.e(tag: "PrivateMessageList ViewModel", e);
-      showToast("网络错误", toastType: ToastType.error);
+      if (e.toString().contains("cookie")) {
+        showToast("请尝试刷新用户信息", toastType: ToastType.error);
+      } else {
+        showToast("网络错误", toastType: ToastType.error);
+      }
       changeState(NetworkLoadingState.ERROR);
     }
   }

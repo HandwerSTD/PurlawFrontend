@@ -28,6 +28,7 @@ enum API {
   chatListSession("/api/chat/list_session"),
   chatFlushSession("/api/chat/flush_session"),
   chatDestroySession("/api/chat/destroy_session"),
+  chatShutTask("/api/chat/shut_task"),
   chatRequestVoice("/api/voice/request_voice/"),
 
   pmGetAllUsers("/api/message/get_all_users"),
