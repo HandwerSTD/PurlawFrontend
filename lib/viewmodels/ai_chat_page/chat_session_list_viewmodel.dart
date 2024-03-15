@@ -94,6 +94,7 @@ class ChatSessionListViewModel extends BaseViewModel {
       sessionList.removeAt(index);
       notifyListeners();
       SessionListDatabaseUtil.delete(sid);
+      showToast("删除成功", toastType: ToastType.success);
     } catch(e) {
       Log.e(e, tag: "Chat Session ViewModel");
       showToast("删除失败", toastType: ToastType.error);

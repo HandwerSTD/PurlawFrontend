@@ -16,6 +16,7 @@ class DatabaseUtil {
     KVBox.insert(DatabaseConst.firstOpen, DatabaseConst.dbTrue);
     KVBox.insert(DatabaseConst.themeColor, "0");
     KVBox.insert(DatabaseConst.autoAudioPlay, DatabaseConst.dbFalse);
+    KVBox.insert(DatabaseConst.aiChatFloatingButtonEnabled, DatabaseConst.dbTrue);
     storeServerAddress(HttpGet.baseUrl);
   }
 

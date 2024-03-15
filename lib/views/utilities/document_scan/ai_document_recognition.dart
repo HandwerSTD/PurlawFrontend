@@ -12,6 +12,7 @@ import 'package:purlaw/viewmodels/main_viewmodel.dart';
 import 'package:purlaw/viewmodels/theme_viewmodel.dart';
 import 'package:tdesign_flutter/tdesign_flutter.dart';
 
+import '../../../common/utils/database/database_util.dart';
 import '../../../common/utils/log_utils.dart';
 import '../../../components/third_party/prompt.dart';
 
@@ -257,7 +258,7 @@ class AIDocumentAnalyzeDialog extends StatelessWidget {
         builder: (context, model, child) {
           return PopScope(
             onPopInvoked: (val){
-              model.manuallyBreak();
+              model.manuallyBreak(getCookie(context, listen: false), DatabaseUtil.getLastAIChatSession());
             },
             child: Container(
               width: Responsive.assignWidthMedium(Grock.width),

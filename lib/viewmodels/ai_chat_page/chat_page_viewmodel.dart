@@ -131,10 +131,11 @@ class AIChatMsgListViewModel extends BaseViewModel {
     SessionListDatabaseUtil.storeHistoryBySid(sid, jsonEncode(messageModels.export().toJson()));
     notifyListeners();
   }
-  void manuallyBreak() {
+  void manuallyBreak(String cookie, String session) {
     Log.i(tag: tag, "[DEBUG] Manually Break");
     try {
-      ChatNetworkRequest.isolate?.kill(priority: Isolate.immediate);
+      // ChatNetworkRequest.isolate?.kill(priority: Isolate.immediate);
+      ChatNetworkRequest.breakIsolate(cookie, session, manually: true);
       messageModels.messages.last.player.stop();
     } on Exception catch (e) {
       Log.e(tag: tag, e);
@@ -206,7 +207,7 @@ class AIChatMsgListViewModel extends BaseViewModel {
         showToast("生成失败，请尝试刷新会话列表", toastType: ToastType.error);
       }
       showToast("生成失败", toastType: ToastType.error);
-      manuallyBreak();
+      manuallyBreak(cookie, session);
     }
   }
 }

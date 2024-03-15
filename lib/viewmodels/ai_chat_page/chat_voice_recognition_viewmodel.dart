@@ -63,10 +63,11 @@ class ChatVoiceRecognitionViewModel extends BaseViewModel {
     audioRecorder.dispose();
   }
 
-  void manuallyBreak() {
+  void manuallyBreak(String cookie, String session) {
     Log.i(tag: "Chat Voice Recognition ViewModel", "[DEBUG] Manually Break");
     try {
-      ChatNetworkRequest.isolate?.kill(priority: Isolate.immediate);
+      // ChatNetworkRequest.isolate?.kill(priority: Isolate.immediate);
+      ChatNetworkRequest.breakIsolate(cookie, session, manually: true);
       message.player.stop();
     } on Exception catch (e) {
       Log.e(tag: "Chat Voice Recognition ViewModel", e);
@@ -88,7 +89,8 @@ class ChatVoiceRecognitionViewModel extends BaseViewModel {
           return;
         }
       }
-      ChatNetworkRequest.isolate?.kill(priority: Isolate.immediate);
+      // ChatNetworkRequest.isolate?.kill(priority: Isolate.immediate);
+      ChatNetworkRequest.breakIsolate(cookie, DatabaseUtil.getLastAIChatSession());
       message.player.stop();
       await audioRecorder.start(
           const RecordConfig(
@@ -166,7 +168,8 @@ class ChatVoiceRecognitionViewModel extends BaseViewModel {
         showToast("生成失败，请尝试刷新会话列表", toastType: ToastType.error);
       }
       showToast("生成失败", toastType: ToastType.error);
-      ChatNetworkRequest.isolate?.kill(priority: Isolate.immediate);
+      // ChatNetworkRequest.isolate?.kill(priority: Isolate.immediate);
+      ChatNetworkRequest.breakIsolate(cookie, session);
     }
   }
 }

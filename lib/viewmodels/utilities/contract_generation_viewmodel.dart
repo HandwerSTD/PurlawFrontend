@@ -40,7 +40,8 @@ class ContractGenerationViewModel extends BaseViewModel {
     }
     try {
       showToast("生成中", toastType: ToastType.info, alignment: Alignment.center);
-      ChatNetworkRequest.isolate?.kill(priority: Isolate.immediate);
+      // ChatNetworkRequest.isolate?.kill(priority: Isolate.immediate);
+      ChatNetworkRequest.breakIsolate(cookie, session);
       await ChatNetworkRequest.submitNewMessage(session, "按以下信息生成一份合同：合同标题为《$title》，甲方为 $aName，乙方为 $bName，合同类型为 $type。合同描述：$text", cookie, appendMessage, (){
         genStart = false; genComplete = true;
         controller = TextEditingController(text: text);
@@ -49,7 +50,8 @@ class ContractGenerationViewModel extends BaseViewModel {
     } on Exception catch (e) {
       Log.e(tag: "ContractGeneration ViewModel", e);
       showToast("生成失败", toastType: ToastType.warning);
-      ChatNetworkRequest.isolate?.kill(priority: Isolate.immediate);
+      // ChatNetworkRequest.isolate?.kill(priority: Isolate.immediate);
+      ChatNetworkRequest.breakIsolate(cookie, session);
     }
   }
 }

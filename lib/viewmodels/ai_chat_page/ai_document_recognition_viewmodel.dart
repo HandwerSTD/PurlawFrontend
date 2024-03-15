@@ -97,17 +97,17 @@ class AIDocumentAnalyzeViewModel extends BaseViewModel {
     await message.append(sentences.last, endsWithDot, (){}, submitAudio);
   }
 
-  void manuallyBreak() {
+  void manuallyBreak(String cookie, String session) {
     Log.i(tag: "Chat Voice Recognition ViewModel", "[DEBUG] Manually Break");
     try {
-      ChatNetworkRequest.isolate?.kill(priority: Isolate.immediate);
+      // ChatNetworkRequest.isolate?.kill(priority: Isolate.immediate);
+      ChatNetworkRequest.breakIsolate(cookie, session);
       message.player.stop();
     } on Exception catch (e) {
       Log.e(tag: "Chat Voice Recognition ViewModel", e);
     } finally {
       message.generateCompleted.value = true;
       notifyListeners();
-      // showToast("打断成功，建议稍等或切换会话使用", toastType: ToastType.info, duration: 5.seconds);
     }
   }
   Future<void> submit(String cookie) async {
@@ -120,7 +120,8 @@ class AIDocumentAnalyzeViewModel extends BaseViewModel {
     }
     try {
       message.player.setAudioSource(message.playlist);
-      ChatNetworkRequest.isolate?.kill(priority: Isolate.immediate);
+      // ChatNetworkRequest.isolate?.kill(priority: Isolate.immediate);
+      ChatNetworkRequest.breakIsolate(cookie, session);
       await ChatNetworkRequest.submitNewMessage(session, "分析下列文本：\n$text", cookie, appendMessage, (){
         if (message.sentenceCompleted.isNotEmpty && !message.sentenceCompleted.last) {
           message.playlist.add(LockCachingAudioSource(
@@ -134,7 +135,8 @@ class AIDocumentAnalyzeViewModel extends BaseViewModel {
     } on Exception catch (e) {
       Log.e(tag: "ContractGeneration ViewModel", e);
       showToast("生成失败", toastType: ToastType.error);
-      ChatNetworkRequest.isolate?.kill(priority: Isolate.immediate);
+      // ChatNetworkRequest.isolate?.kill(priority: Isolate.immediate);
+      ChatNetworkRequest.breakIsolate(cookie, session);
     }
   }
 }

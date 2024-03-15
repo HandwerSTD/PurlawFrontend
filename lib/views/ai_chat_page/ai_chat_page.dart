@@ -15,6 +15,7 @@ import 'package:purlaw/viewmodels/theme_viewmodel.dart';
 import 'package:purlaw/views/account_mgr/components/account_page_components.dart';
 import 'package:purlaw/views/ai_chat_page/chat_page_voice_recognition.dart';
 
+import '../../common/utils/database/database_util.dart';
 import '../../models/account_mgr/user_info_model.dart';
 
 /// AI 对话界面的主体
@@ -93,7 +94,7 @@ class _AIChatPageFooterState extends State<AIChatPageFooter> {
                   RecommendedActionButton(
                     title: '停止对话',
                     onClick: () {
-                      model.manuallyBreak();
+                      model.manuallyBreak(getCookie(context, listen: false), DatabaseUtil.getLastAIChatSession());
                     },
                     show: model.replying,
                   ),

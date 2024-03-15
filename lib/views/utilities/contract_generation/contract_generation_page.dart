@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_fast_forms/flutter_fast_forms.dart';
 import 'package:provider/provider.dart';
+import 'package:purlaw/common/network/chat_api.dart';
 import 'package:purlaw/common/provider/provider_widget.dart';
 import 'package:purlaw/components/purlaw/appbar.dart';
 import 'package:purlaw/viewmodels/main_viewmodel.dart';
 import 'package:purlaw/viewmodels/utilities/contract_generation_viewmodel.dart';
 import 'package:tdesign_flutter/tdesign_flutter.dart';
 
+import '../../../common/utils/database/database_util.dart';
 import '../../../components/purlaw/text_field.dart';
 import '../../../components/third_party/prompt.dart';
 import '../../../viewmodels/theme_viewmodel.dart';
@@ -16,12 +18,17 @@ class ContractGenerationPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: PurlawAppTitleBar(
-        title: '合同生成',
-        showBack: true
-      ).build(context),
-      body: const ContractGenerationPageBody(),
+    return PopScope(
+      onPopInvoked: (val) {
+        ChatNetworkRequest.breakIsolate(getCookie(context, listen: false), DatabaseUtil.getLastAIChatSession());
+      },
+      child: Scaffold(
+        appBar: PurlawAppTitleBar(
+          title: '合同生成',
+          showBack: true
+        ).build(context),
+        body: const ContractGenerationPageBody(),
+      ),
     );
   }
 }

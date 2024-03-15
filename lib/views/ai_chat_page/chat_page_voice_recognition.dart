@@ -7,6 +7,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:purlaw/common/network/chat_api.dart';
 import 'package:purlaw/common/provider/provider_widget.dart';
+import 'package:purlaw/common/utils/database/database_util.dart';
 import 'package:purlaw/components/purlaw/appbar.dart';
 import 'package:purlaw/viewmodels/ai_chat_page/chat_voice_recognition_viewmodel.dart';
 import 'package:purlaw/viewmodels/main_viewmodel.dart';
@@ -23,7 +24,8 @@ class ChatPageVoiceRecognition extends StatelessWidget {
   Widget build(BuildContext context) {
     return PopScope(
       onPopInvoked: (val){
-        ChatNetworkRequest.isolate?.kill(priority: Isolate.immediate);
+        // ChatNetworkRequest.isolate?.kill(priority: Isolate.immediate);
+        ChatNetworkRequest.breakIsolate(getCookie(context, listen: false), DatabaseUtil.getLastAIChatSession());
       },
       child: Scaffold(
         appBar: PurlawAppTitleBar(title: "语音对话", showBack: true).build(context),
@@ -219,7 +221,7 @@ class _ChatVoiceRecognitionBodyState extends State<ChatVoiceRecognitionBody> {
                                 return Padding(
                                   padding: const EdgeInsets.only(left: 12),
                                   child: FloatingActionButton.extended(onPressed: (){
-                                                  model.manuallyBreak();
+                                                  model.manuallyBreak(getCookie(context, listen: false), DatabaseUtil.getLastAIChatSession());
                                                   }, label: const Icon(Icons.stop_circle_rounded,
                                                   color: Colors.white,),
                                                   backgroundColor:
