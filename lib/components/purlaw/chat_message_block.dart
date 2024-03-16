@@ -1,6 +1,5 @@
-
 import 'package:flutter/material.dart';
-import 'package:grock/grock.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:provider/provider.dart';
 import 'package:purlaw/common/utils/misc.dart';
 import 'package:purlaw/components/purlaw/purlaw_components.dart';
@@ -25,8 +24,7 @@ class PurlawChatMessageBlockViewOnly extends StatelessWidget {
 
   Widget chatMessageBlock(BuildContext context, ChatMessageModel msgData) {
     final width = MediaQuery.of(context).size.width;
-    bool rBreak = (Responsive.checkWidth(width) ==
-        Responsive.lg);
+    bool rBreak = (Responsive.checkWidth(width) == Responsive.lg);
     ThemeModel themeModel = Provider.of<ThemeViewModel>(context).themeModel;
     Color foreground = (msgData.isMine
         ? Colors.white
@@ -45,7 +43,7 @@ class PurlawChatMessageBlockViewOnly extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment:
-        (msgData.isMine ? MainAxisAlignment.end : MainAxisAlignment.start),
+            (msgData.isMine ? MainAxisAlignment.end : MainAxisAlignment.start),
         children: [
           Flexible(
             // 文字容器
@@ -54,8 +52,9 @@ class PurlawChatMessageBlockViewOnly extends StatelessWidget {
                   left: leftMargin, right: rightMargin, top: 12, bottom: 12),
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                  border:
-                  Border.all(color: themeModel.colorModel.generalFillColorLight, width: 1),
+                  border: Border.all(
+                      color: themeModel.colorModel.generalFillColorLight,
+                      width: 1),
                   color: background,
                   boxShadow: [
                     const BoxShadow(color: Colors.black12, blurRadius: 5),
@@ -65,8 +64,7 @@ class PurlawChatMessageBlockViewOnly extends StatelessWidget {
                             : Colors.lightBlue[50]!.withOpacity(0.5)),
                         blurRadius: (themeModel.dark ? 20 : 30),
                         spreadRadius: 5,
-                        offset: const Offset(0, 10)
-                    )
+                        offset: const Offset(0, 10))
                   ],
                   borderRadius: BorderRadius.only(
                       bottomLeft: const Radius.circular(20),
@@ -84,7 +82,7 @@ class PurlawChatMessageBlockViewOnly extends StatelessWidget {
                     (msgData.message == "" ? "思考中..." : msgData.message),
                     // softWrap: true,
                     style:
-                    TextStyle(color: foreground, height: 1.5, fontSize: 15),
+                        TextStyle(color: foreground, height: 1.5, fontSize: 15),
                   ),
                   if (!msgData.isMine)
                     {
@@ -109,7 +107,6 @@ class PurlawChatMessageBlockViewOnly extends StatelessWidget {
   }
 }
 
-
 class PurlawChatMessageBlockForPM extends StatelessWidget {
   final PrivateChatMessageModel msg;
   const PurlawChatMessageBlockForPM({required this.msg, super.key});
@@ -119,10 +116,10 @@ class PurlawChatMessageBlockForPM extends StatelessWidget {
     return chatMessageBlock(context, msg);
   }
 
-  Widget chatMessageBlock(BuildContext context, PrivateChatMessageModel msgData) {
+  Widget chatMessageBlock(
+      BuildContext context, PrivateChatMessageModel msgData) {
     final width = MediaQuery.of(context).size.width;
-    bool rBreak = (Responsive.checkWidth(width) ==
-        Responsive.lg);
+    bool rBreak = (Responsive.checkWidth(width) == Responsive.lg);
     ThemeModel themeModel = Provider.of<ThemeViewModel>(context).themeModel;
     Color foreground = (msgData.isMine
         ? Colors.white
@@ -137,7 +134,7 @@ class PurlawChatMessageBlockForPM extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment:
-        (msgData.isMine ? MainAxisAlignment.end : MainAxisAlignment.start),
+            (msgData.isMine ? MainAxisAlignment.end : MainAxisAlignment.start),
         children: [
           Flexible(
             // 文字容器
@@ -146,8 +143,9 @@ class PurlawChatMessageBlockForPM extends StatelessWidget {
                   left: leftMargin, right: rightMargin, top: 12, bottom: 12),
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                  border:
-                  Border.all(color: themeModel.colorModel.generalFillColorLight, width: 1),
+                  border: Border.all(
+                      color: themeModel.colorModel.generalFillColorLight,
+                      width: 1),
                   color: background,
                   boxShadow: [
                     const BoxShadow(color: Colors.black12, blurRadius: 5),
@@ -157,8 +155,7 @@ class PurlawChatMessageBlockForPM extends StatelessWidget {
                             : Colors.lightBlue[50]!.withOpacity(0.5)),
                         blurRadius: (themeModel.dark ? 20 : 30),
                         spreadRadius: 5,
-                        offset: const Offset(0, 10)
-                    )
+                        offset: const Offset(0, 10))
                   ],
                   borderRadius: BorderRadius.only(
                       bottomLeft: const Radius.circular(20),
@@ -176,18 +173,18 @@ class PurlawChatMessageBlockForPM extends StatelessWidget {
                     (msgData.message == "" ? "思考中..." : msgData.message),
                     // softWrap: true,
                     style:
-                    TextStyle(color: foreground, height: 1.5, fontSize: 15),
+                        TextStyle(color: foreground, height: 1.5, fontSize: 15),
                   ),
-
-                      Padding(
-                        padding: const EdgeInsets.only(top: 4),
-                        child: Text(TimeUtils.formatDateTime(msgData.timestamp),
-                          style: const TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.grey),
-                        ),
-                      )
+                  Padding(
+                    padding: const EdgeInsets.only(top: 4),
+                    child: Text(
+                      TimeUtils.formatDateTime(msgData.timestamp),
+                      style: const TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.grey),
+                    ),
+                  )
                 ],
               ),
             ),
@@ -201,13 +198,16 @@ class PurlawChatMessageBlockForPM extends StatelessWidget {
 class PurlawChatMessageBlockWithAudio extends StatefulWidget {
   final AIChatMessageModelWithAudio msg;
   final bool overrideRadius;
-  const PurlawChatMessageBlockWithAudio({required this.msg, super.key, this.overrideRadius = false});
+  const PurlawChatMessageBlockWithAudio(
+      {required this.msg, super.key, this.overrideRadius = false});
 
   @override
-  State<PurlawChatMessageBlockWithAudio> createState() => _PurlawChatMessageBlockWithAudioState();
+  State<PurlawChatMessageBlockWithAudio> createState() =>
+      _PurlawChatMessageBlockWithAudioState();
 }
 
-class _PurlawChatMessageBlockWithAudioState extends State<PurlawChatMessageBlockWithAudio> {
+class _PurlawChatMessageBlockWithAudioState
+    extends State<PurlawChatMessageBlockWithAudio> {
   ValueNotifier<bool> showAudio = ValueNotifier(false);
   int totalLength = 0;
 
@@ -218,8 +218,7 @@ class _PurlawChatMessageBlockWithAudioState extends State<PurlawChatMessageBlock
       if (event == null) return;
       totalLength = event.inMilliseconds;
     });
-    widget.msg.player.positionStream.listen((event) {
-    });
+    widget.msg.player.positionStream.listen((event) {});
     widget.msg.player.bufferedPositionStream.listen((event) {
       Log.d("Buffering to $event", tag: "Chat MessageBlock Audio");
     });
@@ -228,7 +227,8 @@ class _PurlawChatMessageBlockWithAudioState extends State<PurlawChatMessageBlock
       Log.e(e, tag: "Chat MessageBlock Audio");
     });
     widget.msg.player.playerStateStream.listen((event) async {
-      Log.d("listen: ${event.processingState}", tag:"Chat MessageBlock Audio PlayerState");
+      Log.d("listen: ${event.processingState}",
+          tag: "Chat MessageBlock Audio PlayerState");
     });
   }
 
@@ -243,14 +243,13 @@ class _PurlawChatMessageBlockWithAudioState extends State<PurlawChatMessageBlock
     return chatMessageBlock(context, widget.msg);
   }
 
-  Widget chatMessageBlock(BuildContext context, AIChatMessageModelWithAudio msgData) {
+  Widget chatMessageBlock(
+      BuildContext context, AIChatMessageModelWithAudio msgData) {
     final width = MediaQuery.of(context).size.width;
-    bool rBreak = (Responsive.checkWidth(width) ==
-        Responsive.lg);
+    bool rBreak = (Responsive.checkWidth(width) == Responsive.lg);
     ThemeModel themeModel = Provider.of<ThemeViewModel>(context).themeModel;
-    Color foreground = (msgData.isMine
-        ? Colors.white
-        : (themeModel.dark ? Colors.white : Colors.black87));
+    bool foregroundWhite =
+        (msgData.isMine ? true : (themeModel.dark ? true : false));
     Color background = (msgData.isMine
         ? themeModel.colorModel.generalFillColor
         : (themeModel.dark ? Colors.black : Colors.white));
@@ -283,9 +282,12 @@ class _PurlawChatMessageBlockWithAudioState extends State<PurlawChatMessageBlock
                   padding: const EdgeInsets.only(
                       top: 16, left: 16, right: 16, bottom: 16),
                   decoration: BoxDecoration(
-                      border: Border.all(
-                          color: themeModel.colorModel.generalFillColorLight,
-                          width: 1),
+                      border: msgData.isMine
+                          ? null
+                          : Border.all(
+                              color:
+                                  themeModel.colorModel.generalFillColorLight,
+                              width: 1),
                       color: background,
                       boxShadow: [
                         const BoxShadow(color: Colors.black12, blurRadius: 5),
@@ -297,25 +299,56 @@ class _PurlawChatMessageBlockWithAudioState extends State<PurlawChatMessageBlock
                             spreadRadius: 5,
                             offset: const Offset(0, 10))
                       ],
-                      borderRadius: (widget.overrideRadius ? BorderRadius.circular(20) : BorderRadius.only(
-                          bottomLeft: const Radius.circular(20),
-                          bottomRight: const Radius.circular(20),
-                          topLeft: (msgData.isMine
-                              ? const Radius.circular(20)
-                              : const Radius.circular(6)),
-                          topRight: (!msgData.isMine
-                              ? const Radius.circular(20)
-                              : const Radius.circular(6))))),
+                      borderRadius: (widget.overrideRadius
+                          ? BorderRadius.circular(20)
+                          : BorderRadius.only(
+                              bottomLeft: const Radius.circular(20),
+                              bottomRight: const Radius.circular(20),
+                              topLeft: (msgData.isMine
+                                  ? const Radius.circular(20)
+                                  : const Radius.circular(6)),
+                              topRight: (!msgData.isMine
+                                  ? const Radius.circular(20)
+                                  : const Radius.circular(6))))),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SelectableText(
-                        // (msgData.sentences.isEmpty ? "思考中..." : msgData.getString()),
-                        (msgData.showedText.isEmpty ? "思考中..." : msgData.showedText),
-                        // softWrap: true,
-                        style: TextStyle(
-                            color: foreground, height: 1.5, fontSize: 15),
-                      ),
+                      ValueListenableBuilder(
+                          valueListenable: msgData.generateCompleted,
+                          builder: (context, value, child) {
+                            if (!value) {
+                              return SelectableText(
+                                // (msgData.sentences.isEmpty ? "思考中..." : msgData.getString()),
+                                (msgData.showedText.isEmpty
+                                    ? "思考中..."
+                                    : msgData.showedText),
+                                // softWrap: true,
+                                style: TextStyle(
+                                    color: foregroundWhite
+                                        ? Colors.white
+                                        : Colors.black87,
+                                    height: 1.5,
+                                    fontSize: 15),
+                              );
+                            }
+                            return MarkdownBody(
+                              data: msgData.showedText.isEmpty
+                                  ? "思考中..."
+                                  : msgData.showedText,
+                              selectable: true,
+                              styleSheet: MarkdownStyleSheet.fromTheme(
+                                  Theme.of(context).copyWith(
+                                      textTheme: (!foregroundWhite
+                                          ? Typography.blackCupertino.copyWith(
+                                              bodyMedium: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 15))
+                                          : Typography.blackCupertino.copyWith(
+                                              bodyMedium: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 15))))),
+                            );
+                          }),
                       if (!msgData.isMine)
                         {
                           Padding(
@@ -375,7 +408,9 @@ class _PurlawChatMessageBlockWithAudioState extends State<PurlawChatMessageBlock
                     ),
                   );
                 }
-                return Container();
+                return Container(
+                    // child: TDLoading(size: TDLoadingSize.large, icon: TDLoadingIcon.circle, iconColor: getThemeModel(context).colorModel.generalFillColor,)
+                    );
               })
         ],
       ),
@@ -390,52 +425,50 @@ class _PurlawChatMessageBlockWithAudioState extends State<PurlawChatMessageBlock
         mainAxisSize: MainAxisSize.min,
         children: [
           StreamBuilder<PlayerState>(
-            stream: widget.msg.player.playerStateStream,
-            builder: (context, snapshot) {
-              final playingState = snapshot.data;
-              final processingState = playingState?.processingState;
-              final playing = playingState?.playing;
-              var text = "";
-              if (processingState == ProcessingState.loading ||
-                  processingState == ProcessingState.buffering) {
-                text = "加载中";
-              } else if (processingState == ProcessingState.completed) {
-                text = "播放完成";
-              } else if (playing == true) {
-                text = "播放中";
-              } else {
-                text = "";
-              }
-              return ElevatedButton(
-                style: const ButtonStyle(
-                    shadowColor: MaterialStatePropertyAll(Colors.transparent)),
-                onPressed: () async {
-                  if (processingState == ProcessingState.loading) return;
-                  if (playing == true && processingState != ProcessingState.completed) {
-                    widget.msg.player.pause();
-                  } else {
-                    if (processingState == ProcessingState.completed) {
-                      await widget.msg.player.seek(Duration.zero, index: 0);
+              stream: widget.msg.player.playerStateStream,
+              builder: (context, snapshot) {
+                final playingState = snapshot.data;
+                final processingState = playingState?.processingState;
+                final playing = playingState?.playing;
+                var text = "";
+                if (processingState == ProcessingState.loading ||
+                    processingState == ProcessingState.buffering) {
+                  text = "加载中";
+                } else if (processingState == ProcessingState.completed) {
+                  text = "播放完成";
+                } else if (playing == true) {
+                  text = "播放中";
+                } else {
+                  text = "";
+                }
+                return ElevatedButton(
+                  style: const ButtonStyle(
+                      shadowColor:
+                          MaterialStatePropertyAll(Colors.transparent)),
+                  onPressed: () async {
+                    if (processingState == ProcessingState.loading) return;
+                    if (playing == true &&
+                        processingState != ProcessingState.completed) {
+                      widget.msg.player.pause();
+                    } else {
+                      if (processingState == ProcessingState.completed) {
+                        await widget.msg.player.seek(Duration.zero, index: 0);
+                      }
+                      widget.msg.player.play();
                     }
-                    widget.msg.player.play();
-                  }
-                },
-                child: Row(
-                  children: [
-                    const Icon(Icons.multitrack_audio_rounded),
-                    const Text(
-                      "  语音",
-                      style: TextStyle(fontSize: 16),
-                    ),
-                    Text(
-                      text
-                    )
-                  ],
-                ),
-              );
-            }
-          ),
-
+                  },
+                  child: Row(
+                    children: [
+                      const Icon(Icons.multitrack_audio_rounded),
+                      const Text(
+                        "  语音",
+                        style: TextStyle(fontSize: 16),
+                      ),
+                      Text(text)
+                    ],
+                  ),
+                );
+              }),
         ],
       ),
     );

@@ -96,6 +96,7 @@ class ShortVideoPlayBlockViewModel extends BaseViewModel {
       videoPlayerController = VideoPlayerController.networkUrl(Uri.parse(HttpGet.getApi(API.videoFile.api) + nowPlaying.sha1!));
       videoPlayerController.initialize().then((_) {
           videoController = ChewieController(
+            allowedScreenSleep: false,
               videoPlayerController: videoPlayerController,
               showControls: false,
               showOptions: false,

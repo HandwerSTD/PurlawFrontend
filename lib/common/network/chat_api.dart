@@ -43,8 +43,12 @@ class ChatNetworkRequest {
       throw Exception(response["message"]);
     }
     await Future.delayed(500.milliseconds); // 等待服务器刷新延迟
-    await isolateFlushSession(append,
-        session: session, cookie: cookie, callback: callback);
+    try {
+      await isolateFlushSession(append,
+          session: session, cookie: cookie, callback: callback);
+    } on Exception catch (e) {
+      rethrow;
+    }
   }
 
   static Future isolateFlushSession(Future<void> Function(String dt, String cookie) append,
@@ -98,7 +102,7 @@ class ChatNetworkRequest {
       Log.d("Received message from Main $session", tag: "ChatAPI");
       try {
         while (true) {
-          await Future.delayed(3000.milliseconds);
+          await Future.delayed(1000.milliseconds);
           var chatRes = jsonDecode(await HttpGet.post(API.chatFlushSession.api,
               HttpGet.jsonHeadersCookie(cookie), {"sid": session}));
           Log.i(chatRes);

@@ -138,6 +138,7 @@ class _CustomPurlawWaterfallListState extends State<CustomPurlawWaterfallList> {
             // padding: const EdgeInsets.only(left: 2, right: 2),
             width: Responsive.assignWidthMedium(constraints.maxWidth),
             child: CustomScrollView(
+              physics: BouncingScrollPhysics(),
               controller: widget.controller,
               slivers: [
                 SliverList(delegate: SliverChildListDelegate([

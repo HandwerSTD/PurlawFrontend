@@ -51,6 +51,7 @@ class AIChatPageMessageList extends StatelessWidget {
       children: [
         Flexible(
           child: SingleChildScrollView(
+            physics: BouncingScrollPhysics(),
             controller: model.scrollController,
             child: Column(
                 children: model.messageModels.messages
