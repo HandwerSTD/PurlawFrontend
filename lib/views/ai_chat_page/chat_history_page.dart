@@ -18,7 +18,7 @@ class ChatHistoryPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PurlawAppTitleBar(title: '对话历史', showBack: true).build(context),
+      appBar: PurlawAppTitleBar(title: '保存的对话', showBack: true).build(context),
       body: const ChatHistoryPageBody(),
     );
   }

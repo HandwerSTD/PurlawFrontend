@@ -1,6 +1,7 @@
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:purlaw/common/constants/constants.dart';
 import 'package:purlaw/common/network/network_loading_state.dart';
@@ -17,6 +18,7 @@ import 'package:purlaw/viewmodels/theme_viewmodel.dart';
 import 'package:purlaw/views/account_mgr/components/account_page_components.dart';
 import 'package:purlaw/views/account_mgr/my_account_page.dart';
 import 'package:purlaw/views/ai_chat_page/ai_chat_page.dart';
+import 'package:purlaw/views/community/community_category_page.dart';
 import 'package:purlaw/views/community/community_search_page.dart';
 import 'package:purlaw/views/community/private_message/private_message_user_list.dart';
 import 'package:purlaw/views/community/short_video/short_video_play_page.dart';
@@ -58,18 +60,21 @@ class _CommunityPageBodyState extends State<CommunityPageBody> {
     }
     return LayoutBuilder(
       builder: (_, constraints) => Container(
-        margin: const EdgeInsets.symmetric(horizontal: 2),
+          // margin: const EdgeInsets.symmetric(horizontal: 2),
           alignment: Alignment.center,
           child: Stack(alignment: Alignment.topCenter, children: [
             CustomPurlawWaterfallList(
               leading: const RecommendedCategory(),
               refresherOffset: 40,
               controller: controller,
-              list: List.generate((model.videoList.result?.length) ?? 0, (index) {
+              list:
+                  List.generate((model.videoList.result?.length) ?? 0, (index) {
                 return GridVideoBlock(video: model.videoList.result![index]);
-              }), onPullRefresh: () async {
+              }),
+              onPullRefresh: () async {
                 await model.fetchVideoList(getCookie(context, listen: false));
-            }, loadingState: model.state,
+              },
+              loadingState: model.state,
             ),
             Visibility(
               visible: (Responsive.checkWidth(constraints.maxWidth) !=
@@ -87,17 +92,29 @@ class _CommunityPageBodyState extends State<CommunityPageBody> {
                       },
                     ),
                   ),
-                  fabShell(IconButton(onPressed: (){
-                    if (checkAndLoginIfNot(context)) {
-                      Navigator.push(context, MaterialPageRoute(builder: (_) => PrivateMessageUserListPage()));
-                    }
-                  }, padding: EdgeInsets.only(bottom: 2), icon: Icon(EvaIcons.messageCircleOutline, size: 22, color: Theme.of(context).colorScheme.primary,)))
+                  fabShell(IconButton(
+                      onPressed: () {
+                        if (checkAndLoginIfNot(context)) {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (_) =>
+                                      PrivateMessageUserListPage()));
+                        }
+                      },
+                      padding: EdgeInsets.only(bottom: 2),
+                      icon: Icon(
+                        EvaIcons.messageCircleOutline,
+                        size: 22,
+                        color: Theme.of(context).colorScheme.primary,
+                      )))
                 ],
               ),
             ),
           ])),
     );
   }
+
   Widget fabShell(Widget child) {
     return Container(
       margin: EdgeInsets.only(right: 6, top: 8),
@@ -148,87 +165,99 @@ class GridVideoBlock extends StatelessWidget {
           },
           child: Container(
             margin: const EdgeInsets.only(top: 2, bottom: 4, left: 3, right: 3),
-          decoration: BoxDecoration(
-            border: (getThemeModel(context).dark ? null : Border.all(width: 0.1, color: Colors.grey[400]!)),
-            borderRadius: BorderRadius.circular(4)
-          ),
-          child: ClipRRect(
+            decoration: BoxDecoration(
+                border: (getThemeModel(context).dark
+                    ? null
+                    : Border.all(width: 0.1, color: Colors.grey[400]!)),
+                borderRadius: BorderRadius.circular(4)),
+            child: ClipRRect(
               borderRadius: BorderRadius.circular(4),
               child: Container(
                 decoration: BoxDecoration(
-                  color: getThemeModel(context).dark ? Colors.black : Colors.white,
+                  color:
+                      getThemeModel(context).dark ? Colors.black : Colors.white,
                 ),
-                padding: const EdgeInsets.only(top: 0, bottom: 8, left: 0, right: 0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                        alignment: Alignment.center,
-                        margin: const EdgeInsets.only(top: 0, bottom: 12),
-                        child: ImageLoader(
-                          width: 180,
-                          height: (video.coverRatio! * 180),
-                          url:
-                              HttpGet.getApi(API.videoCover.api) + video.coverSha1!,
-                          loadingWidget: Container(
-                            width: 180,
+                padding:
+                    const EdgeInsets.only(top: 0, bottom: 8, left: 0, right: 0),
+                child: LayoutBuilder(
+                  builder: (context, constraints) {
+                    double width = constraints.maxWidth;
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
                             alignment: Alignment.center,
-                            color: Colors.grey.withOpacity(0.3),
-                            child: const TDLoading(
-                              icon: TDLoadingIcon.circle,
-                              size: TDLoadingSize.large,
-                            ),
-                          ),
-                        )),
-                    Padding(
-                      padding:
-                          const EdgeInsets.only(left: 10, right: 10, bottom: 6),
-                      child: Text(
-                        video.title!,
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 2,
-                        style: const TextStyle(fontSize: 13, letterSpacing: 0.1),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 10, right: 10),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              UserAvatarLoader(
-                                verified: false,
-                                  avatar: video.avatar!, size: 18, radius: 9),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 6, right: 1),
-                                child: Text(
-                                  video.author!,
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(fontSize: 12),
+                            margin: const EdgeInsets.only(top: 0, bottom: 12),
+                            child: ImageLoader(
+                              width: width,
+                              height: (video.coverRatio! * width),
+                              url: HttpGet.getApi(API.videoCover.api) +
+                                  video.coverSha1!,
+                              loadingWidget: Container(
+                                width: 180,
+                                alignment: Alignment.center,
+                                color: Colors.grey.withOpacity(0.3),
+                                child: const TDLoading(
+                                  icon: TDLoadingIcon.circle,
+                                  size: TDLoadingSize.large,
                                 ),
+                              ),
+                            )),
+                        Padding(
+                          padding:
+                              const EdgeInsets.only(left: 10, right: 10, bottom: 6),
+                          child: Text(
+                            video.title!,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 2,
+                            style:
+                                const TextStyle(fontSize: 13, letterSpacing: 0.1),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 10, right: 10),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.max,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  UserAvatarLoader(
+                                      verified: false,
+                                      avatar: video.avatar!,
+                                      size: 18,
+                                      radius: 9),
+                                  Padding(
+                                    padding:
+                                        const EdgeInsets.only(left: 6, right: 1),
+                                    child: Text(
+                                      video.author!,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: const TextStyle(fontSize: 12),
+                                    ),
+                                  )
+                                ],
+                              ),
+                              Row(
+                                // crossAxisAlignment: en,
+                                children: [
+                                  const Icon(
+                                    size: 16,
+                                    EvaIcons.heartOutline,
+                                    // color: Color(0xbb000000),
+                                  ),
+                                  Text(" ${video.like!}")
+                                ],
                               )
                             ],
                           ),
-                          Row(
-                            // crossAxisAlignment: en,
-                            children: [
-                              const Icon(
-                                size: 16,
-                                EvaIcons.heartOutline,
-                                // color: Color(0xbb000000),
-                              ),
-                              Text(" ${video.like!}")
-                            ],
-                          )
-                        ],
-                      ),
-                    ),
-                    // Divider()
-                  ],
+                        ),
+                        // Divider()
+                      ],
+                    );
+                  }
                 ),
               ),
             ),
@@ -258,10 +287,10 @@ class GridVideoBlock extends StatelessWidget {
                     alignment: Alignment.center,
                     margin: const EdgeInsets.only(top: 5, bottom: 12),
                     child: ImageLoader(
-                      width: 180,
-                      height: (video.coverRatio! * 180),
-                      url:
-                          HttpGet.getApi(API.videoCover.api) + video.coverSha1!,
+                        width: 180,
+                        height: (video.coverRatio! * 180),
+                        url: HttpGet.getApi(API.videoCover.api) +
+                            video.coverSha1!,
                         loadingWidget: Container(
                           width: 180,
                           alignment: Alignment.center,
@@ -270,8 +299,7 @@ class GridVideoBlock extends StatelessWidget {
                             icon: TDLoadingIcon.circle,
                             size: TDLoadingSize.large,
                           ),
-                        )
-                    )),
+                        ))),
                 Padding(
                   padding:
                       const EdgeInsets.only(left: 10, right: 10, bottom: 6),
@@ -292,8 +320,10 @@ class GridVideoBlock extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           UserAvatarLoader(
-                            verified: false,
-                              avatar: video.avatar!, size: 18, radius: 9),
+                              verified: false,
+                              avatar: video.avatar!,
+                              size: 18,
+                              radius: 9),
                           Padding(
                             padding: const EdgeInsets.only(left: 6, right: 1),
                             child: Text(
@@ -337,41 +367,95 @@ class RecommendedCategory extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(height: 12,),
-        Text("   精选分区", style: TextStyle(fontSize: 20),),
+        SizedBox(
+          height: 12,
+        ),
+        Text(
+          "   精选分区",
+          style: TextStyle(fontSize: 20),
+        ),
         Container(
-          height: 204,
+          height: 180,
           margin: EdgeInsets.only(bottom: 28),
           child: ListView(
             padding: EdgeInsets.only(left: 12, top: 12, bottom: 4),
             shrinkWrap: true,
             scrollDirection: Axis.horizontal,
             children: [
-              Card(
-                margin: EdgeInsets.only(left: 4) ,
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => CommunityCategoryPage(categoryId: 0, title: '时讯', subtitle: '最新讯息', gradientColor: [
+                    getThemeModel(_).dark ? Colors.blueGrey : Colors.white, Colors.blue
+                  ],)));
+                },
                 child: Container(
-                  width: 128,
-                  child: Text("666"),
-                ),),
-              Card(
-                margin: EdgeInsets.only(left: 24) ,
+                  width: 140,
+                  margin: EdgeInsets.only(left: 2),
+                  child: Container(
+                    decoration: BoxDecoration(
+                        borderRadius:
+                            BorderRadius.only(topRight: Radius.circular(12)),
+                        image: DecorationImage(
+                            image: Image.asset(
+                          "assets/video_category/category1.png",
+                          width: 100,
+                        ).image)),
+                  ),
+                ),
+              ),
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => CommunityCategoryPage(categoryId: 1, title: '普法', subtitle: '专家讲解', gradientColor: [
+                    getThemeModel(_).dark ? Colors.blueGrey: Colors.white, Colors.cyanAccent
+                  ],)));
+                  },
                 child: Container(
-                  width: 128,
-                  child: Text("666"),
-                ),),
-              Card(
-                margin: EdgeInsets.only(left: 24) ,
+                  width: 140,
+                  margin: EdgeInsets.only(left: 18),
+                  child: Container(
+                    decoration: BoxDecoration(
+                        borderRadius:
+                            BorderRadius.only(topRight: Radius.circular(12)),
+                        image: DecorationImage(
+                            image: Image.asset(
+                          "assets/video_category/category2.png",
+                          width: 100,
+                        ).image)),
+                  ),
+                ),
+              ),
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => CommunityCategoryPage(categoryId: 2, title: '名案', subtitle: '经典案例', gradientColor: [
+                    getThemeModel(_).dark ? Colors.green : Colors.white, Colors.greenAccent
+                  ])));
+                },
                 child: Container(
-                  width: 128,
-                  child: Text("666"),
-                ),),
+                  width: 140,
+                  margin: EdgeInsets.only(left: 18, right: 16),
+                  child: Container(
+                    decoration: BoxDecoration(
+                        borderRadius:
+                            BorderRadius.only(topRight: Radius.circular(12)),
+                        image: DecorationImage(
+                            image: Image.asset(
+                          "assets/video_category/category3.png",
+                          width: 100,
+                        ).image)),
+                  ),
+                ),
+              ),
             ],
           ),
         ),
-        Text("   热门推荐", style: TextStyle(fontSize: 20),),
-        SizedBox(height: 8,)
+        Text(
+          "   热门推荐",
+          style: TextStyle(fontSize: 20),
+        ),
+        SizedBox(
+          height: 8,
+        )
       ],
     );
   }
 }
-

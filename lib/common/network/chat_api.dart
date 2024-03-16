@@ -70,7 +70,7 @@ class ChatNetworkRequest {
           throw Exception(message.replaceAll("<H_ERR>", ""));
         } else {
           if (start && message.startsWith('\n')) {
-            message = message.replaceAll('\n', '');
+            message = message.replaceFirst('\n', '');
             start = false;
           }
           await append(message, cookie);

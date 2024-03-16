@@ -71,8 +71,8 @@ class _SettingsPageBodyState extends State<SettingsPageBody> {
                             builder: (_) => const MyAccountAvatar()));
                   },
                 ).build(context),
-                const MySettingsItem(icons: TypIconData(0xE036), title: '昵称')
-                    .build(context),
+                // const MySettingsItem(icons: TypIconData(0xE036), title: '昵称')
+                //     .build(context),
                 MySettingsItem(icons: Icons.manage_accounts, title: '帐户管理', onTap: (){
                   Navigator.push(context, MaterialPageRoute(builder: (_) => MyAccountManagement(desc: getMainViewModel(context, listen: false).myUserInfoModel.desc)));
                 })

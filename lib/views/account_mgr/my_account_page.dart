@@ -110,7 +110,7 @@ class MyAccountPageBody extends StatefulWidget {
 class _MyAccountPageBodyState extends State<MyAccountPageBody>
     with SingleTickerProviderStateMixin {
   late TabController controller;
-  final List<TDTab> tabs = [const TDTab(text: '对话历史',), const TDTab(text: '我的视频',), const TDTab(text: '社区收藏',)];
+  final List<TDTab> tabs = [const TDTab(text: '保存的对话',), const TDTab(text: '我的视频',), const TDTab(text: '社区收藏',)];
 
 
   @override

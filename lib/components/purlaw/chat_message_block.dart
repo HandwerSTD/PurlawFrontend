@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:grock/grock.dart';
 import 'package:provider/provider.dart';
 import 'package:purlaw/common/utils/misc.dart';
 import 'package:purlaw/components/purlaw/purlaw_components.dart';
@@ -333,7 +334,7 @@ class _PurlawChatMessageBlockWithAudioState extends State<PurlawChatMessageBlock
                                 ValueListenableBuilder(
                                   valueListenable: showAudio,
                                   builder: (context, value, child) {
-                                    if (value) return audioPlayWidget();
+                                    if (value) return audioPlayWidget(width);
                                     return Container();
                                   },
                                 )
@@ -352,7 +353,7 @@ class _PurlawChatMessageBlockWithAudioState extends State<PurlawChatMessageBlock
               builder: (context, value, child) {
                 if (value) {
                   return PurlawRRectButton(
-                    margin: const EdgeInsets.only(right: 16, bottom: 8),
+                    margin: EdgeInsets.only(right: rightMargin, bottom: 8),
                     height: 24,
                     width: 24,
                     radius: 12,
@@ -381,9 +382,10 @@ class _PurlawChatMessageBlockWithAudioState extends State<PurlawChatMessageBlock
     );
   }
 
-  Widget audioPlayWidget() {
+  Widget audioPlayWidget(double width) {
+    bool rBreak = Responsive.checkWidth(width) == Responsive.lg;
     return Padding(
-      padding: const EdgeInsets.only(top: 8.0),
+      padding: EdgeInsets.only(top: 8.0),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [

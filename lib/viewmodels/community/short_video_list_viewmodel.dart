@@ -21,6 +21,7 @@ class ShortVideoListViewModel extends BaseViewModel {
       }));
       if (response["status"] != "success") throw Exception(response["message"]??"未知错误");
       videoList = VideoList.fromJson(response);
+      Log.d(videoList.toJson());
       notifyListeners();
       changeState(NetworkLoadingState.CONTENT);
     } catch(e) {

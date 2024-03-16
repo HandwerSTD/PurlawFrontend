@@ -49,7 +49,7 @@ class VideoInfoModel {
         this.sha1,
         this.coverSha1,
         this.timestamp,
-        this.avatar});
+        this.avatar, this.coverRatio});
 
   VideoInfoModel.fromJson(Map<String, dynamic> json) {
     uid = json['uid'];

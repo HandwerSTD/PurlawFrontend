@@ -3,15 +3,20 @@ import 'dart:isolate';
 import 'package:flutter/cupertino.dart';
 import 'package:purlaw/common/utils/database/database_util.dart';
 import 'package:purlaw/common/utils/log_utils.dart';
+import 'package:purlaw/models/ai_chat/chat_message_model.dart';
 import 'package:purlaw/viewmodels/base_viewmodel.dart';
 
+import '../../common/constants/constants.dart';
 import '../../common/network/chat_api.dart';
+import '../../common/network/network_request.dart';
+import '../../components/third_party/modified_just_audio.dart';
 import '../../components/third_party/prompt.dart';
 
 class ContractGenerationViewModel extends BaseViewModel {
   bool genComplete = false;
   bool genStart = false;
   TextEditingController controller = TextEditingController();
+  AIChatMessageModelWithAudio message = AIChatMessageModelWithAudio();
 
   var title = "";
   var desc = "";
@@ -19,31 +24,58 @@ class ContractGenerationViewModel extends BaseViewModel {
   var bName = "";
   var type = "";
 
-  var text = "";
-
   ContractGenerationViewModel();
 
   Future<void> appendMessage(String msg, String cookie) async {
-    text += msg;
-    notifyListeners();
-  }
+    var sentences = msg.split('。'); // 按逗号分隔
+    bool endsWithDot = msg.endsWith('。'); // 最后一个是否是完整句子
 
+    refresh() {
+      notifyListeners();
+    }
+
+    Future<void> submitAudio(String sentence, int id) async {
+      if (sentence.isEmpty) return;
+      await message.playlist.add(LockCachingAudioSource(
+          Uri.parse(HttpGet.getApi(API.chatRequestVoice.api) + sentence),
+          headers: HttpGet.jsonHeadersCookie(cookie)));
+    }
+
+    message.animatedAdd(msg, refresh);
+    // Log.d(sentences, tag:"Chat Page ViewModel appendMessage");
+    for (int index = 0; index < sentences.length - 1; ++index) {
+      await message.append(sentences[index], true, () {}, submitAudio);
+    }
+    if (sentences.last.isEmpty) return;
+    await message.append(sentences.last, endsWithDot, () {}, submitAudio);
+  }
   Future<void> submit(String cookie) async {
     Log.i("title: $title, desc: $desc", tag: "ContractGeneration ViewModel");
-    text = "";
-    genStart = true; genComplete = false;
+    // text = "";
+    genStart = true;
+    genComplete = false;
     notifyListeners();
     final session = DatabaseUtil.getLastAIChatSession();
     if (session.isEmpty) {
-      showToast("请先指定一个会话", toastType: ToastType.warning, alignment: Alignment.center);
+      showToast("请先指定一个会话",
+          toastType: ToastType.warning, alignment: Alignment.center);
       return;
     }
     try {
       showToast("生成中", toastType: ToastType.info, alignment: Alignment.center);
-      // ChatNetworkRequest.isolate?.kill(priority: Isolate.immediate);
+      message = AIChatMessageModelWithAudio();
       ChatNetworkRequest.breakIsolate(cookie, session);
-      await ChatNetworkRequest.submitNewMessage(session, "按以下信息生成一份合同：合同标题为《$title》，甲方为 $aName，乙方为 $bName，合同类型为 $type。合同描述：$text", cookie, appendMessage, (){
-        genStart = false; genComplete = true;
+      await ChatNetworkRequest.submitNewMessage(
+          session,
+          "按以下信息生成一份合同：合同标题为《$title》，甲方为 $aName，乙方为 $bName，合同类型为 $type。合同描述：$desc",
+          cookie,
+          appendMessage, () {
+        genStart = false;
+        genComplete = true;
+        var text = "";
+        for (var txt in message.sentences) {
+          text += txt;
+        }
         controller = TextEditingController(text: text);
         notifyListeners();
       });

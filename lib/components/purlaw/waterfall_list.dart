@@ -135,7 +135,7 @@ class _CustomPurlawWaterfallListState extends State<CustomPurlawWaterfallList> {
         child: MultiStateWidget(
           state: widget.loadingState,
           builder: (_) => Container(
-            padding: const EdgeInsets.only(left: 2, right: 2),
+            // padding: const EdgeInsets.only(left: 2, right: 2),
             width: Responsive.assignWidthMedium(constraints.maxWidth),
             child: CustomScrollView(
               controller: widget.controller,
@@ -146,7 +146,7 @@ class _CustomPurlawWaterfallListState extends State<CustomPurlawWaterfallList> {
                 ])),
                 SliverWaterfallFlow(delegate: SliverChildBuilderDelegate((context, index) {
                   return widget.list[index];
-                }, childCount: widget.list.length), gridDelegate: SliverWaterfallFlowDelegateWithFixedCrossAxisCount(crossAxisCount: (break4 ? 4 : (break3 ? 3 : 2)), crossAxisSpacing: 1))
+                }, childCount: widget.list.length), gridDelegate: SliverWaterfallFlowDelegateWithFixedCrossAxisCount(crossAxisCount: (break4 ? 4 : (break3 ? 3 : 2)), crossAxisSpacing: 0))
               ],
             ),
           ),

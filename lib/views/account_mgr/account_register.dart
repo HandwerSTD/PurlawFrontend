@@ -109,16 +109,16 @@ class _AccountRegisterPageBodyState extends State<AccountRegisterPageBody> {
                             const EdgeInsets.only(left: 32, right: 32, top: 6),
                             secureText: true,
                           ),
-                          const Text("密码需包含至少6个字符\n"),
+                          const Text("密码需包含至少6个字符\n", style: TextStyle(fontSize: 10),),
                           Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Checkbox(value: model.agreeStatement, onChanged: (val){ model.switchAgree(); },),
-                              const Text("我已阅读并同意"),
+                              const Text("我已阅读并同意", style: TextStyle(fontSize: 10),),
                               InkWell(
                                 child: const Text(
                                   "《用户协议》",
-                                  style: TextStyle(color: Colors.blue),
+                                  style: TextStyle(color: Colors.blue, fontSize: 10),
                                 ),
                                 onTap: () {},
                               ),
@@ -126,7 +126,7 @@ class _AccountRegisterPageBodyState extends State<AccountRegisterPageBody> {
                               InkWell(
                                 child: const Text(
                                   "《隐私协议》",
-                                  style: TextStyle(color: Colors.blue),
+                                  style: TextStyle(color: Colors.blue, fontSize: 10),
                                 ),
                                 onTap: () {},
                               ),
