@@ -9,7 +9,7 @@ class Log {
   static Logger logger = Logger(
     printer: PrettyPrinter(
       stackTraceBeginIndex: 1,
-      methodCount: 3
+      methodCount: 5
     )
   );
 

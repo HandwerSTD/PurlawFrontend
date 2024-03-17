@@ -80,9 +80,6 @@ class MainPage extends StatelessWidget {
       providers: [
         ChangeNotifierProvider<MainPageViewModel>(
             create: (_) => MainPageViewModel()),
-        ChangeNotifierProvider<AIChatMsgListViewModel>(
-          create: (_) => AIChatMsgListViewModel(),
-        ),
         ChangeNotifierProvider<ShortVideoListViewModel>(
           create: (_) => ShortVideoListViewModel(),
         )
@@ -150,6 +147,7 @@ class _NormalMainPageBodyState extends State<NormalMainPageBody> {
         ),
         Expanded(
           child: PageView(
+            physics: BouncingScrollPhysics(),
             controller: controller,
             children: [
               MainPage.getTab(context, 0),

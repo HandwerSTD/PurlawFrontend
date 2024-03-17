@@ -91,7 +91,6 @@ class _ContractGenerationPageBodyState extends State<ContractGenerationPageBody>
                       text: '提交',
                       onTap: (){
                         if (model.title.isEmpty || model.desc.isEmpty || model.aName.isEmpty || model.bName.isEmpty || model.type.isEmpty) {
-
                           showToast("请填写完整项", toastType: ToastType.warning);
                           return;
                         }

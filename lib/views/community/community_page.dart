@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -146,10 +148,11 @@ class GridVideoBlock extends StatelessWidget {
         GestureDetector(
           onTap: () {
             if (indexInList == null) {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (_) => ShortVideoPlayPage(paramVideo: video)));
+              print(jsonEncode(video.toJson()));
+              // Navigator.push(
+              //     context,
+              //     MaterialPageRoute(
+              //         builder: (_) => ShortVideoPlayPage(paramVideo: video)));
             } else {
               Navigator.push(
                   context,

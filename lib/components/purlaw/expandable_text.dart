@@ -49,10 +49,9 @@ class _ExpandableTextState extends State<ExpandableText> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             expand
-                ? Text(text, style: style)
-                : Text(text,
+                ? SelectableText(text, style: style)
+                : SelectableText(text,
                 maxLines: maxLines,
-                overflow: TextOverflow.ellipsis,
                 style: style),
             GestureDetector(
               behavior: HitTestBehavior.translucent,
@@ -72,7 +71,7 @@ class _ExpandableTextState extends State<ExpandableText> {
           ],
         );
       } else {
-        return Text(text ?? '', style: style);
+        return SelectableText(text ?? '', style: style);
       }
     });
   }

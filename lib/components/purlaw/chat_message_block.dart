@@ -418,7 +418,6 @@ class _PurlawChatMessageBlockWithAudioState
   }
 
   Widget audioPlayWidget(double width) {
-    bool rBreak = Responsive.checkWidth(width) == Responsive.lg;
     return Padding(
       padding: const EdgeInsets.only(top: 8.0),
       child: Column(

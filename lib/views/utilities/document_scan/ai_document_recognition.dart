@@ -121,8 +121,6 @@ class AIDocumentRecognitionBody extends StatelessWidget {
     return Consumer<AIDocumentRecViewModel>(builder: (context, mm, child) {
       final model = mm.models[index];
       return LayoutBuilder(builder: (context, constraints) {
-        bool rBreak =
-            (Responsive.checkWidth(constraints.maxWidth) == Responsive.lg);
         return Container(
           child: SingleChildScrollView(
             child: Column(
@@ -257,7 +255,7 @@ class AIDocumentAnalyzeDialog extends StatelessWidget {
           model.load(documentText, getCookie(context, listen: false));
         },
       onDispose: (model) {
-        ChatNetworkRequest.breakIsolate(getCookie(context, listen: false), DatabaseUtil.getLastAIChatSession());
+        ChatNetworkRequest.breakIsolate(model.cookies, DatabaseUtil.getLastAIChatSession());
       },
         builder: (context, model, child) {
           return PopScope(

@@ -6,6 +6,7 @@ import 'package:purlaw/models/community/short_video_info_model.dart';
 import 'package:purlaw/viewmodels/community/short_video_comment_viewmodel.dart';
 import 'package:purlaw/viewmodels/main_viewmodel.dart';
 import 'package:purlaw/viewmodels/theme_viewmodel.dart';
+import 'package:purlaw/views/account_mgr/account_visit_page.dart';
 import 'package:purlaw/views/account_mgr/components/account_page_components.dart';
 import 'package:purlaw/common/utils/log_utils.dart';
 import 'package:purlaw/views/ai_chat_page/ai_chat_page.dart';
@@ -163,11 +164,16 @@ class CommentBlock extends StatelessWidget {
             children: [
               Padding(
                 padding: const EdgeInsets.only(right: 18, top: 12, bottom: 24),
-                child: UserAvatarLoader(
-                  verified: comment.verified ?? false,
-                  avatar: comment.avatar!,
-                  size: 36,
-                  radius: 18,
+                child: GestureDetector(
+                  onTap: (){
+                    Navigator.push(context, MaterialPageRoute(builder: (_) => AccountVisitPage(userId: comment.authorId!)));
+                  },
+                  child: UserAvatarLoader(
+                    verified: comment.verified ?? false,
+                    avatar: comment.avatar!,
+                    size: 36,
+                    radius: 18,
+                  ),
                 ),
               ),
               Expanded(
@@ -185,7 +191,7 @@ class CommentBlock extends StatelessWidget {
                   ),
                   ExpandableText(
                     text: comment.content!,
-                    style: const TextStyle(fontSize: 14),
+                    style: const TextStyle(fontSize: 14, overflow: TextOverflow.ellipsis),
                     maxLines: 3,
                     expand: false,
                   ),

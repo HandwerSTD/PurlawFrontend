@@ -16,6 +16,7 @@ import 'package:purlaw/common/utils/misc.dart';
 import 'package:purlaw/components/multi_state_widget.dart';
 import 'package:purlaw/components/third_party/image_loader.dart';
 import 'package:purlaw/method_channels/method_channels.dart';
+import 'package:purlaw/viewmodels/ai_chat_page/chat_page_viewmodel.dart';
 import 'package:purlaw/viewmodels/main_viewmodel.dart';
 import 'package:purlaw/viewmodels/theme_viewmodel.dart';
 import 'package:purlaw/views/main_page.dart';
@@ -40,11 +41,13 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => ThemeViewModel(MediaQuery.of(context).platformBrightness == Brightness.dark)),
-        ChangeNotifierProvider(create: (_) => MainViewModel())
+        ChangeNotifierProvider(create: (_) => MainViewModel()),
+        ChangeNotifierProvider<AIChatMsgListViewModel>(
+          create: (_) => AIChatMsgListViewModel(),
+        ),
       ],
       child: Builder(builder: (context) {
         return MaterialApp(
-          debugShowCheckedModeBanner: false,
             title: "紫藤法道",
             localizationsDelegates: const [
               GlobalMaterialLocalizations.delegate,

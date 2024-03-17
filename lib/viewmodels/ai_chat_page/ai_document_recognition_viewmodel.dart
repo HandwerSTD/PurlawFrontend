@@ -65,9 +65,11 @@ class AIDocumentRecBodyModel {
 class AIDocumentAnalyzeViewModel extends BaseViewModel {
   String text = "";
   late AIChatMessageModelWithAudio message;
+  String cookies = "";
 
   load(String str, String cookie) {
     text = str;
+    cookies = cookie;
     submit(cookie);
   }
 

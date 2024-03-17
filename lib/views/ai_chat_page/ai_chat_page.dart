@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:grock/grock.dart';
 import 'package:page_view_dot_indicator/page_view_dot_indicator.dart';
 import 'package:provider/provider.dart';
-import 'package:purlaw/common/network/chat_api.dart';
-import 'package:purlaw/common/provider/provider_widget.dart';
 import 'package:purlaw/common/utils/log_utils.dart';
 import 'package:purlaw/common/utils/misc.dart';
 import 'package:purlaw/components/purlaw/purlaw_components.dart';
@@ -429,20 +427,27 @@ void openAIChatFloatingDialog(BuildContext context) {
                           .themeData
                           .scaffoldBackgroundColor,
                   borderRadius: BorderRadius.circular(24)),
-              child: ProviderWidget<AIChatMsgListViewModel>(
-                  model: AIChatMsgListViewModel(
-                      firstMessage: "您好，我是您的专属 AI 律师紫小藤。有什么问题想问的？"),
-                  onReady: (model) {},
-                  onDispose: (model) {
-                    ChatNetworkRequest.breakIsolate(
-                        getCookie(context, listen: false),
-                        DatabaseUtil.getLastAIChatSession());
-                  },
-                  builder: (context, model, child) {
-                    return const AIChatPageBody(
-                      showVoice: false,
-                    );
-                  }),
+              // child: ProviderWidget<AIChatMsgListViewModel>(
+              //     model: AIChatMsgListViewModel(
+              //         firstMessage: "您好，我是您的专属 AI 律师紫小藤。有什么问题想问的？"),
+              //     onReady: (model) {},
+              //     onDispose: (model) {
+              //       ChatNetworkRequest.breakIsolate(
+              //           getCookie(context, listen: false),
+              //           DatabaseUtil.getLastAIChatSession());
+              //     },
+              //     builder: (context, model, child) {
+              //       return const AIChatPageBody(
+              //         showVoice: false,
+              //       );
+              //     }),
+              child: Consumer<AIChatMsgListViewModel>(
+                    builder: (context, model, child) {
+                      return const AIChatPageBody(
+                        showVoice: false,
+                      );
+                    }
+              ),
             ));
       });
 }
