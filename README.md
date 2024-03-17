@@ -1,16 +1,11 @@
-# purlaw
+# 紫藤法道 Purlaw
 
-Purlaw Frontend
+紫藤法道项目前端 Purlaw Frontend
 
-## Getting Started
+# 如何构建 How to build
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+1. 参考 [Flutter 官方教程](https://flutter.cn/docs) 配置 Flutter 开发环境
+2. 将项目 Clone 至本地
+3. 使用 Android Studio 打开项目
+4. 运行 Flutter Pub Get
+5. 启动应用
