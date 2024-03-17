@@ -1,4 +1,5 @@
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:purlaw/common/utils/log_utils.dart';
 import 'package:synchronized/synchronized.dart';
@@ -99,6 +100,7 @@ class AIChatMessageModelWithAudio {
   bool isMine = false;
   bool isFirst = false;
   ValueNotifier<bool> generateCompleted = ValueNotifier(false);
+  ValueNotifier<bool> allowMarkdownRender = ValueNotifier(false);
   AudioPlayer player = AudioPlayer();
   final playlist = ConcatenatingAudioSource(children: []);
   final lock = Lock();

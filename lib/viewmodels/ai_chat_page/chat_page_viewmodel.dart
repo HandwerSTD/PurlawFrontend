@@ -41,6 +41,10 @@ class AIChatMsgListViewModel extends BaseViewModel {
     }
   }
 
+  void setSwitchMarkdownRendering() {
+    messageModels.messages.last.allowMarkdownRender.value = !messageModels.messages.last.allowMarkdownRender.value;
+  }
+
   void getRecommendLawyer(String cookie, String text) async {
     try {
       Log.d(text);

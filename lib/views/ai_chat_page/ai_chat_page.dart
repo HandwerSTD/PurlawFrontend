@@ -90,139 +90,146 @@ class _AIChatPageFooterState extends State<AIChatPageFooter> {
         Color onPrimary = themeModel.themeData.colorScheme.background;
         bool lgBreak = (screenType == 'lg');
 
-        return Container(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              RecommendedActions(
-                buttons: [
-                  RecommendedActionButton(
-                    title: '停止对话',
-                    onClick: () {
-                      model.manuallyBreak(getCookie(context, listen: false),
-                          DatabaseUtil.getLastAIChatSession());
-                    },
-                    show: model.replying,
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            RecommendedActions(
+              buttons: [
+                RecommendedActionButton(
+                  title: '停止对话',
+                  onClick: () {
+                    model.manuallyBreak(getCookie(context, listen: false),
+                        DatabaseUtil.getLastAIChatSession());
+                  },
+                  show: model.replying,
+                ),
+                RecommendedActionButton(
+                  title: '切换文本显示格式',
+                  onClick: () {
+                    model.setSwitchMarkdownRendering();
+                  },
+                  show: (!model.replying &&
+                      model.messageModels.messages.length > 1),
+                ),
+                RecommendedActionButton(
+                  title: '清屏',
+                  onClick: () {
+                    model.clearMessage();
+                  },
+                  show: (!model.replying &&
+                      model.messageModels.messages.length > 1),
+                ),
+                RecommendedActionButton(
+                  title: '保存并清屏',
+                  onClick: () {
+                    model.saveMessage();
+                  },
+                  show: (!model.replying &&
+                      model.messageModels.messages.length > 1),
+                ),
+
+                RecommendedActionButton(
+                  title: '律师推荐',
+                  onClick: () {
+                    showDialog(
+                        context: context,
+                        builder: (_) => Dialog(
+                            backgroundColor: Colors.transparent,
+                            surfaceTintColor: Colors.transparent,
+                            alignment: Alignment.topCenter,
+                            insetPadding: EdgeInsets.zero,
+                            child: LawyerRecommendation(
+                              lawyers: model.recommendLawyers,
+                            )));
+                  },
+                  show: (!model.replying &&
+                      model.messageModels.messages.length > 1),
+                )
+              ],
+            ),
+            Container(
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                  borderRadius: (lgBreak
+                      ? BorderRadius.circular(12)
+                      : BorderRadius.zero),
+                  border: (lgBreak
+                      ? Border.all(
+                          color: themeModel.colorModel.chatInputDividerColor,
+                          width: 1.5)
+                      : Border(
+                          top: BorderSide(
+                              color:
+                                  themeModel.colorModel.chatInputDividerColor,
+                              width: 1.5)))),
+              width: Responsive.assignWidthMedium(constraint.maxWidth),
+              padding: EdgeInsets.only(
+                  left: 12, right: 18, top: 2 + (lgBreak ? 2 : 0), bottom: 4),
+              margin: (lgBreak ? const EdgeInsets.only(bottom: 12) : null),
+              child: Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Visibility(
+                    visible: widget.showVoice,
+                    child: IconButton(
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (_) =>
+                                      const ChatPageVoiceRecognition()));
+                        },
+                        icon: Icon(
+                          Icons.mic_rounded,
+                          color: onPrimaryContainer,
+                        )),
                   ),
-                  RecommendedActionButton(
-                    title: '清屏',
-                    onClick: () {
-                      model.clearMessage();
-                    },
-                    show: (!model.replying &&
-                        model.messageModels.messages.length > 1),
+                  Expanded(
+                    child: PurlawChatTextField(
+                        hint: (getCookie(context).isEmpty
+                            ? '登录后可用'
+                            : (model.replying ? '生成中' : '说点什么吧')),
+                        focusNode: model.focusNode,
+                        readOnly: (getCookie(context).isEmpty
+                            ? true
+                            : model.replying),
+                        borderRadius: (lgBreak ? 12 : null),
+                        controller: model.controller),
                   ),
-                  RecommendedActionButton(
-                    title: '保存并清屏',
-                    onClick: () {
-                      model.saveMessage();
-                    },
-                    show: (!model.replying &&
-                        model.messageModels.messages.length > 1),
-                  ),
-                  RecommendedActionButton(
-                    title: '律师推荐',
-                    onClick: () {
-                      showDialog(
-                          context: context,
-                          builder: (_) => Dialog(
-                              backgroundColor: Colors.transparent,
-                              surfaceTintColor: Colors.transparent,
-                              alignment: Alignment.topCenter,
-                              insetPadding: EdgeInsets.zero,
-                              child: LawyerRecommendation(
-                                lawyers: model.recommendLawyers,
-                              )));
-                    },
-                    show: (!model.replying &&
-                        model.messageModels.messages.length > 1),
-                  )
+                  PurlawRRectButton(
+                      radius: 10,
+                      backgroundColor: themeModel.colorModel.generalFillColor,
+                      onClick: () {
+                        if (model.controller.text.isEmpty) return;
+                        if (!model.replying) {
+                          bool refreshed =
+                              getMainViewModel(context, listen: false)
+                                  .myUserInfoModel
+                                  .cookie
+                                  .isNotEmpty;
+                          if (!refreshed) {
+                            Log.d("User not refreshed", tag: "AI Chat Page");
+                            showToast("请先刷新用户信息",
+                                toastType: ToastType.warning,
+                                alignment: Alignment.center);
+                            return;
+                          }
+                          model.submitNewMessage(Provider.of<MainViewModel>(
+                                  context,
+                                  listen: false)
+                              .cookies);
+                        }
+                      },
+                      child: Icon(
+                        Icons.send,
+                        color: onPrimary,
+                        size: 20,
+                      ))
                 ],
               ),
-              Container(
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                    borderRadius: (lgBreak
-                        ? BorderRadius.circular(12)
-                        : BorderRadius.zero),
-                    border: (lgBreak
-                        ? Border.all(
-                            color: themeModel.colorModel.chatInputDividerColor,
-                            width: 1.5)
-                        : Border(
-                            top: BorderSide(
-                                color:
-                                    themeModel.colorModel.chatInputDividerColor,
-                                width: 1.5)))),
-                width: Responsive.assignWidthMedium(constraint.maxWidth),
-                padding: EdgeInsets.only(
-                    left: 12, right: 18, top: 2 + (lgBreak ? 2 : 0), bottom: 4),
-                margin: (lgBreak ? const EdgeInsets.only(bottom: 12) : null),
-                child: Row(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Visibility(
-                      visible: widget.showVoice,
-                      child: IconButton(
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (_) =>
-                                        const ChatPageVoiceRecognition()));
-                          },
-                          icon: Icon(
-                            Icons.mic_rounded,
-                            color: onPrimaryContainer,
-                          )),
-                    ),
-                    Expanded(
-                      child: PurlawChatTextField(
-                          hint: (getCookie(context).isEmpty
-                              ? '登录后可用'
-                              : (model.replying ? '生成中' : '说点什么吧')),
-                          focusNode: model.focusNode,
-                          readOnly: (getCookie(context).isEmpty
-                              ? true
-                              : model.replying),
-                          borderRadius: (lgBreak ? 12 : null),
-                          controller: model.controller),
-                    ),
-                    PurlawRRectButton(
-                        radius: 10,
-                        backgroundColor: themeModel.colorModel.generalFillColor,
-                        onClick: () {
-                          if (model.controller.text.isEmpty) return;
-                          if (!model.replying) {
-                            bool refreshed =
-                                getMainViewModel(context, listen: false)
-                                    .myUserInfoModel
-                                    .cookie
-                                    .isNotEmpty;
-                            if (!refreshed) {
-                              Log.d("User not refreshed", tag: "AI Chat Page");
-                              showToast("请先刷新用户信息",
-                                  toastType: ToastType.warning,
-                                  alignment: Alignment.center);
-                              return;
-                            }
-                            model.submitNewMessage(Provider.of<MainViewModel>(
-                                    context,
-                                    listen: false)
-                                .cookies);
-                          }
-                        },
-                        child: Icon(
-                          Icons.send,
-                          color: onPrimary,
-                          size: 20,
-                        ))
-                  ],
-                ),
-              )
-            ],
-          ),
+            )
+          ],
         );
       }),
     );
@@ -235,15 +242,11 @@ class RecommendedActions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
-            children: buttons,
-          ),
-        )
-      ],
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children: buttons,
+      ),
     );
   }
 }

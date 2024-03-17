@@ -148,11 +148,11 @@ class GridVideoBlock extends StatelessWidget {
         GestureDetector(
           onTap: () {
             if (indexInList == null) {
-              print(jsonEncode(video.toJson()));
-              // Navigator.push(
-              //     context,
-              //     MaterialPageRoute(
-              //         builder: (_) => ShortVideoPlayPage(paramVideo: video)));
+              // print(jsonEncode(video.toJson()));
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (_) => ShortVideoPlayPage(paramVideo: video)));
             } else {
               Navigator.push(
                   context,

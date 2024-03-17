@@ -198,8 +198,9 @@ class PurlawChatMessageBlockForPM extends StatelessWidget {
 class PurlawChatMessageBlockWithAudio extends StatefulWidget {
   final AIChatMessageModelWithAudio msg;
   final bool overrideRadius;
+  final bool alwaysMarkdown;
   const PurlawChatMessageBlockWithAudio(
-      {required this.msg, super.key, this.overrideRadius = false});
+      {required this.msg, super.key, this.overrideRadius = false, this.alwaysMarkdown = false});
 
   @override
   State<PurlawChatMessageBlockWithAudio> createState() =>
@@ -314,9 +315,9 @@ class _PurlawChatMessageBlockWithAudioState
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       ValueListenableBuilder(
-                          valueListenable: msgData.generateCompleted,
+                          valueListenable: msgData.allowMarkdownRender,
                           builder: (context, value, child) {
-                            if (!value) {
+                            if (!value && !widget.alwaysMarkdown) {
                               return SelectableText(
                                 // (msgData.sentences.isEmpty ? "思考中..." : msgData.getString()),
                                 (msgData.showedText.isEmpty
@@ -335,6 +336,7 @@ class _PurlawChatMessageBlockWithAudioState
                               data: msgData.showedText.isEmpty
                                   ? "思考中..."
                                   : msgData.showedText,
+                              softLineBreak: true,
                               selectable: true,
                               styleSheet: MarkdownStyleSheet.fromTheme(
                                   Theme.of(context).copyWith(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:purlaw/viewmodels/theme_viewmodel.dart';
 import 'package:purlaw/views/utilities/contract_generation/contract_generation_page.dart';
 import 'package:purlaw/views/utilities/document_scan/ai_document_recognition.dart';
+import 'package:purlaw/views/utilities/similar_cases/similar_cases_page.dart';
 
 
 class UtilitiesIndexPage extends StatelessWidget {
@@ -27,7 +28,7 @@ class UtilitiesIndexPage extends StatelessWidget {
                 Icons.folder_shared_outlined, size: 64,color: getColor,
               ), onTap: (){
                 ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                  content: Text("暂未开放"),
+                  content: Text("暂未开放，可使用对话页面律师推荐"),
                   duration: Duration(milliseconds: 1000),
                 ));
               }),
@@ -44,10 +45,7 @@ class UtilitiesIndexPage extends StatelessWidget {
               UtilityGridBlock(title: '类似案例', iconAsset:  Icon(
                 Icons.mark_email_read_rounded, size: 64,color: getColor,
               ), onTap: (){
-                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                  content: Text("暂未开放"),
-                  duration: Duration(milliseconds: 1000),
-                ));
+                Navigator.push(context, MaterialPageRoute(builder: (_) => const SimilarCasesPage()));
               })
             ],
           )
