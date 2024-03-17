@@ -340,11 +340,11 @@ class _PurlawChatMessageBlockWithAudioState
                                   Theme.of(context).copyWith(
                                       textTheme: (!foregroundWhite
                                           ? Typography.blackCupertino.copyWith(
-                                              bodyMedium: TextStyle(
+                                              bodyMedium: const TextStyle(
                                                   color: Colors.black,
                                                   fontSize: 15))
                                           : Typography.blackCupertino.copyWith(
-                                              bodyMedium: TextStyle(
+                                              bodyMedium: const TextStyle(
                                                   color: Colors.white,
                                                   fontSize: 15))))),
                             );
@@ -420,7 +420,7 @@ class _PurlawChatMessageBlockWithAudioState
   Widget audioPlayWidget(double width) {
     bool rBreak = Responsive.checkWidth(width) == Responsive.lg;
     return Padding(
-      padding: EdgeInsets.only(top: 8.0),
+      padding: const EdgeInsets.only(top: 8.0),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [

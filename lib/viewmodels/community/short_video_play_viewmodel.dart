@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:chewie/chewie.dart';
-import 'package:purlaw/main.dart';
 import 'package:purlaw/models/community/short_video_info_model.dart';
 import 'package:purlaw/viewmodels/base_viewmodel.dart';
 import 'package:purlaw/views/community/short_video/short_video_play_page.dart';

@@ -12,6 +12,7 @@ import 'package:purlaw/viewmodels/main_viewmodel.dart';
 import 'package:purlaw/viewmodels/theme_viewmodel.dart';
 import 'package:tdesign_flutter/tdesign_flutter.dart';
 
+import '../../../common/network/chat_api.dart';
 import '../../../common/utils/database/database_util.dart';
 import '../../../common/utils/log_utils.dart';
 import '../../../components/third_party/prompt.dart';
@@ -169,7 +170,7 @@ class AIDocumentRecognitionBody extends StatelessWidget {
                             ],
                           ),
                         ),
-                        SizedBox(height: 4,),
+                        const SizedBox(height: 4,),
                         PurlawRRectButton(
                           width: 72,
                           onClick: () async {
@@ -255,6 +256,9 @@ class AIDocumentAnalyzeDialog extends StatelessWidget {
         onReady: (model){
           model.load(documentText, getCookie(context, listen: false));
         },
+      onDispose: (model) {
+        ChatNetworkRequest.breakIsolate(getCookie(context, listen: false), DatabaseUtil.getLastAIChatSession());
+      },
         builder: (context, model, child) {
           return PopScope(
             onPopInvoked: (val){

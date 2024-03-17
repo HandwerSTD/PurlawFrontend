@@ -4,13 +4,9 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:fake_http_client/fake_http_client.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:grock/grock.dart';
-import 'package:just_audio_platform_interface/just_audio_platform_interface.dart';
-import 'package:mockito/mockito.dart';
 import 'package:provider/provider.dart';
 import 'package:purlaw/common/constants/constants.dart';
 import 'package:purlaw/common/utils/database/database_util.dart';
@@ -43,7 +39,7 @@ void main() {
                     children: [
                       SizedBox(height: 10, child: ListView(controller: model.scrollController,)),
                       ElevatedButton(
-                        key: Key("testBtn"),
+                        key: const Key("testBtn"),
                           onPressed: () async {
                         model.controller = TextEditingController(text: "success");
                         DatabaseUtil.storeLastAIChatSession("123");
@@ -52,8 +48,8 @@ void main() {
                             expect(model.messageModels.messages.last.showedText, testText);
                           });
                         });
-                      }, child: Text("testButton")),
-                      Text(key: Key("testTxt"),
+                      }, child: const Text("testButton")),
+                      Text(key: const Key("testTxt"),
                       model.messageModels.messages.lastOrNull?.showedText ?? "")
                     ],
                   );
@@ -63,7 +59,7 @@ void main() {
         }),
       ));
 
-      final button = find.byKey(Key("testBtn"));
+      final button = find.byKey(const Key("testBtn"));
       await tester.tap(button);
       await tester.pumpAndSettle();
     });
@@ -84,19 +80,19 @@ class MyHttpOverrides extends HttpOverrides {
       }
       if (request.uri.path.contains(API.chatFlushSession.api)) {
         if (count + 5 >= testText.length) {
-          int _c = count; count = 0;
+          int c = count; count = 0;
           return FakeHttpResponse(
               body: jsonEncode({
                 "status": "success",
-                "data": "${testText.substring(_c)}<EOF>"
+                "data": "${testText.substring(c)}<EOF>"
               })
           );
         }
-        int _c = count; count += 5;
+        int c = count; count += 5;
         return FakeHttpResponse(
             body: jsonEncode({
               "status": "success",
-              "message": testText.substring(_c, count)
+              "message": testText.substring(c, count)
             }));
       }
       if (request.uri.path.contains(API.userRecommendLawyer.api)) {

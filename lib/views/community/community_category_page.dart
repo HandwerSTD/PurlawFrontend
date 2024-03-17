@@ -1,6 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:purlaw/common/utils/misc.dart';
 import 'package:purlaw/viewmodels/theme_viewmodel.dart';
 import 'package:purlaw/views/community/community_page.dart';
 import 'package:waterfall_flow/waterfall_flow.dart';
@@ -35,8 +33,8 @@ class CommunityCategoryPage extends StatelessWidget {
                   flexibleSpace: FlexibleSpaceBar(
                     background: Container(
                       decoration: BoxDecoration(
-                        gradient: LinearGradient(colors: gradientColor, begin: Alignment(-1.5, 0)),
-                        borderRadius: BorderRadius.only(bottomLeft: Radius.circular(24), bottomRight: Radius.circular(24))
+                        gradient: LinearGradient(colors: gradientColor, begin: const Alignment(-1.5, 0)),
+                        borderRadius: const BorderRadius.only(bottomLeft: Radius.circular(24), bottomRight: Radius.circular(24))
                       ),
                     ),
                     title: Column(
@@ -50,7 +48,7 @@ class CommunityCategoryPage extends StatelessWidget {
                   ),
                   stretch: true,
                 ),
-                SliverToBoxAdapter(
+                const SliverToBoxAdapter(
                   child: SizedBox(height: 12,),
                 ),
                 SliverWaterfallFlow(

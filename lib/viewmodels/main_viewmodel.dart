@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import 'package:purlaw/common/network/network_request.dart';
 import 'package:purlaw/common/utils/database/database_util.dart';
 import 'package:purlaw/components/third_party/prompt.dart';
-import 'package:purlaw/main.dart';
 import 'package:purlaw/models/account_mgr/user_info_model.dart';
 import 'package:purlaw/viewmodels/base_viewmodel.dart';
 import 'package:purlaw/common/utils/log_utils.dart';

@@ -15,7 +15,6 @@ import 'package:purlaw/views/account_mgr/account_management.dart';
 import 'package:purlaw/views/account_mgr/my_account_avatar.dart';
 import 'package:purlaw/views/settings/about/about_page.dart';
 import 'package:tdesign_flutter/tdesign_flutter.dart';
-import 'package:typicons_flutter/typicons_flutter.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});

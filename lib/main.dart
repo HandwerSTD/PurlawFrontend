@@ -15,7 +15,6 @@ import 'package:purlaw/common/utils/database/kvstore.dart';
 import 'package:purlaw/common/utils/misc.dart';
 import 'package:purlaw/components/multi_state_widget.dart';
 import 'package:purlaw/components/third_party/image_loader.dart';
-import 'package:purlaw/components/third_party/prompt.dart';
 import 'package:purlaw/method_channels/method_channels.dart';
 import 'package:purlaw/viewmodels/main_viewmodel.dart';
 import 'package:purlaw/viewmodels/theme_viewmodel.dart';
@@ -45,22 +44,23 @@ class MyApp extends StatelessWidget {
       ],
       child: Builder(builder: (context) {
         return MaterialApp(
+          debugShowCheckedModeBanner: false,
             title: "紫藤法道",
-            localizationsDelegates: [
+            localizationsDelegates: const [
               GlobalMaterialLocalizations.delegate,
               GlobalWidgetsLocalizations.delegate,
               GlobalCupertinoLocalizations.delegate,
             ],
-            supportedLocales: [
-              const Locale('zh','CN'),
-              const Locale('en','US'),
+            supportedLocales: const [
+              Locale('zh','CN'),
+              Locale('en','US'),
             ],
 
             theme: Provider.of<ThemeViewModel>(context).themeModel.themeData,
             navigatorKey: Grock.navigationKey, // added line
             scaffoldMessengerKey: Grock.scaffoldMessengerKey, // added line
             home: const ProgramEntry()
-          // home: OOBE(),
+          // home: const OutOfBoxExperience(),
         );
       }),
     );
@@ -97,7 +97,7 @@ class _ProgramEntryState extends State<ProgramEntry> {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (_) => const OOBE(),
+                builder: (_) => const OutOfBoxExperience(),
                 settings: const RouteSettings(name: '/home')));
       }
 

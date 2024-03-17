@@ -1,7 +1,6 @@
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:purlaw/common/constants/constants.dart';
 import 'package:purlaw/common/network/network_loading_state.dart';
@@ -17,13 +16,11 @@ import 'package:purlaw/viewmodels/main_viewmodel.dart';
 import 'package:purlaw/viewmodels/theme_viewmodel.dart';
 import 'package:purlaw/views/account_mgr/components/account_page_components.dart';
 import 'package:purlaw/views/account_mgr/my_account_page.dart';
-import 'package:purlaw/views/ai_chat_page/ai_chat_page.dart';
 import 'package:purlaw/views/community/community_category_page.dart';
 import 'package:purlaw/views/community/community_search_page.dart';
 import 'package:purlaw/views/community/private_message/private_message_user_list.dart';
 import 'package:purlaw/views/community/short_video/short_video_play_page.dart';
 import 'package:tdesign_flutter/tdesign_flutter.dart';
-import 'package:typicons_flutter/typicons_flutter.dart';
 
 class CommunityPageBody extends StatefulWidget {
   const CommunityPageBody({super.key});
@@ -99,10 +96,10 @@ class _CommunityPageBodyState extends State<CommunityPageBody> {
                               context,
                               MaterialPageRoute(
                                   builder: (_) =>
-                                      PrivateMessageUserListPage()));
+                                      const PrivateMessageUserListPage()));
                         }
                       },
-                      padding: EdgeInsets.only(bottom: 2),
+                      padding: const EdgeInsets.only(bottom: 2),
                       icon: Icon(
                         EvaIcons.messageCircleOutline,
                         size: 22,
@@ -117,7 +114,7 @@ class _CommunityPageBodyState extends State<CommunityPageBody> {
 
   Widget fabShell(Widget child) {
     return Container(
-      margin: EdgeInsets.only(right: 6, top: 8),
+      margin: const EdgeInsets.only(right: 6, top: 8),
       height: 48,
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(36),
@@ -367,18 +364,18 @@ class RecommendedCategory extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(
+        const SizedBox(
           height: 12,
         ),
-        Text(
+        const Text(
           "   精选分区",
           style: TextStyle(fontSize: 20),
         ),
         Container(
           height: 180,
-          margin: EdgeInsets.only(bottom: 28),
+          margin: const EdgeInsets.only(bottom: 28),
           child: ListView(
-            padding: EdgeInsets.only(left: 12, top: 12, bottom: 4),
+            padding: const EdgeInsets.only(left: 12, top: 12, bottom: 4),
             shrinkWrap: true,
             scrollDirection: Axis.horizontal,
             children: [
@@ -390,11 +387,11 @@ class RecommendedCategory extends StatelessWidget {
                 },
                 child: Container(
                   width: 140,
-                  margin: EdgeInsets.only(left: 2),
+                  margin: const EdgeInsets.only(left: 2),
                   child: Container(
                     decoration: BoxDecoration(
                         borderRadius:
-                            BorderRadius.only(topRight: Radius.circular(12)),
+                            const BorderRadius.only(topRight: Radius.circular(12)),
                         image: DecorationImage(
                             image: Image.asset(
                           "assets/video_category/category1.png",
@@ -411,11 +408,11 @@ class RecommendedCategory extends StatelessWidget {
                   },
                 child: Container(
                   width: 140,
-                  margin: EdgeInsets.only(left: 18),
+                  margin: const EdgeInsets.only(left: 18),
                   child: Container(
                     decoration: BoxDecoration(
                         borderRadius:
-                            BorderRadius.only(topRight: Radius.circular(12)),
+                            const BorderRadius.only(topRight: Radius.circular(12)),
                         image: DecorationImage(
                             image: Image.asset(
                           "assets/video_category/category2.png",
@@ -432,11 +429,11 @@ class RecommendedCategory extends StatelessWidget {
                 },
                 child: Container(
                   width: 140,
-                  margin: EdgeInsets.only(left: 18, right: 16),
+                  margin: const EdgeInsets.only(left: 18, right: 16),
                   child: Container(
                     decoration: BoxDecoration(
                         borderRadius:
-                            BorderRadius.only(topRight: Radius.circular(12)),
+                            const BorderRadius.only(topRight: Radius.circular(12)),
                         image: DecorationImage(
                             image: Image.asset(
                           "assets/video_category/category3.png",
@@ -448,11 +445,11 @@ class RecommendedCategory extends StatelessWidget {
             ],
           ),
         ),
-        Text(
+        const Text(
           "   热门推荐",
           style: TextStyle(fontSize: 20),
         ),
-        SizedBox(
+        const SizedBox(
           height: 8,
         )
       ],

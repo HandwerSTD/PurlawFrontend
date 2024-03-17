@@ -1,8 +1,9 @@
 import 'package:card_swiper/card_swiper.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:grock/grock.dart';
+import 'package:page_view_dot_indicator/page_view_dot_indicator.dart';
 import 'package:provider/provider.dart';
+import 'package:purlaw/common/network/chat_api.dart';
 import 'package:purlaw/common/provider/provider_widget.dart';
 import 'package:purlaw/common/utils/log_utils.dart';
 import 'package:purlaw/common/utils/misc.dart';
@@ -12,6 +13,7 @@ import 'package:purlaw/models/theme_model.dart';
 import 'package:purlaw/viewmodels/ai_chat_page/chat_page_viewmodel.dart';
 import 'package:purlaw/viewmodels/main_viewmodel.dart';
 import 'package:purlaw/viewmodels/theme_viewmodel.dart';
+import 'package:purlaw/views/account_mgr/account_visit_page.dart';
 import 'package:purlaw/views/account_mgr/components/account_page_components.dart';
 import 'package:purlaw/views/ai_chat_page/chat_page_voice_recognition.dart';
 
@@ -34,7 +36,11 @@ class AIChatPageBody extends StatelessWidget {
           Expanded(
             child: const AIChatPageMessageList().build(context),
           ),
-          Flexible(flex: 0, child: AIChatPageFooter(showVoice: showVoice,))
+          Flexible(
+              flex: 0,
+              child: AIChatPageFooter(
+                showVoice: showVoice,
+              ))
         ],
       ),
     );
@@ -51,7 +57,7 @@ class AIChatPageMessageList extends StatelessWidget {
       children: [
         Flexible(
           child: SingleChildScrollView(
-            physics: BouncingScrollPhysics(),
+            physics: const BouncingScrollPhysics(),
             controller: model.scrollController,
             child: Column(
                 children: model.messageModels.messages
@@ -95,7 +101,8 @@ class _AIChatPageFooterState extends State<AIChatPageFooter> {
                   RecommendedActionButton(
                     title: '停止对话',
                     onClick: () {
-                      model.manuallyBreak(getCookie(context, listen: false), DatabaseUtil.getLastAIChatSession());
+                      model.manuallyBreak(getCookie(context, listen: false),
+                          DatabaseUtil.getLastAIChatSession());
                     },
                     show: model.replying,
                   ),
@@ -125,7 +132,9 @@ class _AIChatPageFooterState extends State<AIChatPageFooter> {
                               surfaceTintColor: Colors.transparent,
                               alignment: Alignment.topCenter,
                               insetPadding: EdgeInsets.zero,
-                              child: LawyerRecommendation(lawyers: model.recommendLawyers,)));
+                              child: LawyerRecommendation(
+                                lawyers: model.recommendLawyers,
+                              )));
                     },
                     show: (!model.replying &&
                         model.messageModels.messages.length > 1),
@@ -196,7 +205,8 @@ class _AIChatPageFooterState extends State<AIChatPageFooter> {
                             if (!refreshed) {
                               Log.d("User not refreshed", tag: "AI Chat Page");
                               showToast("请先刷新用户信息",
-                                  toastType: ToastType.warning, alignment: Alignment.center);
+                                  toastType: ToastType.warning,
+                                  alignment: Alignment.center);
                               return;
                             }
                             model.submitNewMessage(Provider.of<MainViewModel>(
@@ -277,10 +287,16 @@ class RecommendedActionButton extends StatelessWidget {
   }
 }
 
-class LawyerRecommendation extends StatelessWidget {
+class LawyerRecommendation extends StatefulWidget {
   final List<UserInfoModel> lawyers;
   const LawyerRecommendation({super.key, required this.lawyers});
 
+  @override
+  State<LawyerRecommendation> createState() => _LawyerRecommendationState();
+}
+
+class _LawyerRecommendationState extends State<LawyerRecommendation> {
+  int nowIndex = 0;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -297,41 +313,66 @@ class LawyerRecommendation extends StatelessWidget {
           const Text("\n   律师推荐"),
           SizedBox(
             height: 200,
+            width: 300,
             child: Swiper(
-              itemCount: lawyers.length,
-              loop: false,
+              itemCount: widget.lawyers.length,
               itemBuilder: (context, index) {
-                var userInfoModel = lawyers[index];
-                return Container(
-                  alignment: Alignment.center,
-                  height: 180,
-                  width: 300,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      UserAvatarLoader(verified: userInfoModel.verified, avatar: userInfoModel.avatar, size: 108, radius: 54),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 18),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              userInfoModel.user,
-                              style: const TextStyle(fontSize: 20),
-                            ),
-                            SizedBox(
-                                width: 160,
-                                child: Text(userInfoModel.desc, style: TextStyle(fontSize: 12),))
-                          ],
-                        ),
-                      )
-                    ],
+                var userInfoModel = widget.lawyers[index];
+                return GestureDetector(
+                  onTap: (){
+                    Navigator.push(context, MaterialPageRoute(builder: (_) => AccountVisitPage(userId: widget.lawyers[index].uid)));
+                  },
+                  child: Container(
+                    alignment: Alignment.center,
+                    height: 180,
+                    width: 300,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        UserAvatarLoader(
+                            verified: userInfoModel.verified,
+                            avatar: userInfoModel.avatar,
+                            size: 108,
+                            radius: 54),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 18),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                userInfoModel.user,
+                                style: const TextStyle(fontSize: 20),
+                              ),
+                              SizedBox(
+                                  width: 160,
+                                  child: Text(
+                                    userInfoModel.desc,
+                                    style: const TextStyle(fontSize: 12),
+                                  ))
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
                   ),
                 );
               },
+              onIndexChanged: (ind) {
+                setState(() {
+                  nowIndex = ind;
+                });
+              },
             ),
-          )
+          ),
+          PageViewDotIndicator(
+              currentItem: nowIndex,
+              count: widget.lawyers.length,
+              unselectedColor: Colors.grey,
+              unselectedSize: const Size(6, 6),
+              size: const Size(10, 10),
+              selectedColor: getThemeModel(context).colorModel.generalFillColor),
+          SizedBox(height: 12,)
         ],
       ),
     );
@@ -341,7 +382,10 @@ class LawyerRecommendation extends StatelessWidget {
 class OpenAIChatFloatingDialogButton extends StatelessWidget {
   final EdgeInsetsGeometry margin;
   final Future<void> Function()? onLoad;
-  const OpenAIChatFloatingDialogButton({super.key, this.margin = const EdgeInsets.only(bottom: 48), this.onLoad});
+  const OpenAIChatFloatingDialogButton(
+      {super.key,
+      this.margin = const EdgeInsets.only(bottom: 48),
+      this.onLoad});
 
   @override
   Widget build(BuildContext context) {
@@ -353,42 +397,52 @@ class OpenAIChatFloatingDialogButton extends StatelessWidget {
       child: Padding(
         padding: margin,
         child: FloatingActionButton.small(
-          heroTag: null,
-          child: const Icon(Icons.question_answer_rounded),
+            heroTag: null,
+            child: const Icon(Icons.question_answer_rounded),
             onPressed: () async {
-            if (onLoad != null) await onLoad!();
-          if (context.mounted) openAIChatFloatingDialog(context);
-        }),
+              if (onLoad != null) await onLoad!();
+              if (context.mounted) openAIChatFloatingDialog(context);
+            }),
       ),
     );
   }
 }
 
-
 void openAIChatFloatingDialog(BuildContext context) {
-  showDialog(context: context, builder: (_) {
-    return Dialog(
-      backgroundColor: Colors.transparent,
-      surfaceTintColor: Colors.transparent,
-      alignment: Alignment.topCenter,
-      insetPadding: EdgeInsets.zero,
-      child: Container(
-        width: Responsive.assignWidthMedium(Grock.width),
-        height: Grock.height / 2 - 48,
-        margin: const EdgeInsets.only(left: 12, right: 12, top: 48, bottom: 64),
-        decoration: BoxDecoration(
-            color: getThemeModel(context).dark ? const Color(0xff333333) : getThemeModel(context).themeData.scaffoldBackgroundColor,
-            borderRadius: BorderRadius.circular(24)
-        ),
-        child: ProviderWidget<AIChatMsgListViewModel>(
-          model: AIChatMsgListViewModel(firstMessage: "您好，我是您的专属 AI 律师紫小藤。有什么问题想问的？"),
-          onReady: (model){},
-          builder: (context, model, child) {
-            return const AIChatPageBody(showVoice: false,);
-          }
-        ),
-      )
-    );
-  });
+  showDialog(
+      context: context,
+      builder: (_) {
+        return Dialog(
+            backgroundColor: Colors.transparent,
+            surfaceTintColor: Colors.transparent,
+            alignment: Alignment.topCenter,
+            insetPadding: EdgeInsets.zero,
+            child: Container(
+              width: Responsive.assignWidthMedium(Grock.width),
+              height: Grock.height / 2 - 48,
+              margin: const EdgeInsets.only(
+                  left: 12, right: 12, top: 24),
+              decoration: BoxDecoration(
+                  color: getThemeModel(context).dark
+                      ? const Color(0xff333333)
+                      : getThemeModel(context)
+                          .themeData
+                          .scaffoldBackgroundColor,
+                  borderRadius: BorderRadius.circular(24)),
+              child: ProviderWidget<AIChatMsgListViewModel>(
+                  model: AIChatMsgListViewModel(
+                      firstMessage: "您好，我是您的专属 AI 律师紫小藤。有什么问题想问的？"),
+                  onReady: (model) {},
+                  onDispose: (model) {
+                    ChatNetworkRequest.breakIsolate(
+                        getCookie(context, listen: false),
+                        DatabaseUtil.getLastAIChatSession());
+                  },
+                  builder: (context, model, child) {
+                    return const AIChatPageBody(
+                      showVoice: false,
+                    );
+                  }),
+            ));
+      });
 }
-

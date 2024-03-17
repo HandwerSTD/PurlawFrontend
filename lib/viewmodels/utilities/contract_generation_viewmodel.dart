@@ -1,4 +1,3 @@
-import 'dart:isolate';
 
 import 'package:flutter/cupertino.dart';
 import 'package:purlaw/common/utils/database/database_util.dart';

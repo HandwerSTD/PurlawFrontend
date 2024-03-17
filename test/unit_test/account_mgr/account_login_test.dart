@@ -3,14 +3,10 @@ import 'dart:io';
 
 import 'package:fake_http_client/fake_http_client.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:purlaw/common/constants/constants.dart';
-import 'package:http/http.dart' as http;
 import 'package:purlaw/common/utils/database/kvstore.dart';
 import 'package:purlaw/viewmodels/account_mgr/account_login_viewmodel.dart';
-import 'package:flutter_test/flutter_test.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:path_provider_platform_interface/path_provider_platform_interface.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 

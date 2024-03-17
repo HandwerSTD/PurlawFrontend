@@ -81,7 +81,6 @@ class ShortVideoUploadViewModel extends BaseViewModel {
     isVideoUploading = true;
     notifyListeners();
     try {
-      var uploaded = 0;
       var response = uploadNewVideo(
         title: title,
         desc: desc,
@@ -90,11 +89,11 @@ class ShortVideoUploadViewModel extends BaseViewModel {
         coverPath: tempCoverPath.path,
         cookie: cookie,
       );
-      response.progress.listen((int progress) { // TODO: Test
+      response.progress.listen((int progress) {
         percentage.value = progress;
         Log.i(
             tag: tag,
-            "[DEBUG] uploaded = $uploaded, percent = ${percentage.value}");
+            "[DEBUG] percent = ${percentage.value}");
       });
       response.onError = () async {
         showToast("上传失败", toastType: ToastType.error);

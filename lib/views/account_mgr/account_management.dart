@@ -1,18 +1,12 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:image_cropper/image_cropper.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:provider/provider.dart';
 import 'package:purlaw/common/constants/constants.dart';
 import 'package:purlaw/common/network/network_request.dart';
-import 'package:purlaw/components/purlaw/appbar.dart';
 import 'package:purlaw/components/purlaw/purlaw_components.dart';
 import 'package:purlaw/components/third_party/prompt.dart';
 import 'package:purlaw/viewmodels/main_viewmodel.dart';
 import 'package:purlaw/viewmodels/theme_viewmodel.dart';
-import 'package:purlaw/views/account_mgr/components/account_page_components.dart';
-import 'package:http/http.dart' as http;
 import 'package:purlaw/common/utils/log_utils.dart';
 
 

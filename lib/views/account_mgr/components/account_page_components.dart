@@ -2,8 +2,6 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:grock/grock.dart';
-import 'package:hive/hive.dart';
-import 'package:ionicons/ionicons.dart';
 import 'package:purlaw/common/network/network_loading_state.dart';
 import 'package:purlaw/common/network/network_request.dart';
 import 'package:purlaw/common/provider/provider_widget.dart';
@@ -14,8 +12,6 @@ import 'package:purlaw/components/third_party/image_loader.dart';
 import 'package:purlaw/models/account_mgr/user_info_model.dart';
 import 'package:purlaw/models/community/short_video_info_model.dart';
 import 'package:purlaw/viewmodels/account_mgr/account_video_list_viewmodel.dart';
-import 'package:tdesign_flutter/tdesign_flutter.dart';
-import 'package:typicons_flutter/typicons_flutter.dart';
 
 import '../../../common/constants/constants.dart';
 import '../../community/community_page.dart';
@@ -43,7 +39,7 @@ class AccountPageUserInfoBoard extends StatelessWidget {
                     userInfoModel.user,
                     style: const TextStyle(fontSize: 20),
                   ),
-                  Text(userInfoModel.desc, style: TextStyle(fontSize: 12),)
+                  Text(userInfoModel.desc, style: const TextStyle(fontSize: 12),)
                 ],
               ),
             )
@@ -70,7 +66,7 @@ class AccountPageUserInfoBoard extends StatelessWidget {
                 ),
                 SizedBox(
                   width: 160,
-                    child: Text(userInfoModel.desc, style: TextStyle(fontSize: 12),))
+                    child: Text(userInfoModel.desc, style: const TextStyle(fontSize: 12),))
               ],
             ),
           )
@@ -146,6 +142,9 @@ class UserAvatarLoader extends StatelessWidget {
         Builder(
           builder: (context) {
             double siz = 24, iconSize = 16;
+            if (size <= 40 ) {
+              siz = 18; iconSize = 12;
+            }
             if (size <= 36) {
               siz = 12; iconSize = 8;
             }
@@ -153,6 +152,7 @@ class UserAvatarLoader extends StatelessWidget {
               width: siz,
               height: siz,
               alignment: Alignment.center,
+              margin: EdgeInsets.only(right: 2),
               decoration: BoxDecoration(
                 border: Border.all(color: Colors.white),
                 color: Colors.green,

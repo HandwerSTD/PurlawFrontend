@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
-import 'package:purlaw/common/utils/log_utils.dart';
 import 'package:purlaw/components/purlaw/purlaw_components.dart';
 import 'package:purlaw/components/third_party/prompt.dart';
 import 'package:purlaw/models/account_mgr/user_info_model.dart';

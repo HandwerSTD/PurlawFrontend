@@ -22,11 +22,13 @@ class ShortVideoUpload extends StatefulWidget {
 
 class _ShortVideoUploadState extends State<ShortVideoUpload> {
   late StreamSubscription _;
+  int uploadStatus = 0; // 0: idle; 1: uploading; -1: completed
   @override
   void initState() {
     super.initState();
     _ = eventBus.on<ShortVideoUploadEventBus>().listen((event) {
       if (event.needNavigate) {
+        uploadStatus = -1;
         Navigator.pop(context);
       }
     });
@@ -43,8 +45,11 @@ class _ShortVideoUploadState extends State<ShortVideoUpload> {
   Widget build(BuildContext context) {
     return PopScope(
       onPopInvoked: (val) async {
-        showToast("视频后台上传中", toastType: ToastType.info);
-        await CacheUtil.clear();
+        if (uploadStatus == 1) {
+          showToast("视频后台上传中", toastType: ToastType.info);
+        } else {
+          await CacheUtil.clear();
+        }
       },
       child: Scaffold(
         appBar: AppBar(
@@ -142,6 +147,7 @@ class _ShortVideoUploadState extends State<ShortVideoUpload> {
                   ignoring: model.isVideoUploading,
                   child: ElevatedButton(
                       onPressed: () async {
+                        uploadStatus = 1;
                         model.uploadVideo(
                             Provider.of<MainViewModel>(context, listen: false)
                                 .cookies);

@@ -46,7 +46,7 @@ class ChatNetworkRequest {
     try {
       await isolateFlushSession(append,
           session: session, cookie: cookie, callback: callback);
-    } on Exception catch (e) {
+    } on Exception {
       rethrow;
     }
   }

@@ -27,8 +27,8 @@ class PrivateMessagePage extends StatelessWidget {
             titleSpacing: 8,
               title: Row(
                 children: [
-                  UserAvatarLoader(avatar: sendUser.avatar, size: 40, radius: 20, verified: sendUser.verified, margin: EdgeInsets.only(right: 12),),
-                  Text(sendUser.user, style: TextStyle(fontSize: 18),)
+                  UserAvatarLoader(avatar: sendUser.avatar, size: 40, radius: 20, verified: sendUser.verified, margin: const EdgeInsets.only(right: 12),),
+                  Text(sendUser.user, style: const TextStyle(fontSize: 18),)
                 ],
               ),
           ),
