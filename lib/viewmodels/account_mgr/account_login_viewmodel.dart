@@ -10,6 +10,7 @@ import 'package:purlaw/main.dart';
 import 'package:purlaw/viewmodels/base_viewmodel.dart';
 import 'package:purlaw/common/utils/log_utils.dart';
 
+import '../../common/utils/misc.dart';
 import '../../models/account_mgr/user_info_model.dart';
 
 const tag = "Account Login ViewModel";
@@ -86,10 +87,23 @@ class AccountLoginViewModel extends BaseViewModel {
       for (var sid in (response["sid"])) {
         list.add((sid, "获取的会话信息"));
       }
+      if (list.isEmpty) {
+        try {
+          var resp = jsonDecode(await HttpGet.post(API.chatCreateSession.api, HttpGet.jsonHeadersCookie(cookie), {
+            "type": "chat"
+          }));
+          if (resp["status"] != "success") throw Exception(resp["message"]);
+          String session = resp["sid"];
+          list.add((session, "默认会话"));
+        } on Exception catch (e) {
+          showToast("新建会话失败，请手动新建", toastType: ToastType.error);
+          Log.e(e, tag: "Chat Session ViewModel");
+        }
+      }
       SessionListDatabaseUtil.storeSessionList(list);
     } catch(e) {
       Log.e(e, tag: "Chat Session ViewModel");
-      showToast("获取失败", toastType: ToastType.error);
+      showToast("获取云端会话失败", toastType: ToastType.error);
     }
   }
 }

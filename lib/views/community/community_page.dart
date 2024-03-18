@@ -121,7 +121,7 @@ class _CommunityPageBodyState extends State<CommunityPageBody> {
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(36),
           boxShadow: (TDTheme.defaultData().shadowsTop),
-          color: (Theme.of(context).scaffoldBackgroundColor)),
+          color: getThemeModel(context).dark ? Colors.black : Theme.of(context).scaffoldBackgroundColor),
       child: child,
     );
   }

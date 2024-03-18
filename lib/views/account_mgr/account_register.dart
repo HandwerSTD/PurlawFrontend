@@ -11,6 +11,7 @@ import 'package:purlaw/viewmodels/theme_viewmodel.dart';
 
 import '../../common/utils/misc.dart';
 import '../../models/theme_model.dart';
+import '../settings/about/about_page.dart';
 
 class AccountRegisterPage extends StatelessWidget {
   const AccountRegisterPage({super.key});
@@ -114,21 +115,15 @@ class _AccountRegisterPageBodyState extends State<AccountRegisterPageBody> {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Checkbox(value: model.agreeStatement, onChanged: (val){ model.switchAgree(); },),
-                              const Text("我已阅读并同意", style: TextStyle(fontSize: 10),),
+                              const Text("我已阅读并同意", style: TextStyle(fontSize: 12),),
                               InkWell(
                                 child: const Text(
                                   "《用户协议》",
-                                  style: TextStyle(color: Colors.blue, fontSize: 10),
+                                  style: TextStyle(color: Colors.blue, fontSize: 12),
                                 ),
-                                onTap: () {},
-                              ),
-                              const Text('和'),
-                              InkWell(
-                                child: const Text(
-                                  "《隐私协议》",
-                                  style: TextStyle(color: Colors.blue, fontSize: 10),
-                                ),
-                                onTap: () {},
+                                onTap: () {
+                                  Navigator.push(context, MaterialPageRoute(builder: (context) => const EULAPage()));
+                                  },
                               ),
                             ],
                           ),

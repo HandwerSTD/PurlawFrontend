@@ -122,7 +122,7 @@ class ChatSessionListViewModel extends BaseViewModel {
     } on Exception catch (e) {
       Log.e(e, tag: "Chat Session ViewModel");
       hideLoading();
-      showToast("创建新会话失败，可尝试刷新", toastType: ToastType.error);
+      showToast("创建新会话失败，请尝试刷新", toastType: ToastType.error);
     }
   }
   void useSession(int index) {

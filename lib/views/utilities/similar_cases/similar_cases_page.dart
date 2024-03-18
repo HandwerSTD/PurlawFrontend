@@ -78,8 +78,12 @@ class SimilarCasesPageBody extends StatelessWidget {
                                 const DropDownDecoratorProps(
                                     dropdownSearchDecoration: InputDecoration(
                                         border: InputBorder.none)),
-                            popupProps: const PopupProps.modalBottomSheet(
-                              title: Text(
+                            popupProps: PopupProps.modalBottomSheet(
+                              disabledItemFn: (str) {
+                                return str.contains("暂不支持");
+                              },
+                              modalBottomSheetProps: ModalBottomSheetProps(backgroundColor: getThemeModel(context).themeData.scaffoldBackgroundColor),
+                              title: const Text(
                                 "\n选择地区",
                                 style: TextStyle(fontSize: 20),
                                 textAlign: TextAlign.center,
@@ -89,15 +93,9 @@ class SimilarCasesPageBody extends StatelessWidget {
                             ),
                             items: const [
                               "全国",
-                              "北京",
-                              "天津",
-                              "山东",
-                              "上海",
-                              "广东",
-                              "江苏",
-                              "湖南",
-                              "湖北",
-                              "四川"
+                              "北京","天津","上海","重庆",
+                              "河北","山西","辽宁","吉林","黑龙江","江苏","浙江","安徽","福建","江西","山东","河南","湖北","湖南","广东","海南","四川","贵州","云南","陕西","甘肃","青海",
+                              "内蒙古","广西","西藏","宁夏","新疆","港澳台地区暂不支持"
                             ],
                             selectedItem: model.selectedRegion,
                           ),
@@ -112,7 +110,8 @@ class SimilarCasesPageBody extends StatelessWidget {
                                 const DropDownDecoratorProps(
                                     dropdownSearchDecoration: InputDecoration(
                                         border: InputBorder.none)),
-                            popupProps: const PopupProps.modalBottomSheet(
+                            popupProps:  PopupProps.modalBottomSheet(
+                              modalBottomSheetProps: ModalBottomSheetProps(backgroundColor: getThemeModel(context).themeData.scaffoldBackgroundColor),
                               title: Text(
                                 "\n选择参照级别",
                                 style: TextStyle(fontSize: 20),
@@ -141,7 +140,8 @@ class SimilarCasesPageBody extends StatelessWidget {
                                 const DropDownDecoratorProps(
                                     dropdownSearchDecoration: InputDecoration(
                                         border: InputBorder.none)),
-                            popupProps: const PopupProps.modalBottomSheet(
+                            popupProps:  PopupProps.modalBottomSheet(
+                              modalBottomSheetProps: ModalBottomSheetProps(backgroundColor: getThemeModel(context).themeData.scaffoldBackgroundColor),
                               title: Text(
                                 "\n排序方式",
                                 style: TextStyle(fontSize: 20),
