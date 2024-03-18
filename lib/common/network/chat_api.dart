@@ -14,6 +14,7 @@ class ChatNetworkRequest {
   static Isolate? isolate;
 
   static void breakIsolate(String cookie, String session, {bool manually = false}) async {
+    if (cookie == "") return; // Not logged
     isolate?.kill(priority: Isolate.immediate);
     try {
       var response = jsonDecode(await HttpGet.post(API.chatShutTask.api, HttpGet.jsonHeadersCookie(cookie), {

@@ -241,8 +241,12 @@ class _SettingsPageBodyState extends State<SettingsPageBody> {
           MySettingsGroup(
             settingsGroupTitle: '  应用信息',
             items: [
-              const MySettingsItem(
-                      icons: Icons.contact_support_rounded, title: '联系我们')
+              MySettingsItem(
+                      icons: Icons.contact_support_rounded, title: '联系我们', onTap: (){
+                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                          content: Text("邮箱：handwer@qq.com"),
+                        ));
+              })
                   .build(context),
               MySettingsItem(
                 icons: Icons.grid_view_rounded,

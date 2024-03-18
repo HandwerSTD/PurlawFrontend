@@ -16,6 +16,7 @@ import '../../../common/network/chat_api.dart';
 import '../../../common/utils/database/database_util.dart';
 import '../../../common/utils/log_utils.dart';
 import '../../../components/third_party/prompt.dart';
+import '../../account_mgr/my_account_page.dart';
 
 class AIDocumentRecognition extends StatelessWidget {
   const AIDocumentRecognition({super.key});
@@ -71,6 +72,7 @@ class AIDocumentRecognition extends StatelessWidget {
                           showToast("请先进行识别", toastType: ToastType.info);
                           return;
                         }
+                        if (!checkAndLoginIfNot(context)) return;
                         Log.i("Start analyze document $page", tag: "AI Document Recognition");
                         showDialog(context: context, builder: (context) {
                           return Dialog(
@@ -299,6 +301,7 @@ class AIDocumentAnalyzeDialog extends StatelessWidget {
                       PurlawChatMessageBlockWithAudio(
                         msg: model.message,
                         overrideRadius: true,
+                        alwaysMarkdown: true
                       )
                     ],
                   )

@@ -532,12 +532,10 @@ class _VideoPlayBlockState extends State<VideoPlayBlock> {
               if (getCookie(context, listen: false).isEmpty) {
                 model.pauseVideo();
                 showToast("请先登录", toastType: ToastType.warning);
-                Future.delayed(200.milliseconds).then((value) {
-                  checkAndLoginIfNot(context, callback: (result) {
-                    if (result == true) {
-                      model.getVideoIsLiked(getCookie(context, listen: false));
-                    }
-                  });
+                checkAndLoginIfNot(context, callback: (result) {
+                  if (result == true) {
+                    model.getVideoIsLiked(getCookie(context, listen: false));
+                  }
                 });
                 return;
               }

@@ -14,6 +14,7 @@ import 'package:simple_ripple_animation/simple_ripple_animation.dart';
 import 'package:tdesign_flutter/tdesign_flutter.dart';
 
 import '../../components/purlaw/chat_message_block.dart';
+import '../account_mgr/my_account_page.dart';
 
 class ChatPageVoiceRecognition extends StatelessWidget {
   const ChatPageVoiceRecognition({super.key});
@@ -48,7 +49,10 @@ class _ChatVoiceRecognitionBodyState extends State<ChatVoiceRecognitionBody> {
     return ProviderWidget<ChatVoiceRecognitionViewModel>(
         model: ChatVoiceRecognitionViewModel(),
         onReady: (model) {
-          model.load(getCookie(context));
+          model.load(getCookie(context, listen: false));
+        },
+        onDispose: (model) {
+          model.onDispose();
         },
         builder: (context, model, child) {
           return Stack(
@@ -99,6 +103,7 @@ class _ChatVoiceRecognitionBodyState extends State<ChatVoiceRecognitionBody> {
                                 PurlawChatMessageBlockWithAudio(
                                   msg: model.message,
                                   overrideRadius: true,
+                                  alwaysMarkdown: true
                                 )
                               ],
                             )
@@ -195,6 +200,7 @@ class _ChatVoiceRecognitionBodyState extends State<ChatVoiceRecognitionBody> {
                               backgroundColor:
                               getThemeModel(context).colorModel.generalFillColor,
                               onPressed: () async {
+                                if (!checkAndLoginIfNot(context)) return;
                                 if (!model.listeningVoice) {
                                   model.startRecord();
                                 } else {

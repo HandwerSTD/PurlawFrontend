@@ -13,6 +13,7 @@ import '../../../common/utils/database/database_util.dart';
 import '../../../components/purlaw/text_field.dart';
 import '../../../components/third_party/prompt.dart';
 import '../../../viewmodels/theme_viewmodel.dart';
+import '../../account_mgr/my_account_page.dart';
 
 class ContractGenerationPage extends StatelessWidget {
   const ContractGenerationPage({super.key});
@@ -94,6 +95,7 @@ class _ContractGenerationPageBodyState extends State<ContractGenerationPageBody>
                           showToast("请填写完整项", toastType: ToastType.warning);
                           return;
                         }
+                        if (!checkAndLoginIfNot(context)) return;
                         model.submit(getCookie(context, listen: false));
                       },
                     )
@@ -107,7 +109,7 @@ class _ContractGenerationPageBodyState extends State<ContractGenerationPageBody>
                         decoration: PurlawChatTextField.chatInputDeco('', getThemeModel(context).colorModel.loginTextFieldColor, 24),
                         controller: model.controller,
                         maxLines: null,
-                      ) : (model.genStart ? PurlawChatMessageBlockWithAudio(msg: model.message, overrideRadius: true,) : Container()))),
+                      ) : (model.genStart ? PurlawChatMessageBlockWithAudio(msg: model.message, overrideRadius: true, alwaysMarkdown: true,) : Container()))),
                     )
                   ],
                 )

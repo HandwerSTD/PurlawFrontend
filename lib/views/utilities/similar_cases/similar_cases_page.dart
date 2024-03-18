@@ -13,6 +13,7 @@ import 'package:purlaw/viewmodels/utilities/similar_cases_viewmodel.dart';
 
 import '../../../common/utils/database/database_util.dart';
 import '../../../components/purlaw/chat_message_block.dart';
+import '../../account_mgr/my_account_page.dart';
 
 class SimilarCasesPage extends StatelessWidget {
   const SimilarCasesPage({super.key});
@@ -50,6 +51,7 @@ class SimilarCasesPageBody extends StatelessWidget {
                     onSubmitted: (val) {
                       if (val.isEmpty) return;
                       model.description = val;
+                      if (!checkAndLoginIfNot(context)) return;
                       model.submit(getCookie(context, listen: false));
                     }, onTap: (){},
                   ),
